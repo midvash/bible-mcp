@@ -1,0 +1,24 @@
+{
+  "name": "bible-mcp",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Free, no-key Model Context Protocol (MCP) server for the public Bible API — read scripture across 35+ public-domain translations in 8 languages from any MCP client. Powers mcp.midvash.com.",
+  "license": "MIT",
+  "homepage": "https://mcp.midvash.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/midvash/bible-mcp.git"
+  },
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260604.1",
+    "typescript": "~6.0",
+    "wrangler": "^4.98.0"
+  }
+}

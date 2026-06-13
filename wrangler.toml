@@ -1,0 +1,33 @@
+name = "midvash-mcp"
+main = "src/index.ts"
+compatibility_date = "2026-02-19"
+compatibility_flags = ["nodejs_compat"]
+
+# Rate limit por IP (auditoria de segurança): endpoint POST sem cache e que
+# aceita batch JSON-RPC. namespace_id distinto do apps/web (que usa 1001-1003).
+[[unsafe.bindings]]
+name = "RATE_LIMIT_MCP"
+type = "ratelimit"
+namespace_id = "2001"
+simple = { limit = 60, period = 60 }
+
+# Custom domain
+routes = [
+  { pattern = "mcp.midvash.com", custom_domain = true }
+]
+
+# R2 Bucket Binding (mesmo bucket usado pela api-publica)
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "bible"
+
+# Observability - Logs e traces para debug
+[observability]
+enabled = true
+head_sampling_rate = 1
+
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+persist = true
+invocation_logs = true
