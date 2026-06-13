@@ -57,8 +57,10 @@ npm run typecheck  # tsc --noEmit
 ## Deployment
 
 Deploys to the Cloudflare Worker `midvash-mcp` (custom domain
-`mcp.midvash.com`) via **Cloudflare Workers Builds** — every push to `main` is
-built and deployed automatically. Manual deploy:
+`mcp.midvash.com`) via **GitHub Actions** ([`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)) —
+every push to `main` is type-checked and deployed automatically. Requires the
+repository secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`. Manual
+deploy:
 
 ```bash
 npm run deploy     # npx wrangler deploy
