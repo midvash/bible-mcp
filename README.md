@@ -1,7 +1,7 @@
 # Bible MCP
 
 Free, no-key [Model Context Protocol](https://modelcontextprotocol.io) server for
-the public Bible API. Read scripture across **86 public-domain translations in 32
+the public Bible API. Read scripture across **86 Bible translations in 32
 languages** from any MCP client — Claude, Cursor, and anything else that speaks
 MCP. Served from Cloudflare's edge. Powers
 [mcp.midvash.com](https://mcp.midvash.com).
