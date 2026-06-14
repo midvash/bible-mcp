@@ -1,7 +1,7 @@
 # Bible MCP
 
 Free, no-key [Model Context Protocol](https://modelcontextprotocol.io) server for
-the public Bible API. Read scripture across **35+ public-domain translations in 8
+the public Bible API. Read scripture across **86 public-domain translations in 32
 languages** from any MCP client — Claude, Cursor, and anything else that speaks
 MCP. Served from Cloudflare's edge. Powers
 [mcp.midvash.com](https://mcp.midvash.com).
@@ -86,3 +86,4 @@ Part of [**Midvash**](https://midvash.com) — a free Bible reading & study plat
 | 📦 **Open data** | [`bible-data`](https://github.com/midvash/bible-data) · [`bible-data-js`](https://github.com/midvash/bible-data-js) · [`bible-cross-references`](https://github.com/midvash/bible-cross-references) |
 
 <sub>Free & open, built by [Midvash](https://midvash.com) · [midvash.com](https://midvash.com) · [midvash.app](https://midvash.app)</sub>
+
