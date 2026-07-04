@@ -1,5 +1,7 @@
 # Bible MCP
 
+[![bible-mcp MCP server](https://glama.ai/mcp/servers/midvash/bible-mcp/badges/card.svg)](https://glama.ai/mcp/servers/midvash/bible-mcp)
+
 > 🌐 **English** · [Português (BR)](./README.pt-BR.md) · [Español](./README.es.md)
 
 Free, no-key [Model Context Protocol](https://modelcontextprotocol.io) server for

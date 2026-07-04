@@ -13,33 +13,35 @@ export const getVerseTool: Tool = {
   definition: {
     name: 'get_verse',
     description:
-      'Retorna um versículo específico (ou um intervalo de versículos) da Bíblia em Markdown formatado. Use para citações diretas e precisas.',
+      'Fetches one exact Bible verse or a contiguous verse range from a specific version. Use this when the book, chapter, verse, and version are already known. For natural references such as "John 3:16-18", prefer get_passage.',
     inputSchema: {
       type: 'object',
       properties: {
         version: {
           type: 'string',
-          description: 'Slug da versão bíblica (ex.: "nvi", "kjv", "ara").',
+          description:
+            'Bible version slug to read from, such as "nvi", "kjv", "ara", or "rvr1960". Must be enabled by the connection URL filters.',
         },
         book: {
           type: 'string',
           description:
-            'Nome ou slug do livro em português, inglês ou espanhol (ex.: "john", "João", "Salmos", "1 Sm").',
+            'Bible book name, slug, or abbreviation. Accepts supported localized names such as "John", "João", "Salmos", or "1 Sm".',
         },
         chapter: {
           type: 'integer',
           minimum: 1,
-          description: 'Número do capítulo.',
+          description: 'Chapter number within the selected book. Must be 1 or greater.',
         },
         verse: {
           type: 'integer',
           minimum: 1,
-          description: 'Número do versículo inicial.',
+          description: 'Starting verse number. Must exist in the selected chapter.',
         },
         verse_end: {
           type: 'integer',
           minimum: 1,
-          description: 'Versículo final (opcional, para intervalos).',
+          description:
+            'Optional ending verse number for a range. Must be greater than or equal to verse and within the same chapter.',
         },
       },
       required: ['version', 'book', 'chapter', 'verse'],

@@ -45,18 +45,19 @@ export const searchBibleTool: Tool = {
   definition: {
     name: 'search_bible',
     description:
-      'Searches for a keyword or exact phrase in one Bible version. Supports optional book/testament filters and returns matching verse references in Markdown.',
+      'Searches for a keyword or exact phrase in one Bible version and returns matching verse references in Markdown. Use this for discovery questions like "find verses about love in KJV". For direct citation lookup, use get_passage or get_verse.',
     inputSchema: {
       type: 'object',
       properties: {
         query: {
           type: 'string',
           description:
-            'Keyword or exact phrase to search for. Search is case-insensitive and accent-insensitive.',
+            'Keyword or exact phrase to search for. Matching is case-insensitive and accent-insensitive; it is not semantic search.',
         },
         version: {
           type: 'string',
-          description: 'Bible version slug to search (ex.: "nvi", "kjv", "ara").',
+          description:
+            'Single Bible version slug to search, such as "nvi", "kjv", "ara", or "rvr1960". Must be enabled by the connection URL filters.',
         },
         book: {
           type: 'string',
@@ -66,7 +67,8 @@ export const searchBibleTool: Tool = {
         testament: {
           type: 'string',
           enum: ['old', 'new'],
-          description: 'Optional testament filter: "old" or "new". Ignored when book is provided.',
+          description:
+            'Optional testament filter. Use "old" for Old Testament or "new" for New Testament. Ignored when book is provided.',
         },
         limit: {
           type: 'integer',

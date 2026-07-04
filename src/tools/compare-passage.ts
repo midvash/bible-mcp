@@ -46,20 +46,20 @@ export const comparePassageTool: Tool = {
   definition: {
     name: 'compare_passage',
     description:
-      'Compares the same Bible passage across multiple versions. Accepts a natural reference like "John 3:16-18" and returns a Markdown comparison.',
+      'Compares the same Bible passage across multiple Bible versions and returns a Markdown side-by-side style comparison. Use this for translation comparison, sermon preparation, or study questions. For a single version, use get_passage.',
     inputSchema: {
       type: 'object',
       properties: {
         reference: {
           type: 'string',
           description:
-            'Bible reference in free text. Accepts PT/EN/ES names, abbreviations, and ranges (ex.: "João 3:16-18", "Psalm 23").',
+            'Free-form Bible reference to compare. Accepts supported localized book names, abbreviations, whole chapters, and verse ranges. Examples: "John 3:16", "João 3:16-18", "Psalm 23".',
         },
         versions: {
           type: 'array',
           items: { type: 'string' },
           description:
-            'Bible version slugs to compare. If omitted, uses enabled versions from the connection or a small default set.',
+            'Optional list of Bible version slugs to compare. If omitted, uses versions enabled by the connection URL, or a small default set. Maximum 8 versions.',
         },
       },
       required: ['reference'],

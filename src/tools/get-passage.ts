@@ -13,19 +13,19 @@ export const getPassageTool: Tool = {
   definition: {
     name: 'get_passage',
     description:
-      'Retorna uma passagem bíblica a partir de uma referência em linguagem natural (ex.: "João 3:16-18", "Romanos 8:1-11", "Sl 23"). Mais conveniente que get_verse quando a referência já está em formato de citação.',
+      'Fetches a Bible passage from a natural-language reference such as "John 3:16-18", "João 3:16", "Romans 8:1-11", or "Psalm 23". This is the primary lookup tool when the user gives a citation instead of structured book/chapter/verse fields.',
     inputSchema: {
       type: 'object',
       properties: {
         reference: {
           type: 'string',
           description:
-            'Referência bíblica em texto livre. Aceita PT/EN/ES, abreviações e prefixos numéricos. Ex.: "John 3:16", "1 Coríntios 13", "Sl 23:1-6".',
+            'Free-form Bible reference. Accepts supported localized book names, abbreviations, numeric prefixes, whole chapters, and verse ranges. Examples: "John 3:16", "1 Coríntios 13", "Sl 23:1-6".',
         },
         version: {
           type: 'string',
           description:
-            'Slug da versão bíblica. Se omitido, usa a primeira versão habilitada nesta conexão.',
+            'Optional Bible version slug. If omitted, uses the first version enabled by the connection URL, or "nvi" when no version filter exists.',
         },
       },
       required: ['reference'],

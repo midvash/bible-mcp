@@ -28,19 +28,20 @@ export const listBooksTool: Tool = {
   definition: {
     name: 'list_books',
     description:
-      'Lista os 66 livros da Bíblia agrupados por testamento, com nomes, slugs, abreviações e número de capítulos.',
+      'Lists the 66 canonical Bible books with localized names, slugs, abbreviations, testament grouping, and chapter counts. Use this when an agent needs valid book identifiers or localized display names before calling lookup tools.',
     inputSchema: {
       type: 'object',
       properties: {
         testament: {
           type: 'string',
           enum: ['old', 'new'],
-          description: 'Filtra por testamento: "old" (Antigo) ou "new" (Novo).',
+          description:
+            'Optional testament filter. Use "old" for Old Testament books or "new" for New Testament books.',
         },
         language: {
           type: 'string',
           description:
-            'Idioma dos nomes dos livros: en, pt-br, es, fr, de, it, zh, ru, ko. Padrão: en.',
+            'Optional locale for book names, slugs, and abbreviations. Supported values: en, pt-br, es, fr, de, it, zh, ru, ko. Defaults to en.',
         },
       },
     },

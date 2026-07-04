@@ -28,14 +28,14 @@ export const listVersionsTool: Tool = {
   definition: {
     name: 'list_versions',
     description:
-      'Lista as versões bíblicas disponíveis nesta conexão MCP. Filtra automaticamente pelas versões e idiomas configurados na URL.',
+      'Lists Bible versions available to the current MCP connection, automatically respecting URL filters such as ?v=nvi,kjv and ?lang=pt-br,en. Use this before lookup, search, or comparison when the user has not specified a version.',
     inputSchema: {
       type: 'object',
       properties: {
         language: {
           type: 'string',
           description:
-            'Filtra por idioma (ex.: "pt-br", "en", "es", "he", "la", "fr", "it", "gr"). Opcional.',
+            'Optional language filter for version metadata. Examples: "pt-br", "pt", "en", "es", "he", "la", "fr", "it", "gr". The value "pt" includes pt-br and pt-pt.',
         },
       },
     },

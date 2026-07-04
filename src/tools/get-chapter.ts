@@ -13,23 +13,24 @@ export const getChapterTool: Tool = {
   definition: {
     name: 'get_chapter',
     description:
-      'Retorna um capítulo bíblico completo em Markdown com todos os versículos numerados. Use quando precisar do contexto inteiro de um capítulo.',
+      'Fetches a full Bible chapter from a specific version, formatted in Markdown with numbered verses. Use this when the user needs chapter-level context instead of an isolated verse.',
     inputSchema: {
       type: 'object',
       properties: {
         version: {
           type: 'string',
-          description: 'Slug da versão bíblica (ex.: "nvi", "kjv", "ara").',
+          description:
+            'Bible version slug to read from, such as "nvi", "kjv", "ara", or "rvr1960". Must be enabled by the connection URL filters.',
         },
         book: {
           type: 'string',
           description:
-            'Nome ou slug do livro em português, inglês ou espanhol (ex.: "john", "João", "Salmos").',
+            'Bible book name, slug, or abbreviation. Accepts supported localized names such as "John", "João", "Salmos", or "1 Sm".',
         },
         chapter: {
           type: 'integer',
           minimum: 1,
-          description: 'Número do capítulo.',
+          description: 'Chapter number within the selected book. Must be 1 or greater.',
         },
       },
       required: ['version', 'book', 'chapter'],
