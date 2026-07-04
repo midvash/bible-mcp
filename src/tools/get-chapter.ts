@@ -1,6 +1,6 @@
 import { VERSIONS } from '../data/versions';
 import { lookupBook } from '../lib/books-lookup';
-import { isVersionAllowed } from '../lib/context';
+import { isLanguageAllowed, isVersionAllowed } from '../lib/context';
 import { fetchChapter } from '../lib/r2';
 import { formatChapter } from '../lib/markdown';
 import type { Tool } from '../mcp/types';
@@ -34,6 +34,13 @@ export const getChapterTool: Tool = {
       },
       required: ['version', 'book', 'chapter'],
     },
+    annotations: {
+      title: 'Get Bible chapter',
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+    },
   },
 
   async handler(args, ctx, executionCtx) {
@@ -56,6 +63,13 @@ export const getChapterTool: Tool = {
       const allowed = ctx.allowedVersions?.join(', ').toUpperCase() ?? '';
       return textResult(
         `A versão **${version.shortName}** não está habilitada nesta conexão.\nVersões disponíveis: ${allowed}`,
+        true,
+      );
+    }
+    if (!isLanguageAllowed(ctx, version.language)) {
+      const allowed = ctx.allowedLanguages?.join(', ') ?? '';
+      return textResult(
+        `O idioma da versão **${version.shortName}** (${version.language}) não está habilitado nesta conexão.\nIdiomas disponíveis: ${allowed}`,
         true,
       );
     }

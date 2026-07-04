@@ -1,5 +1,5 @@
 import { VERSIONS } from '../data/versions';
-import { isVersionAllowed } from '../lib/context';
+import { isLanguageAllowed, isVersionAllowed } from '../lib/context';
 import { fetchChapter } from '../lib/r2';
 import { formatVerse, formatChapter } from '../lib/markdown';
 import { parseReference } from '../lib/reference-parser';
@@ -30,6 +30,13 @@ export const getPassageTool: Tool = {
       },
       required: ['reference'],
     },
+    annotations: {
+      title: 'Get Bible passage',
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+    },
   },
 
   async handler(args, ctx, executionCtx) {
@@ -56,6 +63,13 @@ export const getPassageTool: Tool = {
       const allowed = ctx.allowedVersions?.join(', ').toUpperCase() ?? '';
       return textResult(
         `A versão **${version.shortName}** não está habilitada nesta conexão.\nVersões disponíveis: ${allowed}`,
+        true,
+      );
+    }
+    if (!isLanguageAllowed(ctx, version.language)) {
+      const allowed = ctx.allowedLanguages?.join(', ') ?? '';
+      return textResult(
+        `O idioma da versão **${version.shortName}** (${version.language}) não está habilitado nesta conexão.\nIdiomas disponíveis: ${allowed}`,
         true,
       );
     }

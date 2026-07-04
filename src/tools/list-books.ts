@@ -44,6 +44,13 @@ export const listBooksTool: Tool = {
         },
       },
     },
+    annotations: {
+      title: 'List Bible books',
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+    },
   },
 
   async handler(args) {

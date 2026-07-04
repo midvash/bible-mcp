@@ -55,6 +55,13 @@ export interface ToolDefinition {
   name: string;
   description: string;
   inputSchema: ToolInputSchema;
+  annotations?: {
+    title?: string;
+    readOnlyHint?: boolean;
+    destructiveHint?: boolean;
+    idempotentHint?: boolean;
+    openWorldHint?: boolean;
+  };
 }
 
 export interface ToolContent {

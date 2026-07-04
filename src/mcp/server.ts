@@ -64,7 +64,7 @@ export async function handleMcpMessage(
           capabilities: SERVER_CAPABILITIES,
           serverInfo: SERVER_INFO,
           instructions:
-            'Midvash MCP — acesso ao texto bíblico em 35+ versões e 8 idiomas. Use get_passage para a forma mais natural de citar versículos.',
+            'Midvash MCP gives AI clients fast, no-key access to Scripture in 35+ Bible versions across 9 language families. Use get_passage for natural references, search_bible to find verses, and compare_passage to compare translations.',
         });
       }
 

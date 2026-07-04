@@ -1,6 +1,8 @@
 import { getVerseTool } from './get-verse';
 import { getChapterTool } from './get-chapter';
 import { getPassageTool } from './get-passage';
+import { searchBibleTool } from './search-bible';
+import { comparePassageTool } from './compare-passage';
 import { listVersionsTool } from './list-versions';
 import { listBooksTool } from './list-books';
 import type { Tool } from '../mcp/types';
@@ -13,6 +15,8 @@ export const TOOLS: Tool[] = [
   getVerseTool,
   getChapterTool,
   getPassageTool,
+  searchBibleTool,
+  comparePassageTool,
   listVersionsTool,
   listBooksTool,
 ];

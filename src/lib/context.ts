@@ -5,7 +5,7 @@ import type { Env } from '../env';
  * (?v=nvi,kjv&lang=pt-br,en) e disponível em todas as tools.
  */
 export interface ConnectionContext {
-  /** Versões habilitadas nesta conexão. null = todas as 35 versões. */
+  /** Versões habilitadas nesta conexão. null = todas as versões disponíveis. */
   allowedVersions: string[] | null;
   /** Idiomas habilitados nesta conexão. null = todos os idiomas. */
   allowedLanguages: string[] | null;
@@ -54,4 +54,26 @@ export function isVersionAllowed(
 ): boolean {
   if (!ctx.allowedVersions) return true;
   return ctx.allowedVersions.includes(versionSlug.toLowerCase());
+}
+
+function normalizeLanguage(lang: string): string {
+  const l = lang.toLowerCase().trim();
+  if (l === 'pt') return 'pt-br';
+  return l;
+}
+
+export function isLanguageAllowed(
+  ctx: ConnectionContext,
+  language: string,
+): boolean {
+  if (!ctx.allowedLanguages) return true;
+  const target = normalizeLanguage(language);
+
+  return ctx.allowedLanguages.some((allowed) => {
+    const normalized = normalizeLanguage(allowed);
+    if (normalized === 'pt-br') {
+      return target === 'pt-br' || target === 'pt-pt';
+    }
+    return normalized === target;
+  });
 }

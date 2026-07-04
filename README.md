@@ -47,6 +47,8 @@ Example (Claude Desktop / `mcp.json`):
 | `get_verse` | Fetch a single verse or a verse range. |
 | `get_chapter` | Fetch a full chapter. |
 | `get_passage` | Fetch a passage from a free-form reference (e.g. "John 3:16-18") — the most natural way to cite scripture. |
+| `search_bible` | Search for a keyword or exact phrase in one Bible version, optionally filtered by book or testament. |
+| `compare_passage` | Compare the same passage across multiple Bible versions. |
 | `list_versions` | List available Bible versions/translations. |
 | `list_books` | List the 66 books, optionally filtered by testament. |
 
@@ -81,8 +83,8 @@ the discovery and study tools users expect from Bible-focused MCP servers.
 ## Roadmap
 
 - Expand the MCP catalog to match the broader Midvash data/API coverage.
-- Add `search_bible` for keyword search across selected versions and books.
-- Add passage comparison across multiple versions.
+- Improve `search_bible` with a prebuilt index for faster broad searches.
+- Improve `compare_passage` with richer formatting for long passages.
 - Add cross-reference tools powered by
   [`bible-cross-references`](https://github.com/midvash/bible-cross-references).
 - Add study-oriented tools for original-language, lexicon, and morphology data
