@@ -3,8 +3,8 @@
 > 🌐 [English](./README.md) · [Português (BR)](./README.pt-BR.md) · **Español**
 
 Servidor [Model Context Protocol](https://modelcontextprotocol.io) gratuito y sin clave para
-la API bíblica pública. Lee las Escrituras en **86 traducciones bíblicas en 32
-idiomas** desde cualquier cliente MCP — Claude, Cursor y cualquier otro que hable
+la API bíblica pública. Lee las Escrituras en **35+ versiones bíblicas en 9
+familias de idioma** desde cualquier cliente MCP — Claude, Cursor y cualquier otro que hable
 MCP. Servido desde el edge de Cloudflare. Impulsa
 [mcp.midvash.com](https://mcp.midvash.com).
 
@@ -12,6 +12,8 @@ MCP. Servido desde el edge de Cloudflare. Impulsa
 - **Transporte HTTP Streamable** (JSON-RPC sin estado sobre `POST`).
 - Construido sobre Cloudflare Workers + R2, respaldado por el mismo contenido de
   [api.midvash.com](https://api.midvash.com).
+- Catálogo actual del MCP: versiones en portugués, inglés, español, hebreo,
+  latín, francés, italiano, griego y portugués de Portugal.
 
 ## Conectando un cliente
 
@@ -47,6 +49,46 @@ Ejemplo (Claude Desktop / `mcp.json`):
 | `get_passage` | Obtiene un pasaje a partir de una referencia en texto libre (ej.: "John 3:16-18") — la forma más natural de citar las Escrituras. |
 | `list_versions` | Lista las versiones/traducciones bíblicas disponibles. |
 | `list_books` | Lista los 66 libros, opcionalmente filtrados por testamento. |
+
+## Catálogo actual
+
+El MCP expone hoy el catálogo compilado en
+[`src/data/versions.ts`](./src/data/versions.ts): 35 versiones en los códigos de
+idioma `pt-br`, `en`, `es`, `he`, `la`, `fr`, `it`, `gr` y `pt-pt`.
+
+La URL pública puede limitar ese catálogo por conexión:
+
+```
+https://mcp.midvash.com/mcp/{id}?v=nvi,kjv&lang=pt-br,en
+```
+
+## Benchmark
+
+El ecosistema de MCPs bíblicos muestra tres patrones útiles:
+
+| Servidor | Fortalezas | Qué debería aprender Midvash |
+|---|---|---|
+| [`tuxr/bible-mcp`](https://glama.ai/mcp/servers/tuxr/bible-mcp) | Lookup remoto, búsqueda, navegación, múltiples traducciones y Apocrypha. | Agregar búsqueda bíblica nativa y mejores helpers de navegación. |
+| [`molpass/mcp-bible`](https://glama.ai/mcp/servers/molpass/mcp-bible) | Lookup multi-versión, búsqueda keyword/semántica, referencias cruzadas, estudios de palabras y léxicos de lenguas originales. | Agregar búsqueda semántica/keyword, referencias cruzadas y capas opcionales de estudio. |
+| [`djayatillake/studybible-mcp`](https://glama.ai/mcp/servers/djayatillake/studybible-mcp) | Léxicos, morfología, referencias cruzadas, notas contextuales y flujo de estudio profundo. | Mantener Midvash simple por defecto, pero exponer herramientas avanzadas cuando haya datos confiables. |
+| [`ytssamuel/FHL-MCP-Server`](https://glama.ai/mcp/servers/ytssamuel/FHL-MCP-Server) | Recursos fuertes para estudio bíblico en chino, comentarios, análisis de lenguas originales, Apocrypha y estudios por tema. | Tratar comunidades lingüísticas como audiencias de primera clase, no solo como filtros de traducción. |
+
+La ventaja de Midvash es la simplicidad: remoto, sin clave, sin cuenta, rápido en
+Cloudflare y conectado a un ecosistema abierto de lector, API, apps, plugins y
+datos. Las próximas mejoras deberían preservar esa experiencia sin fricción y
+agregar las herramientas de descubrimiento y estudio que los usuarios esperan de
+MCPs bíblicos.
+
+## Roadmap
+
+- Expandir el catálogo del MCP para acompañar la cobertura más amplia de los datos/API Midvash.
+- Agregar `search_bible` para búsqueda por palabra clave en versiones y libros seleccionados.
+- Agregar comparación de pasajes entre múltiples versiones.
+- Agregar herramientas de referencias cruzadas usando
+  [`bible-cross-references`](https://github.com/midvash/bible-cross-references).
+- Agregar herramientas de estudio para lenguas originales, léxicos y morfología
+  cuando haya datos abiertos confiables.
+- Agregar pruebas automatizadas para parser de referencias, filtros de catálogo y llamadas de herramientas.
 
 ## Desarrollo
 
