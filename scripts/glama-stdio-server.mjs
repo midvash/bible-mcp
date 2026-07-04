@@ -22,6 +22,23 @@ process.stdin.on('end', () => {
 
 async function processMessages() {
   while (true) {
+    if (!bufferIncludesContentLengthHeader(buffer)) {
+      const lineEnd = buffer.indexOf('\n');
+      if (lineEnd === -1) return;
+
+      const rawLine = buffer.slice(0, lineEnd).toString('utf8').trim();
+      buffer = buffer.slice(lineEnd + 1);
+      if (!rawLine) continue;
+
+      const message = JSON.parse(rawLine);
+      debug('received', message.method, message.id);
+      const response = await handleMessage(message);
+      if (response) {
+        writeMessage(response);
+      }
+      continue;
+    }
+
     const crlfHeaderEnd = buffer.indexOf('\r\n\r\n');
     const lfHeaderEnd = buffer.indexOf('\n\n');
     const usesCrlf =
@@ -50,6 +67,11 @@ async function processMessages() {
       writeMessage(response);
     }
   }
+}
+
+function bufferIncludesContentLengthHeader(value) {
+  const prefix = value.slice(0, Math.min(value.length, 64)).toString('utf8');
+  return /^content-length:/i.test(prefix);
 }
 
 async function handleMessage(message) {
@@ -154,7 +176,7 @@ function parseRemoteResponse(text, id) {
 function writeMessage(message) {
   const body = JSON.stringify(message);
   debug('sending', message.id, message.error?.message ?? 'ok');
-  process.stdout.write(`Content-Length: ${Buffer.byteLength(body)}\r\n\r\n${body}`);
+  process.stdout.write(`${body}\n`);
 }
 
 function debug(...args) {
