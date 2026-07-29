@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.midvash/bible",
+  "title": "Bible by Midvash",
+  "description": "Free, no-key Bible MCP server — 86 translations in 32 languages, from any MCP client.",
+  "version": "1.0.0",
+  "websiteUrl": "https://mcp.midvash.com",
+  "repository": {
+    "url": "https://github.com/midvash/bible-mcp",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.midvash.com/mcp/registry"
+    }
+  ]
+}
