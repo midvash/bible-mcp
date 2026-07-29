@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "bible-by-midvash",
+  "displayName": "Bible by Midvash",
+  "version": "1.0.0",
+  "description": "Read and compare Scripture across 86 translations in 32 languages. No API key required.",
+  "author": {
+    "name": "Midvash",
+    "url": "https://midvash.com"
+  },
+  "homepage": "https://mcp.midvash.com",
+  "repository": "https://github.com/midvash/bible-mcp",
+  "license": "MIT",
+  "keywords": ["bible", "scripture", "translation", "religion", "research"]
+}
