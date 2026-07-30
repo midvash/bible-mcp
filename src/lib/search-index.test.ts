@@ -13,6 +13,31 @@ describe('normalizeText', () => {
     expect(normalizeText('Coração')).toBe('coracao');
     expect(normalizeText('ÁGAPE')).toBe('agape');
   });
+
+  it('strips Hebrew niqqud so the consonants can be matched', () => {
+    // WLC grava Gênesis 1:1 com vogais intercaladas — 11 codepoints para
+    // 6 letras. Sem remover, buscar בראשית não achava nada.
+    expect(normalizeText('בְּרֵאשִׁית')).toBe('בראשית');
+    expect(normalizeText('אֱלֹהִים')).toBe('אלהים');
+  });
+
+  it('turns the Hebrew maqaf into a space instead of gluing words', () => {
+    expect(normalizeText('עַל־פְּנֵי')).toBe('על פני');
+  });
+
+  it('drops the Hebrew sof pasuq', () => {
+    expect(normalizeText('הָאָרֶץ ׃')).toBe('הארץ ');
+  });
+
+  it('unifies final sigma with sigma', () => {
+    // ς e σ são a mesma letra; quem digita "ουτωσ" precisa achar "ουτως".
+    expect(normalizeText('ουτως')).toBe(normalizeText('ουτωσ'));
+    expect(normalizeText('θεος')).toBe('θεοσ');
+  });
+
+  it('strips polytonic Greek diacritics', () => {
+    expect(normalizeText('ἀγάπη')).toBe('αγαπη');
+  });
 });
 
 describe('parseQuery', () => {

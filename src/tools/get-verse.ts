@@ -1,8 +1,12 @@
-import { VERSIONS } from '../data/versions';
-import { lookupBook } from '../lib/books-lookup';
-import { isLanguageAllowed, isVersionAllowed } from '../lib/context';
 import { fetchChapter } from '../lib/r2';
 import { formatVerse } from '../lib/markdown';
+import {
+  chapterNotFound,
+  resolveBook,
+  resolveChapter,
+  resolveVerseRange,
+  resolveVersion,
+} from '../lib/tool-guards';
 import type { Tool } from '../mcp/types';
 
 function textResult(text: string, isError = false) {
@@ -56,71 +60,49 @@ export const getVerseTool: Tool = {
   },
 
   async handler(args, ctx, executionCtx) {
-    const versionSlug = String(args.version ?? '').toLowerCase().trim();
-    const bookInput = String(args.book ?? '').trim();
-    const chapter = Number(args.chapter);
-    const verseStart = Number(args.verse);
-    const verseEnd = args.verse_end != null ? Number(args.verse_end) : verseStart;
+    const version = resolveVersion(ctx, args.version, { required: true });
+    if (!version.ok) return textResult(version.message, true);
 
-    if (!versionSlug || !bookInput || !chapter || !verseStart) {
-      return textResult(
-        'Parâmetros obrigatórios faltando: version, book, chapter, verse.',
-        true,
-      );
-    }
+    const book = resolveBook(args.book, { required: true });
+    if (!book.ok) return textResult(book.message, true);
 
-    const version = VERSIONS.find((v) => v.slug === versionSlug);
-    if (!version) {
-      return textResult(`Versão "${versionSlug}" não encontrada.`, true);
-    }
-    if (!isVersionAllowed(ctx, versionSlug)) {
-      const allowed = ctx.allowedVersions?.join(', ').toUpperCase() ?? '';
-      return textResult(
-        `A versão **${version.shortName}** não está habilitada nesta conexão.\nVersões disponíveis: ${allowed}`,
-        true,
-      );
-    }
-    if (!isLanguageAllowed(ctx, version.language)) {
-      const allowed = ctx.allowedLanguages?.join(', ') ?? '';
-      return textResult(
-        `O idioma da versão **${version.shortName}** (${version.language}) não está habilitado nesta conexão.\nIdiomas disponíveis: ${allowed}`,
-        true,
-      );
-    }
+    const chapter = resolveChapter(book.value, args.chapter);
+    if (!chapter.ok) return textResult(chapter.message, true);
 
-    const book = lookupBook(bookInput);
-    if (!book) {
-      return textResult(`Livro "${bookInput}" não encontrado.`, true);
-    }
-    if (chapter < 1 || chapter > book.chapters) {
-      return textResult(
-        `Capítulo inválido: ${chapter}. ${book.names.en} tem ${book.chapters} capítulos.`,
-        true,
-      );
-    }
-
-    const verses = await fetchChapter(ctx.env, versionSlug, book.id, chapter, executionCtx);
+    const verses = await fetchChapter(
+      ctx.env,
+      version.value.slug,
+      book.value.id,
+      chapter.value,
+      executionCtx,
+    );
     if (!verses || verses.length === 0) {
       return textResult(
-        `Capítulo não encontrado: ${book.names.en} ${chapter} (${version.shortName}).`,
+        chapterNotFound(book.value, version.value, chapter.value),
         true,
       );
     }
 
-    if (verseStart < 1 || verseStart > verses.length) {
-      return textResult(
-        `Versículo ${verseStart} não existe. ${book.names.en} ${chapter} tem ${verses.length} versículos.`,
-        true,
-      );
-    }
-    if (verseEnd > verses.length || verseEnd < verseStart) {
-      return textResult(
-        `Intervalo inválido: ${verseStart}-${verseEnd}. O capítulo tem ${verses.length} versículos.`,
-        true,
-      );
-    }
+    const start = Number(args.verse);
+    const end = args.verse_end != null ? Number(args.verse_end) : start;
+    const range = resolveVerseRange(
+      book.value,
+      chapter.value,
+      verses.length,
+      start,
+      end,
+    );
+    if (!range.ok) return textResult(range.message, true);
 
-    const slice = verses.slice(verseStart - 1, verseEnd);
-    return textResult(formatVerse(book, version, chapter, verseStart, verseEnd, slice));
+    return textResult(
+      formatVerse(
+        book.value,
+        version.value,
+        chapter.value,
+        range.value.start,
+        range.value.end,
+        verses.slice(range.value.start - 1, range.value.end),
+      ),
+    );
   },
 };

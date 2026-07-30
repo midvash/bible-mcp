@@ -1,13 +1,10 @@
 import { BOOKS, type BookDefinition } from '../data/books';
 import { VERSIONS, type VersionDefinition } from '../data/versions';
 import { lookupBook } from '../lib/books-lookup';
-import {
-  isLanguageAllowed,
-  isVersionAllowed,
-  type ConnectionContext,
-} from '../lib/context';
+import type { ConnectionContext } from '../lib/context';
+import { resolveVersion } from '../lib/tool-guards';
 import { bookNameForVersion } from '../lib/markdown';
-import { fetchChapter } from '../lib/r2';
+import { chapterKey, fetchChapters, type ChapterKey } from '../lib/r2';
 import {
   indexLocaleForLanguage,
   indexVersionForLocale,
@@ -34,12 +31,6 @@ const CROSS_VERSION_OVERFETCH = 3;
  */
 const MAX_CHAPTER_READS = 60;
 
-/**
- * Leituras simultâneas ao R2 dentro de uma busca. Com 24, varrer o maior
- * livro da Bíblia (Salmos, 150 capítulos) cabe em ~7 lotes.
- */
-const READ_CONCURRENCY = 24;
-
 /** Quantas referências não confirmadas listar no rodapé. */
 const MAX_UNVERIFIED_SHOWN = 5;
 
@@ -54,42 +45,6 @@ function clampLimit(value: unknown): number {
 }
 
 const BOOK_BY_ID = new Map<number, BookDefinition>(BOOKS.map((b) => [b.id, b]));
-
-// ─── Leitura de capítulos em lote ────────────────────────────────────────
-
-type ChapterKey = string; // `${bookId}:${chapter}`
-
-const chapterKey = (bookId: number, chapter: number): ChapterKey =>
-  `${bookId}:${chapter}`;
-
-/**
- * Lê vários capítulos de uma versão em paralelo, em lotes. Devolve um mapa
- * chave → versículos; capítulos ausentes ficam de fora do mapa.
- */
-async function fetchChapters(
-  ctx: ConnectionContext,
-  versionSlug: string,
-  keys: Array<[number, number]>,
-  executionCtx: ExecutionContext,
-): Promise<Map<ChapterKey, string[]>> {
-  const out = new Map<ChapterKey, string[]>();
-
-  for (let i = 0; i < keys.length; i += READ_CONCURRENCY) {
-    const batch = keys.slice(i, i + READ_CONCURRENCY);
-    const loaded = await Promise.all(
-      batch.map(([bookId, chapter]) =>
-        fetchChapter(ctx.env, versionSlug, bookId, chapter, executionCtx).then(
-          (verses) => [chapterKey(bookId, chapter), verses] as const,
-        ),
-      ),
-    );
-    for (const [key, verses] of loaded) {
-      if (verses && verses.length > 0) out.set(key, verses);
-    }
-  }
-
-  return out;
-}
 
 // ─── Formatação ──────────────────────────────────────────────────────────
 
@@ -184,7 +139,7 @@ async function renderCrossVersionHits(
     wanted.push([hit.bookId, hit.chapter]);
   }
 
-  const chapters = await fetchChapters(ctx, version.slug, wanted, executionCtx);
+  const chapters = await fetchChapters(ctx.env, version.slug, wanted, executionCtx);
 
   const lines: ResultLine[] = [];
   const unverified: ResultLine[] = [];
@@ -230,7 +185,7 @@ async function scanBook(
     keys.push([book.id, chapter]);
   }
 
-  const chapters = await fetchChapters(ctx, version.slug, keys, executionCtx);
+  const chapters = await fetchChapters(ctx.env, version.slug, keys, executionCtx);
   const lines: ResultLine[] = [];
 
   for (
@@ -320,30 +275,9 @@ export const searchBibleTool: Tool = {
       ? rawQuery.replace(/^["“'](.*)["”']$/, '$1')
       : rawQuery;
 
-    // Resolve a versão — explícita, ou a primeira permitida na conexão.
-    const requested = args.version
-      ? String(args.version).toLowerCase().trim()
-      : '';
-    const versionSlug = requested || ctx.allowedVersions?.[0] || 'nvi';
-
-    const version = VERSIONS.find((v) => v.slug === versionSlug);
-    if (!version) {
-      return textResult(`Version "${versionSlug}" not found.`, true);
-    }
-    if (!isVersionAllowed(ctx, versionSlug)) {
-      const allowed = ctx.allowedVersions?.join(', ').toUpperCase() ?? '';
-      return textResult(
-        `Version **${version.shortName}** is not enabled for this connection.\nAvailable versions: ${allowed}`,
-        true,
-      );
-    }
-    if (!isLanguageAllowed(ctx, version.language)) {
-      const allowed = ctx.allowedLanguages?.join(', ') ?? '';
-      return textResult(
-        `Version **${version.shortName}** uses language ${version.language}, which is not enabled for this connection.\nAvailable languages: ${allowed}`,
-        true,
-      );
-    }
+    const resolved = resolveVersion(ctx, args.version);
+    if (!resolved.ok) return textResult(resolved.message, true);
+    const version = resolved.value;
 
     const limit = clampLimit(args.limit);
 
