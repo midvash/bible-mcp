@@ -8,6 +8,7 @@ import { listBooksTool } from './list-books';
 import { searchStudyTool } from './search-study';
 import { getCommentaryTool } from './get-commentary';
 import { getCrossReferencesTool } from './get-cross-references';
+import { getStrongsTool } from './get-strongs';
 import type { Tool } from '../mcp/types';
 
 /**
@@ -25,6 +26,7 @@ export const TOOLS: Tool[] = [
   getCrossReferencesTool,
   searchStudyTool,
   getCommentaryTool,
+  getStrongsTool,
 ];
 
 const TOOL_BY_NAME: Map<string, Tool> = new Map(
