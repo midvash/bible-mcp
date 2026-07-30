@@ -21,6 +21,13 @@ routes = [
 binding = "R2_BUCKET"
 bucket_name = "bible"
 
+# D1 — índice FTS5 de versículos (search_verses_fts + search_verses_tri).
+# Somente leitura aqui; a população do índice é do pipeline do Midvash.
+[[d1_databases]]
+binding = "SEARCH_DB"
+database_name = "midvash-search"
+database_id = "9b77c700-93cb-453a-84a5-4917d1bd1ad6"
+
 # Observability - Logs e traces para debug
 [observability]
 enabled = true

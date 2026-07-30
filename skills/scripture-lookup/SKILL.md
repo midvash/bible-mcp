@@ -49,8 +49,14 @@ implying one translation is the correct one — that is a judgment for the reade
 
 ## Searching
 
-`search_bible` requires a `version`, because it matches the wording of that
-specific translation. A phrase that exists in one translation may not appear in
-another. If a search returns nothing, try a distinctive keyword instead of a
-full phrase, or search a different version, before concluding the verse does
-not exist.
+`search_bible` matches words in any order and ignores case and accents. Wrap
+the query in double quotes only when the exact wording matters — a phrase that
+exists in one translation may not appear in another. Results come back ranked
+by relevance, so the strongest match is usually first.
+
+`version` is optional; without it the search uses the connection's default.
+Ranking is computed on one reference translation per language, so for other
+versions the footer says which index ranked the results and lists references
+that matched there but are worded differently in the version shown. If a search
+returns nothing, try a distinctive single keyword before concluding the verse
+does not exist.
