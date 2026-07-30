@@ -64,20 +64,33 @@ function tooManyRequests(): Response {
   );
 }
 
+/** Chave fixa do teto agregado — um contador por localidade da Cloudflare. */
+const GLOBAL_LIMIT_KEY = 'mcp-global';
+
 /**
- * Cobra `units` do rate limit por IP. O limiter conta uma unidade por
- * chamada, então um lote de N `tools/call` precisa custar N — sem isso o
- * lote multiplicaria o teto por IP por até MAX_BATCH.
+ * Cobra `units` dos dois limitadores: o do IP e o agregado. Cada um conta uma
+ * unidade por chamada, então um lote de N `tools/call` precisa custar N — sem
+ * isso o lote multiplicaria o teto por até MAX_BATCH.
+ *
+ * O agregado existe porque o limite por IP não segura abuso distribuído: mil
+ * IPs abaixo de 60/min cada somam 60 mil chamadas por minuto.
  */
 async function chargeRateLimit(
-  limiter: RateLimit,
-  key: string,
+  env: Env,
+  ipKey: string,
   units: number,
 ): Promise<boolean> {
-  const checks = await Promise.all(
-    Array.from({ length: units }, () => limiter.limit({ key })),
-  );
-  return checks.every((c) => c.success);
+  const charges: Array<Promise<{ success: boolean }>> = [];
+
+  for (let i = 0; i < units; i++) {
+    if (env.RATE_LIMIT_MCP) charges.push(env.RATE_LIMIT_MCP.limit({ key: ipKey }));
+    if (env.RATE_LIMIT_GLOBAL) {
+      charges.push(env.RATE_LIMIT_GLOBAL.limit({ key: GLOBAL_LIMIT_KEY }));
+    }
+  }
+
+  const results = await Promise.all(charges);
+  return results.every((r) => r.success);
 }
 
 /** Quantas mensagens do payload são `tools/call` — as que custam I/O. */
@@ -118,13 +131,11 @@ async function handleMcpRequest(
     });
   }
 
-  // Rate limit por IP — defesa contra abuso/DoS (POST não é cacheado).
-  // Uma unidade antes de ler o corpo, pra proteger o próprio parse.
+  // Rate limit — defesa contra abuso/DoS (POST não é cacheado). Uma unidade
+  // antes de ler o corpo, pra proteger o próprio parse.
   const clientIp = request.headers.get('CF-Connecting-IP');
-  const limiter = env.RATE_LIMIT_MCP;
-  if (clientIp && limiter) {
-    const { success } = await limiter.limit({ key: clientIp });
-    if (!success) return tooManyRequests();
+  if (clientIp && !(await chargeRateLimit(env, clientIp, 1))) {
+    return tooManyRequests();
   }
 
   // Parse do corpo JSON-RPC
@@ -156,7 +167,7 @@ async function handleMcpRequest(
   // um binding quebrado degrada o serviço em vez de abrir a torneira em silêncio.
   const toolCalls = countToolCalls(payload);
   if (toolCalls > 0) {
-    if (!clientIp || !limiter) {
+    if (!clientIp || !env.RATE_LIMIT_MCP) {
       console.error(
         '[MCP] RATE_LIMIT_MCP indisponível — tools/call recusado (fail-closed).',
       );
@@ -172,7 +183,7 @@ async function handleMcpRequest(
     // A primeira unidade já foi cobrada acima.
     if (
       toolCalls > 1 &&
-      !(await chargeRateLimit(limiter, clientIp, toolCalls - 1))
+      !(await chargeRateLimit(env, clientIp, toolCalls - 1))
     ) {
       return tooManyRequests();
     }

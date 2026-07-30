@@ -1,5 +1,6 @@
 import { TOOLS, getToolByName } from '../tools';
 import type { ConnectionContext } from '../lib/context';
+import { readToolCache, toolCacheKey, writeToolCache } from '../lib/tool-cache';
 import {
   JSON_RPC_ERRORS,
   type JsonRpcRequest,
@@ -106,14 +107,20 @@ export async function handleMcpMessage(
           return error(
             id,
             JSON_RPC_ERRORS.METHOD_NOT_FOUND,
-            `Tool não encontrada: ${toolName}`,
+            `Tool not found: ${toolName}`,
           );
         }
-        const result = await tool.handler(
-          params.arguments ?? {},
-          connectionCtx,
-          executionCtx,
-        );
+
+        // Tools são determinísticas e servem conteúdo público, então a
+        // resposta pode vir do cache do edge — chamada repetida não toca
+        // D1 nem R2.
+        const args = params.arguments ?? {};
+        const cacheKey = await toolCacheKey(toolName, args, connectionCtx);
+        const cached = await readToolCache(cacheKey);
+        if (cached) return success(id, cached);
+
+        const result = await tool.handler(args, connectionCtx, executionCtx);
+        writeToolCache(cacheKey, result, executionCtx);
         return success(id, result);
       }
 

@@ -54,6 +54,26 @@ Ejemplo (Claude Desktop / `mcp.json`):
 | `compare_passage` | Compara el mismo pasaje en múltiples versiones bíblicas. |
 | `list_versions` | Lista las versiones/traducciones bíblicas disponibles. |
 | `list_books` | Lista los 66 libros, opcionalmente filtrados por testamento. |
+| `search_study` | Busca en la biblioteca de estudio — comentarios de capítulo, personajes bíblicos, entradas de diccionario y artículos de teología — en 9 idiomas. |
+| `get_commentary` | Obtiene el comentario del capítulo al que apunta una referencia. Los 1.189 capítulos, en 9 idiomas. |
+
+Las herramientas de estudio devuelven un resumen de hasta 500 caracteres y el
+enlace al artículo completo en [midvash.com](https://midvash.com).
+
+## Límites
+
+El servidor es público y sin autenticación, así que cada solicitud se mide:
+
+| Límite | Valor |
+|---|---|
+| Llamadas de herramienta por IP | 60 por minuto |
+| Tamaño del lote JSON-RPC | 5 mensajes |
+| Techo agregado de llamadas | 1.200 por minuto por localidad de Cloudflare |
+
+Un lote cuesta una unidad por `tools/call`, así que agrupar mensajes no eleva el
+techo por IP. Las respuestas son deterministas y públicas, y se almacenan en
+caché en el edge durante 24 horas — una llamada repetida no cuesta nada y
+responde en una fracción del tiempo.
 
 ## Catálogo actual
 
