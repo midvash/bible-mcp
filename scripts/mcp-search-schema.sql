@@ -50,3 +50,25 @@ CREATE TABLE IF NOT EXISTS search_metadata (
 CREATE INDEX IF NOT EXISTS idx_metadata_locale_type ON search_metadata(locale, type);
 CREATE INDEX IF NOT EXISTS idx_metadata_deeplink ON search_metadata(locale, deeplink);
 CREATE INDEX IF NOT EXISTS idx_metadata_slug ON search_metadata(type, locale, slug);
+
+-- Referências cruzadas ("que outros versículos falam disso?").
+--
+-- Cópia de `bible-config.verse_cross_refs`. O `bible-config` guarda, na mesma
+-- base, usuários, sessões e credenciais de provedor de IA — **nunca** deve ser
+-- ligado a este Worker público. Copiar é o caminho; custo igual, risco nenhum.
+--
+-- `votes` é a força da ligação no dataset de origem: quanto maior, mais fontes
+-- concordam que os dois trechos se relacionam. É a ordenação natural.
+CREATE TABLE IF NOT EXISTS verse_cross_refs (
+  from_book INTEGER NOT NULL,
+  from_ch INTEGER NOT NULL,
+  from_v INTEGER NOT NULL,
+  to_book INTEGER NOT NULL,
+  to_ch INTEGER NOT NULL,
+  to_v_start INTEGER NOT NULL,
+  to_v_end INTEGER NOT NULL,
+  votes INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_xrefs_from
+  ON verse_cross_refs(from_book, from_ch, from_v, votes DESC);

@@ -17,6 +17,10 @@
 set -euo pipefail
 
 SOURCE_DB="midvash-search"
+# Só as referências cruzadas vêm daqui. Este banco guarda também usuários,
+# sessões e credenciais de provedor de IA: é lido pelo CLI com as credenciais
+# de quem roda o script, e NUNCA deve ganhar um binding no Worker.
+XREF_SOURCE_DB="bible-config"
 TARGET_DB="midvash-mcp-search"
 WORKDIR="$(mktemp -d)"
 trap 'rm -rf "$WORKDIR"' EXIT
@@ -34,18 +38,21 @@ npx wrangler d1 execute "$TARGET_DB" --remote --command "
   DROP TABLE IF EXISTS search_metadata_fts;
   DELETE FROM search_verses;
   DELETE FROM search_metadata;
+  DELETE FROM verse_cross_refs;
 "
 
-echo "==> 3/5  Exportando de $SOURCE_DB"
+echo "==> 3/5  Exportando das origens"
 for table in search_verses search_metadata; do
   npx wrangler d1 export "$SOURCE_DB" --remote \
     --table "$table" --no-schema --output "$WORKDIR/$table.sql"
 done
+npx wrangler d1 export "$XREF_SOURCE_DB" --remote \
+  --table verse_cross_refs --no-schema --output "$WORKDIR/verse_cross_refs.sql"
 
 echo "==> 4/5  Carregando em $TARGET_DB"
 # O export traz a lista de colunas em cada INSERT, então a ordem das colunas
 # no destino não precisa bater — só os nomes precisam existir.
-for table in search_verses search_metadata; do
+for table in search_verses search_metadata verse_cross_refs; do
   npx wrangler d1 execute "$TARGET_DB" --remote --file "$WORKDIR/$table.sql"
 done
 
@@ -61,6 +68,7 @@ npx wrangler d1 execute "$TARGET_DB" --remote --command "
     (SELECT COUNT(*) FROM search_verses)   AS verses,
     (SELECT COUNT(*) FROM search_metadata) AS metadata,
     (SELECT COUNT(*) FROM search_verses_fts)   AS verses_fts,
-    (SELECT COUNT(*) FROM search_metadata_fts) AS metadata_fts;
+    (SELECT COUNT(*) FROM search_metadata_fts) AS metadata_fts,
+    (SELECT COUNT(*) FROM verse_cross_refs)    AS cross_refs;
 "
 echo "Pronto. verses e verses_fts devem bater; metadata e metadata_fts também."

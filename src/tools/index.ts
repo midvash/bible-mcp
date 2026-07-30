@@ -7,6 +7,7 @@ import { listVersionsTool } from './list-versions';
 import { listBooksTool } from './list-books';
 import { searchStudyTool } from './search-study';
 import { getCommentaryTool } from './get-commentary';
+import { getCrossReferencesTool } from './get-cross-references';
 import type { Tool } from '../mcp/types';
 
 /**
@@ -21,6 +22,7 @@ export const TOOLS: Tool[] = [
   comparePassageTool,
   listVersionsTool,
   listBooksTool,
+  getCrossReferencesTool,
   searchStudyTool,
   getCommentaryTool,
 ];
