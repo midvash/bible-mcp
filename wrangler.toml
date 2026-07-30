@@ -11,6 +11,16 @@ type = "ratelimit"
 namespace_id = "2001"
 simple = { limit = 60, period = 60 }
 
+# Teto agregado, com chave fixa. O limite por IP acima não segura abuso
+# distribuído por muitos IPs. O contador do binding é local a cada localidade
+# da Cloudflare (documentado), então isto é um teto por datacenter — não um
+# teto global, mas impede que um único colo dispare o custo sozinho.
+[[unsafe.bindings]]
+name = "RATE_LIMIT_GLOBAL"
+type = "ratelimit"
+namespace_id = "2002"
+simple = { limit = 1200, period = 60 }
+
 # Custom domain
 routes = [
   { pattern = "mcp.midvash.com", custom_domain = true }
@@ -20,6 +30,19 @@ routes = [
 [[r2_buckets]]
 binding = "R2_BUCKET"
 bucket_name = "bible"
+
+# D1 — índice do MCP: versículos (FTS5 + trigrama) e material de estudo.
+#
+# Banco próprio, não o `midvash-search` do app web. Três motivos, em
+# scripts/mcp-search-schema.sql: atribuição de custo (o painel reporta métricas
+# por banco), menor privilégio (binding de D1 entrega o banco inteiro, e aqui só
+# há conteúdo público) e independência do pipeline do site.
+#
+# Somente leitura pelo Worker. A carga é scripts/seed-mcp-search.sh.
+[[d1_databases]]
+binding = "SEARCH_DB"
+database_name = "midvash-mcp-search"
+database_id = "146643cc-f8ce-4045-8192-de4d815da26a"
 
 # Observability - Logs e traces para debug
 [observability]

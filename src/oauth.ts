@@ -144,9 +144,63 @@ async function handleRegister(request: Request): Promise<Response> {
 }
 
 /**
- * /oauth/authorize — redireciona imediatamente pro redirect_uri com um
- * code fixo, preservando state. Não há tela de consentimento porque não
- * há usuário nem permissões a conceder.
+ * Hosts autorizados a receber o redirect do /authorize, e seus subdomínios.
+ *
+ * Sem essa lista o endpoint é um open redirect: qualquer pessoa monta
+ * `mcp.midvash.com/oauth/authorize?redirect_uri=https://site-falso/` e usa o
+ * nosso domínio como trampolim de phishing — o que também queima a reputação
+ * de midvash.com. Checar que a URI é absoluta não protege contra isso.
+ *
+ * Clientes MCP nativos fazem callback em loopback; clientes web, no próprio
+ * domínio. Host recusado sai no log (`[OAuth] redirect_uri rejeitado`), então
+ * um cliente legítimo que falte aqui aparece e pode ser adicionado.
+ */
+const ALLOWED_REDIRECT_HOSTS = [
+  'localhost',
+  '127.0.0.1',
+  '[::1]',
+  'claude.ai',
+  'claude.com',
+  'anthropic.com',
+  'cursor.com',
+  'cursor.sh',
+  'openai.com',
+  'chatgpt.com',
+  'smithery.ai',
+  'glama.ai',
+  'midvash.com',
+];
+
+/**
+ * Esquemas de app desktop. Não são navegáveis a partir de uma página web, então
+ * não servem de vetor de phishing — o SO entrega ao app registrado.
+ */
+const ALLOWED_REDIRECT_SCHEMES = new Set([
+  'cursor:',
+  'vscode:',
+  'vscode-insiders:',
+  'windsurf:',
+  'zed:',
+  'claude:',
+]);
+
+function isAllowedRedirect(target: URL): boolean {
+  if (ALLOWED_REDIRECT_SCHEMES.has(target.protocol)) return true;
+  if (target.protocol !== 'http:' && target.protocol !== 'https:') return false;
+
+  const host = target.hostname.toLowerCase();
+  return ALLOWED_REDIRECT_HOSTS.some(
+    (allowed) =>
+      host === allowed ||
+      // Subdomínio só de host com ponto — evita liberar `evil.localhost`.
+      (allowed.includes('.') && host.endsWith(`.${allowed}`)),
+  );
+}
+
+/**
+ * /oauth/authorize — redireciona pro redirect_uri com um code fixo,
+ * preservando state. Não há tela de consentimento porque não há usuário nem
+ * permissões a conceder, mas o destino é restrito à lista acima.
  */
 function handleAuthorize(url: URL): Response {
   const redirectUri = url.searchParams.get('redirect_uri');
@@ -159,8 +213,6 @@ function handleAuthorize(url: URL): Response {
     });
   }
 
-  // Valida que redirect_uri é uma URL absoluta — defesa contra open redirect
-  // mesmo num fluxo público (evita usar nosso domínio como gateway pra phishing).
   let target: URL;
   try {
     target = new URL(redirectUri);
@@ -169,6 +221,22 @@ function handleAuthorize(url: URL): Response {
       status: 400,
       headers: CORS_HEADERS,
     });
+  }
+
+  if (!isAllowedRedirect(target)) {
+    console.warn(
+      `[OAuth] redirect_uri rejeitado: ${target.protocol}//${target.hostname}`,
+    );
+    return new Response(
+      'redirect_uri host is not allowed for this server.\n\n' +
+        'Native MCP clients should use a loopback address (http://localhost:PORT/...).\n' +
+        'If you are a known MCP client and need your host allowed, open an issue at\n' +
+        'https://github.com/midvash/bible-mcp/issues\n',
+      {
+        status: 400,
+        headers: { 'Content-Type': 'text/plain; charset=utf-8', ...CORS_HEADERS },
+      },
+    );
   }
 
   target.searchParams.set('code', PUBLIC_TOKEN);

@@ -47,6 +47,60 @@ function jsonResponse(body: unknown, status = 200): Response {
   });
 }
 
+/**
+ * Tamanho máximo de um lote JSON-RPC.
+ *
+ * Uma `tools/call` pode ler até 150 capítulos do R2 e o Worker tem teto de
+ * 1.000 subrequests por requisição: 5 × 150 = 750 cabe, 10 × 150 não. Clientes
+ * MCP reais mandam uma ou duas mensagens por requisição — o lote grande só
+ * serve pra amplificar abuso.
+ */
+const MAX_BATCH = 5;
+
+function tooManyRequests(): Response {
+  return jsonResponse(
+    jsonRpcError(null, -32000, 'Rate limit exceeded — try again shortly.'),
+    429,
+  );
+}
+
+/** Chave fixa do teto agregado — um contador por localidade da Cloudflare. */
+const GLOBAL_LIMIT_KEY = 'mcp-global';
+
+/**
+ * Cobra `units` dos dois limitadores: o do IP e o agregado. Cada um conta uma
+ * unidade por chamada, então um lote de N `tools/call` precisa custar N — sem
+ * isso o lote multiplicaria o teto por até MAX_BATCH.
+ *
+ * O agregado existe porque o limite por IP não segura abuso distribuído: mil
+ * IPs abaixo de 60/min cada somam 60 mil chamadas por minuto.
+ */
+async function chargeRateLimit(
+  env: Env,
+  ipKey: string,
+  units: number,
+): Promise<boolean> {
+  const charges: Array<Promise<{ success: boolean }>> = [];
+
+  for (let i = 0; i < units; i++) {
+    if (env.RATE_LIMIT_MCP) charges.push(env.RATE_LIMIT_MCP.limit({ key: ipKey }));
+    if (env.RATE_LIMIT_GLOBAL) {
+      charges.push(env.RATE_LIMIT_GLOBAL.limit({ key: GLOBAL_LIMIT_KEY }));
+    }
+  }
+
+  const results = await Promise.all(charges);
+  return results.every((r) => r.success);
+}
+
+/** Quantas mensagens do payload são `tools/call` — as que custam I/O. */
+function countToolCalls(payload: unknown): number {
+  const messages = Array.isArray(payload) ? payload : [payload];
+  return messages.filter(
+    (m) => (m as { method?: unknown } | null)?.method === 'tools/call',
+  ).length;
+}
+
 async function handleMcpRequest(
   request: Request,
   env: Env,
@@ -77,17 +131,11 @@ async function handleMcpRequest(
     });
   }
 
-  // Rate limit por IP — defesa contra abuso/DoS (POST não é cacheado).
-  // Fail-open: se o binding não estiver provisionado, não bloqueia.
+  // Rate limit — defesa contra abuso/DoS (POST não é cacheado). Uma unidade
+  // antes de ler o corpo, pra proteger o próprio parse.
   const clientIp = request.headers.get('CF-Connecting-IP');
-  if (clientIp && env.RATE_LIMIT_MCP) {
-    const { success } = await env.RATE_LIMIT_MCP.limit({ key: clientIp });
-    if (!success) {
-      return jsonResponse(
-        jsonRpcError(null, -32000, 'Rate limit exceeded — tente novamente em instantes.'),
-        429,
-      );
-    }
+  if (clientIp && !(await chargeRateLimit(env, clientIp, 1))) {
+    return tooManyRequests();
   }
 
   // Parse do corpo JSON-RPC
@@ -101,6 +149,46 @@ async function handleMcpRequest(
     );
   }
 
+  // Tamanho do lote antes de cobrar as unidades: um lote gigante deve ser
+  // recusado de graça, não gerar uma cobrança por mensagem primeiro.
+  if (Array.isArray(payload) && payload.length > MAX_BATCH) {
+    return jsonResponse(
+      jsonRpcError(
+        null,
+        JSON_RPC_ERRORS.INVALID_REQUEST,
+        `Batch too large (maximum ${MAX_BATCH} messages).`,
+      ),
+      400,
+    );
+  }
+
+  // `tools/call` é o que gasta dinheiro (leituras de R2 e D1). Sem limiter,
+  // recusa — fail-closed. Handshake, ping e discovery seguem funcionando, então
+  // um binding quebrado degrada o serviço em vez de abrir a torneira em silêncio.
+  const toolCalls = countToolCalls(payload);
+  if (toolCalls > 0) {
+    if (!clientIp || !env.RATE_LIMIT_MCP) {
+      console.error(
+        '[MCP] RATE_LIMIT_MCP indisponível — tools/call recusado (fail-closed).',
+      );
+      return jsonResponse(
+        jsonRpcError(
+          null,
+          -32000,
+          'Tool calls are temporarily unavailable (rate limiter offline).',
+        ),
+        503,
+      );
+    }
+    // A primeira unidade já foi cobrada acima.
+    if (
+      toolCalls > 1 &&
+      !(await chargeRateLimit(env, clientIp, toolCalls - 1))
+    ) {
+      return tooManyRequests();
+    }
+  }
+
   const url = new URL(request.url);
   const connectionCtx = buildConnectionContext(url, nanoId, env);
 
@@ -111,21 +199,8 @@ async function handleMcpRequest(
     } langs=${connectionCtx.allowedLanguages?.join(',') ?? 'all'}`,
   );
 
-  // JSON-RPC permite batch (array de mensagens)
+  // JSON-RPC permite batch (array de mensagens). Tamanho já validado acima.
   if (Array.isArray(payload)) {
-    // Limita o tamanho do batch — sem isso, um único request com milhares de
-    // mensagens amplifica leituras R2/CPU (vetor de DoS). 50 cobre uso legítimo.
-    const MAX_BATCH = 50;
-    if (payload.length > MAX_BATCH) {
-      return jsonResponse(
-        jsonRpcError(
-          null,
-          JSON_RPC_ERRORS.INVALID_REQUEST,
-          `Batch muito grande (máximo ${MAX_BATCH} mensagens).`,
-        ),
-        400,
-      );
-    }
     const responses: JsonRpcResponse[] = [];
     for (const msg of payload) {
       if (!isValidJsonRpcRequest(msg)) {

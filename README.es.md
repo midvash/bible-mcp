@@ -50,10 +50,30 @@ Ejemplo (Claude Desktop / `mcp.json`):
 | `get_verse` | Obtiene un único versículo o un rango de versículos. |
 | `get_chapter` | Obtiene un capítulo completo. |
 | `get_passage` | Obtiene un pasaje a partir de una referencia en texto libre (ej.: "John 3:16-18") — la forma más natural de citar las Escrituras. |
-| `search_bible` | Busca una palabra clave o frase exacta en una versión bíblica, con filtro opcional por libro o testamento. |
+| `search_bible` | Busca palabras o una frase exacta en el texto bíblico, ordenada por relevancia (BM25) sobre un índice FTS5. Ignora mayúsculas y acentos, con filtro opcional por libro o testamento. |
 | `compare_passage` | Compara el mismo pasaje en múltiples versiones bíblicas. |
 | `list_versions` | Lista las versiones/traducciones bíblicas disponibles. |
 | `list_books` | Lista los 66 libros, opcionalmente filtrados por testamento. |
+| `search_study` | Busca en la biblioteca de estudio — comentarios de capítulo, personajes bíblicos, entradas de diccionario y artículos de teología — en 9 idiomas. |
+| `get_commentary` | Obtiene el comentario del capítulo al que apunta una referencia. Los 1.189 capítulos, en 9 idiomas. |
+
+Las herramientas de estudio devuelven un resumen de hasta 500 caracteres y el
+enlace al artículo completo en [midvash.com](https://midvash.com).
+
+## Límites
+
+El servidor es público y sin autenticación, así que cada solicitud se mide:
+
+| Límite | Valor |
+|---|---|
+| Llamadas de herramienta por IP | 60 por minuto |
+| Tamaño del lote JSON-RPC | 5 mensajes |
+| Techo agregado de llamadas | 1.200 por minuto por localidad de Cloudflare |
+
+Un lote cuesta una unidad por `tools/call`, así que agrupar mensajes no eleva el
+techo por IP. Las respuestas son deterministas y públicas, y se almacenan en
+caché en el edge durante 24 horas — una llamada repetida no cuesta nada y
+responde en una fracción del tiempo.
 
 ## Catálogo actual
 
@@ -66,6 +86,19 @@ La URL pública puede limitar ese catálogo por conexión:
 ```
 https://mcp.midvash.com/mcp/{id}?v=nvi,kjv&lang=pt-br,en
 ```
+
+## De dónde vienen los datos
+
+| Almacenamiento | Contenido |
+|---|---|
+| Bucket R2 `bible` | Texto de los capítulos, `{versión}/{libro}/{capítulo}.json`, con caché en el edge |
+| D1 `midvash-mcp-search` | Índice FTS5: 278.682 versículos y 18.792 documentos de estudio |
+
+La base D1 es exclusiva de este MCP. Es una copia, reconstruida por
+[`scripts/seed-mcp-search.sh`](./scripts/seed-mcp-search.sh), y el Worker solo
+lee de ella. Mantenerla separada hace que el panel de Cloudflare reporte el uso
+de este servidor por separado, y que un binding de D1 — que da acceso a la base
+completa — no alcance nada más que contenido bíblico público.
 
 ## Benchmark
 
@@ -87,7 +120,8 @@ MCPs bíblicos.
 ## Roadmap
 
 - Expandir el catálogo del MCP para acompañar la cobertura más amplia de los datos/API Midvash.
-- Mejorar `search_bible` con un índice pregenerado para búsquedas amplias más rápidas.
+- Extender el índice de búsqueda a las versiones restantes y a los textos en
+  hebreo, griego y latín, que aún recurren a un barrido limitado a un libro.
 - Mejorar `compare_passage` con formato más rico para pasajes largos.
 - Agregar herramientas de referencias cruzadas usando
   [`bible-cross-references`](https://github.com/midvash/bible-cross-references).

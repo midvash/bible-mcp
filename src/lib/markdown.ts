@@ -30,6 +30,14 @@ function bookNameFor(book: BookDefinition, version: VersionDefinition): string {
   return book.names[localeForVersion(version)];
 }
 
+/** Nome do livro no idioma da versão — ex.: (João, NVI) → "João". */
+export function bookNameForVersion(
+  book: BookDefinition,
+  version: VersionDefinition,
+): string {
+  return bookNameFor(book, version);
+}
+
 /**
  * Formata um único versículo (ou intervalo) em Markdown.
  *

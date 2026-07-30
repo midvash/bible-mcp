@@ -5,6 +5,8 @@ import { searchBibleTool } from './search-bible';
 import { comparePassageTool } from './compare-passage';
 import { listVersionsTool } from './list-versions';
 import { listBooksTool } from './list-books';
+import { searchStudyTool } from './search-study';
+import { getCommentaryTool } from './get-commentary';
 import type { Tool } from '../mcp/types';
 
 /**
@@ -19,6 +21,8 @@ export const TOOLS: Tool[] = [
   comparePassageTool,
   listVersionsTool,
   listBooksTool,
+  searchStudyTool,
+  getCommentaryTool,
 ];
 
 const TOOL_BY_NAME: Map<string, Tool> = new Map(
