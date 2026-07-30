@@ -87,6 +87,19 @@ The public URL can narrow that catalog per connection:
 https://mcp.midvash.com/mcp/{id}?v=nvi,kjv&lang=pt-br,en
 ```
 
+## Where the data comes from
+
+| Store | Contents |
+|---|---|
+| R2 bucket `bible` | Chapter text, `{version}/{book}/{chapter}.json`, cached at the edge |
+| D1 `midvash-mcp-search` | FTS5 index: 278,682 verses and 18,792 study documents |
+
+The D1 database belongs to this MCP alone. It is a copy, rebuilt by
+[`scripts/seed-mcp-search.sh`](./scripts/seed-mcp-search.sh), and the Worker
+only ever reads from it. Keeping it separate means the Cloudflare dashboard
+reports this server's usage on its own, and a D1 binding — which grants access
+to an entire database — reaches nothing but public Bible content.
+
 ## Benchmark
 
 The Bible MCP landscape has three useful patterns:

@@ -87,6 +87,19 @@ A URL pública pode limitar esse catálogo por conexão:
 https://mcp.midvash.com/mcp/{id}?v=nvi,kjv&lang=pt-br,en
 ```
 
+## De onde vêm os dados
+
+| Armazenamento | Conteúdo |
+|---|---|
+| Bucket R2 `bible` | Texto dos capítulos, `{versão}/{livro}/{capítulo}.json`, com cache no edge |
+| D1 `midvash-mcp-search` | Índice FTS5: 278.682 versículos e 18.792 documentos de estudo |
+
+O banco D1 é exclusivo deste MCP. É uma cópia, reconstruída por
+[`scripts/seed-mcp-search.sh`](./scripts/seed-mcp-search.sh), e o Worker apenas
+lê dela. Mantê-lo separado faz o painel da Cloudflare reportar o uso deste
+servidor isoladamente, e faz com que um binding de D1 — que dá acesso ao banco
+inteiro — não alcance nada além de conteúdo bíblico público.
+
 ## Benchmark
 
 O ecossistema de MCPs bíblicos mostra três padrões úteis:

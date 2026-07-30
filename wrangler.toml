@@ -31,12 +31,18 @@ routes = [
 binding = "R2_BUCKET"
 bucket_name = "bible"
 
-# D1 — índice FTS5 de versículos (search_verses_fts + search_verses_tri).
-# Somente leitura aqui; a população do índice é do pipeline do Midvash.
+# D1 — índice do MCP: versículos (FTS5 + trigrama) e material de estudo.
+#
+# Banco próprio, não o `midvash-search` do app web. Três motivos, em
+# scripts/mcp-search-schema.sql: atribuição de custo (o painel reporta métricas
+# por banco), menor privilégio (binding de D1 entrega o banco inteiro, e aqui só
+# há conteúdo público) e independência do pipeline do site.
+#
+# Somente leitura pelo Worker. A carga é scripts/seed-mcp-search.sh.
 [[d1_databases]]
 binding = "SEARCH_DB"
-database_name = "midvash-search"
-database_id = "9b77c700-93cb-453a-84a5-4917d1bd1ad6"
+database_name = "midvash-mcp-search"
+database_id = "146643cc-f8ce-4045-8192-de4d815da26a"
 
 # Observability - Logs e traces para debug
 [observability]
