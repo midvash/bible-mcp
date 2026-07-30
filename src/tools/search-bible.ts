@@ -3,7 +3,13 @@ import { VERSIONS, type VersionDefinition } from '../data/versions';
 import { lookupBook } from '../lib/books-lookup';
 import type { ConnectionContext } from '../lib/context';
 import { resolveVersion } from '../lib/tool-guards';
-import { bookNameForVersion } from '../lib/markdown';
+import { bookNameForVersion, localeForVersion } from '../lib/markdown';
+import {
+  dualResult,
+  structuredVerse,
+  versionFields,
+  SEARCH_OUTPUT_SCHEMA,
+} from '../lib/structured';
 import { chapterKey, fetchChapters, type ChapterKey } from '../lib/r2';
 import {
   indexLocaleForLanguage,
@@ -53,6 +59,32 @@ interface ResultLine {
   chapter: number;
   verse: number;
   text: string;
+}
+
+type Strategy = 'ranked' | 'ranked-cross-version' | 'substring' | 'scan';
+
+/** Markdown para quem lê, dados para quem processa. */
+function searchResult(
+  query: string,
+  version: VersionDefinition,
+  lines: ResultLine[],
+  notes: string[],
+  strategy: Strategy,
+) {
+  const locale = localeForVersion(version);
+  return dualResult(
+    lines.length === 0
+      ? emptyResult(query, version, notes)
+      : formatResults(query, version, lines, notes),
+    {
+      ...versionFields(version),
+      query,
+      strategy,
+      matches: lines.map((l) =>
+        structuredVerse(l.book, locale, l.chapter, l.verse, l.text),
+      ),
+    },
+  );
 }
 
 function formatResults(
@@ -246,6 +278,7 @@ export const searchBibleTool: Tool = {
       },
       required: ['query'],
     },
+    outputSchema: SEARCH_OUTPUT_SCHEMA,
     annotations: {
       title: 'Search Bible',
       readOnlyHint: true,
@@ -323,11 +356,7 @@ export const searchBibleTool: Tool = {
       const notes = [
         `Scanned all ${chaptersRead} chapters of ${bookNameForVersion(book, version)} in ${version.shortName}. This version is not in the ranked index, so matches appear in canonical order.`,
       ];
-      return textResult(
-        lines.length === 0
-          ? emptyResult(displayQuery, version, notes)
-          : formatResults(displayQuery, version, lines, notes),
-      );
+      return searchResult(displayQuery, version, lines, notes, 'scan');
     }
 
     // ── Estratégias 1 e 2: índice FTS5 ──────────────────────────────────
@@ -351,7 +380,13 @@ export const searchBibleTool: Tool = {
     }
 
     if (result.hits.length === 0) {
-      return textResult(emptyResult(displayQuery, version, notes));
+      return searchResult(
+        displayQuery,
+        version,
+        [],
+        notes,
+        result.strategy === 'trigram' ? 'substring' : 'ranked',
+      );
     }
 
     if (isNative) {
@@ -359,7 +394,13 @@ export const searchBibleTool: Tool = {
       notes.unshift(
         `${lines.length} matches ranked by relevance (BM25) across the whole ${version.shortName} index.`,
       );
-      return textResult(formatResults(displayQuery, version, lines, notes));
+      return searchResult(
+        displayQuery,
+        version,
+        lines,
+        notes,
+        result.strategy === 'trigram' ? 'substring' : 'ranked',
+      );
     }
 
     const { lines, unverified } = await renderCrossVersionHits(
@@ -391,10 +432,12 @@ export const searchBibleTool: Tool = {
       );
     }
 
-    if (lines.length === 0) {
-      return textResult(emptyResult(displayQuery, version, notes));
-    }
-
-    return textResult(formatResults(displayQuery, version, lines, notes));
+    return searchResult(
+      displayQuery,
+      version,
+      lines,
+      notes,
+      result.strategy === 'trigram' ? 'substring' : 'ranked-cross-version',
+    );
   },
 };

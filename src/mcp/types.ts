@@ -51,10 +51,24 @@ export interface ToolInputSchema {
   required?: string[];
 }
 
+/**
+ * Schema do resultado estruturado, quando a tool devolve um.
+ *
+ * Pela spec 2025-06-18, declarar `outputSchema` é um contrato: a resposta
+ * precisa trazer `structuredContent` que valide contra ele. Só as tools que
+ * realmente devolvem estrutura declaram.
+ */
+export interface ToolOutputSchema {
+  type: 'object';
+  properties: Record<string, unknown>;
+  required?: string[];
+}
+
 export interface ToolDefinition {
   name: string;
   description: string;
   inputSchema: ToolInputSchema;
+  outputSchema?: ToolOutputSchema;
   annotations?: {
     title?: string;
     readOnlyHint?: boolean;
@@ -71,6 +85,12 @@ export interface ToolContent {
 
 export interface ToolResult {
   content: ToolContent[];
+  /**
+   * Mesma resposta em forma de dados, para clientes programáticos não terem de
+   * parsear Markdown. O `content` em texto continua sendo enviado, como a spec
+   * exige, para clientes que só mostram texto.
+   */
+  structuredContent?: Record<string, unknown>;
   isError?: boolean;
 }
 

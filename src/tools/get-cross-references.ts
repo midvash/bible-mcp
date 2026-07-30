@@ -1,5 +1,10 @@
 import { crossRefsFor, type CrossRef } from '../lib/cross-refs';
-import { bookNameForVersion } from '../lib/markdown';
+import { bookNameForVersion, localeForVersion } from '../lib/markdown';
+import {
+  dualResult,
+  versionFields,
+  CROSS_REFS_OUTPUT_SCHEMA,
+} from '../lib/structured';
 import { chapterKey, fetchChapters } from '../lib/r2';
 import { parseReference } from '../lib/reference-parser';
 import { resolveVersion } from '../lib/tool-guards';
@@ -58,6 +63,7 @@ export const getCrossReferencesTool: Tool = {
       },
       required: ['reference'],
     },
+    outputSchema: CROSS_REFS_OUTPUT_SCHEMA,
     annotations: {
       title: 'Get cross-references',
       readOnlyHint: true,
@@ -110,6 +116,26 @@ export const getCrossReferencesTool: Tool = {
       );
     }
 
+    const locale = localeForVersion(version.value);
+    const source = {
+      book: book.names[locale],
+      book_id: book.id,
+      chapter,
+      verse: verseStart,
+    };
+    const structuredPassages = (texts: Map<string, string>) =>
+      refs.map((ref) => ({
+        book: ref.book.names[locale],
+        book_id: ref.book.id,
+        chapter: ref.chapter,
+        verse_start: ref.verseStart,
+        verse_end: ref.verseEnd,
+        votes: ref.votes,
+        ...(texts.has(refLabel(ref, version.value))
+          ? { text: texts.get(refLabel(ref, version.value)) }
+          : {}),
+      }));
+
     const includeText = args.include_text !== false;
     const lines = [`## Cross-references for ${sourceLabel}`, ''];
 
@@ -118,7 +144,11 @@ export const getCrossReferencesTool: Tool = {
         lines.push(`- **${refLabel(ref, version.value)}**`);
       }
       lines.push('', `_${refs.length} passages, most widely attested first._`);
-      return textResult(lines.join('\n'));
+      return dualResult(lines.join('\n'), {
+        ...versionFields(version.value),
+        source,
+        passages: structuredPassages(new Map()),
+      });
     }
 
     // Um capítulo pode conter várias referências — deduplica antes de ler.
@@ -138,6 +168,8 @@ export const getCrossReferencesTool: Tool = {
       executionCtx,
     );
 
+    const texts = new Map<string, string>();
+
     for (const ref of refs) {
       const label = refLabel(ref, version.value);
       const verses = chapters.get(chapterKey(ref.book.id, ref.chapter));
@@ -153,6 +185,7 @@ export const getCrossReferencesTool: Tool = {
         .filter((v) => v && v.trim() !== '')
         .join(' ');
 
+      if (text) texts.set(label, text);
       lines.push(`- **${label}** — ${text || '_verse not present in this version._'}`);
     }
 
@@ -161,6 +194,10 @@ export const getCrossReferencesTool: Tool = {
       `_${refs.length} passages, most widely attested first. Text shown in ${version.value.shortName}._`,
     );
 
-    return textResult(lines.join('\n'));
+    return dualResult(lines.join('\n'), {
+      ...versionFields(version.value),
+      source,
+      passages: structuredPassages(texts),
+    });
   },
 };

@@ -1,5 +1,11 @@
 import { fetchChapter } from '../lib/r2';
-import { formatChapter } from '../lib/markdown';
+import { formatChapter, localeForVersion } from '../lib/markdown';
+import {
+  dualResult,
+  structuredVerse,
+  versionFields,
+  VERSES_OUTPUT_SCHEMA,
+} from '../lib/structured';
 import {
   chapterNotFound,
   resolveBook,
@@ -38,6 +44,7 @@ export const getChapterTool: Tool = {
       },
       required: ['version', 'book', 'chapter'],
     },
+    outputSchema: VERSES_OUTPUT_SCHEMA,
     annotations: {
       title: 'Get Bible chapter',
       readOnlyHint: true,
@@ -71,8 +78,19 @@ export const getChapterTool: Tool = {
       );
     }
 
-    return textResult(
+    const locale = localeForVersion(version.value);
+
+    return dualResult(
       formatChapter(book.value, version.value, chapter.value, verses),
+      {
+        ...versionFields(version.value),
+        verses: verses
+          .map((text, i) =>
+            structuredVerse(book.value, locale, chapter.value, i + 1, text),
+          )
+          // Alguns capítulos têm buracos no dado de origem.
+          .filter((v) => v.text.trim() !== ''),
+      },
     );
   },
 };

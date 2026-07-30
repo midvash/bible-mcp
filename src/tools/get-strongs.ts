@@ -5,6 +5,10 @@ import {
   type StrongsEntry,
   type StrongsLanguage,
 } from '../lib/strongs';
+import {
+  dualResult,
+  STRONGS_OUTPUT_SCHEMA,
+} from '../lib/structured';
 import type { Tool } from '../mcp/types';
 import { resolveStudyLocale } from './search-study';
 
@@ -26,6 +30,23 @@ function normalizeLanguage(value: unknown): StrongsLanguage | undefined {
   if (v === 'hebrew' || v === 'hebraico' || v === 'he') return 'hebrew';
   if (v === 'greek' || v === 'grego' || v === 'gr') return 'greek';
   return undefined;
+}
+
+/** Verbete em forma de dados, com as chaves do outputSchema. */
+function structuredEntry(entry: StrongsEntry) {
+  return {
+    id: entry.id,
+    number: entry.number,
+    language: entry.language,
+    lemma: entry.lemma,
+    transliteration: entry.transliteration,
+    pronunciation: entry.pronunciation,
+    part_of_speech: entry.partOfSpeech,
+    derivation: entry.derivation,
+    definition: entry.definition,
+    kjv_definition: entry.kjvDefinition,
+    outline: entry.outline,
+  };
 }
 
 function formatEntry(entry: StrongsEntry): string {
@@ -84,6 +105,7 @@ export const getStrongsTool: Tool = {
         },
       },
     },
+    outputSchema: STRONGS_OUTPUT_SCHEMA,
     annotations: {
       title: "Get Strong's lexicon entry",
       readOnlyHint: true,
@@ -138,7 +160,9 @@ export const getStrongsTool: Tool = {
         );
       }
 
-      return textResult(formatEntry(entry));
+      return dualResult(formatEntry(entry), {
+        entries: [structuredEntry(entry)],
+      });
     }
 
     const entries = await strongsByWord(
@@ -160,6 +184,8 @@ export const getStrongsTool: Tool = {
         ? `## Strong's entry for "${wordInput}"`
         : `## ${entries.length} Strong's entries for "${wordInput}"`;
 
-    return textResult([header, '', ...entries.map(formatEntry)].join('\n\n'));
+    return dualResult([header, '', ...entries.map(formatEntry)].join('\n\n'), {
+      entries: entries.map(structuredEntry),
+    });
   },
 };

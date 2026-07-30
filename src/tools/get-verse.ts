@@ -1,5 +1,11 @@
 import { fetchChapter } from '../lib/r2';
-import { formatVerse } from '../lib/markdown';
+import { formatVerse, localeForVersion } from '../lib/markdown';
+import {
+  dualResult,
+  structuredVerse,
+  versionFields,
+  VERSES_OUTPUT_SCHEMA,
+} from '../lib/structured';
 import {
   chapterNotFound,
   resolveBook,
@@ -50,6 +56,7 @@ export const getVerseTool: Tool = {
       },
       required: ['version', 'book', 'chapter', 'verse'],
     },
+    outputSchema: VERSES_OUTPUT_SCHEMA,
     annotations: {
       title: 'Get Bible verse',
       readOnlyHint: true,
@@ -94,15 +101,30 @@ export const getVerseTool: Tool = {
     );
     if (!range.ok) return textResult(range.message, true);
 
-    return textResult(
+    const selected = verses.slice(range.value.start - 1, range.value.end);
+    const locale = localeForVersion(version.value);
+
+    return dualResult(
       formatVerse(
         book.value,
         version.value,
         chapter.value,
         range.value.start,
         range.value.end,
-        verses.slice(range.value.start - 1, range.value.end),
+        selected,
       ),
+      {
+        ...versionFields(version.value),
+        verses: selected.map((text, i) =>
+          structuredVerse(
+            book.value,
+            locale,
+            chapter.value,
+            range.value.start + i,
+            text,
+          ),
+        ),
+      },
     );
   },
 };

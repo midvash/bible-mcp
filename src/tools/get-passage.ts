@@ -1,6 +1,18 @@
 import type { BookDefinition } from '../data/books';
 import type { VersionDefinition } from '../data/versions';
-import { bookNameForVersion, formatChapter, formatVerse } from '../lib/markdown';
+import {
+  bookNameForVersion,
+  formatChapter,
+  formatVerse,
+  localeForVersion,
+} from '../lib/markdown';
+import {
+  dualResult,
+  structuredVerse,
+  versionFields,
+  VERSES_OUTPUT_SCHEMA,
+  type StructuredVerse,
+} from '../lib/structured';
 import { chapterKey, fetchChapters } from '../lib/r2';
 import {
   MAX_REFERENCES,
@@ -133,6 +145,7 @@ export const getPassageTool: Tool = {
       },
       required: ['reference'],
     },
+    outputSchema: VERSES_OUTPUT_SCHEMA,
     annotations: {
       title: 'Get Bible passage',
       readOnlyHint: true,
@@ -182,6 +195,8 @@ export const getPassageTool: Tool = {
 
     const sections: string[] = [];
     const missing: string[] = [];
+    const structured: StructuredVerse[] = [];
+    const locale = localeForVersion(version.value);
 
     for (const reference of parsed.references) {
       const first = chapters.get(chapterKey(reference.book.id, reference.chapter));
@@ -195,6 +210,27 @@ export const getPassageTool: Tool = {
           ? formatCrossChapter(reference, version.value, chapters)
           : formatSingleChapter(reference, version.value, first),
       );
+
+      // Mesmo recorte que o Markdown, em forma de dados.
+      const lastChapter = reference.endChapter ?? reference.chapter;
+      for (let c = reference.chapter; c <= lastChapter; c++) {
+        const verses = chapters.get(chapterKey(reference.book.id, c));
+        if (!verses) continue;
+
+        const from = c === reference.chapter ? (reference.verseStart ?? 1) : 1;
+        const to =
+          c === lastChapter
+            ? Math.min(reference.verseEnd ?? verses.length, verses.length)
+            : verses.length;
+
+        for (let v = from; v <= to; v++) {
+          const text = verses[v - 1];
+          if (!text || text.trim() === '') continue;
+          structured.push(
+            structuredVerse(reference.book, locale, c, v, text),
+          );
+        }
+      }
     }
 
     if (sections.length === 0) {
@@ -216,6 +252,9 @@ export const getPassageTool: Tool = {
       );
     }
 
-    return textResult(sections.join('\n\n'));
+    return dualResult(sections.join('\n\n'), {
+      ...versionFields(version.value),
+      verses: structured,
+    });
   },
 };
