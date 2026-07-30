@@ -45,6 +45,24 @@ CREATE VIRTUAL TABLE IF NOT EXISTS search_metadata_fts USING fts5(
   tokenize='unicode61 remove_diacritics 2'
 );
 
-INSERT INTO search_verses_fts(search_verses_fts) VALUES('rebuild');
-INSERT INTO search_verses_tri(search_verses_tri) VALUES('rebuild');
-INSERT INTO search_metadata_fts(search_metadata_fts) VALUES('rebuild');
+-- ATENÇÃO: este arquivo só CRIA as tabelas. A população dos índices ficou
+-- fora daqui de propósito.
+--
+-- `INSERT INTO t(t) VALUES('rebuild')` reindexa a tabela inteira numa única
+-- instrução. Com 278 mil versículos isso passava; com 1,2 milhão o D1 devolve
+-- `internal error [code: 7500]` e nada é indexado — a busca fica silenciosamente
+-- vazia, porque `COUNT(*)` numa tabela FTS5 de conteúdo externo conta as linhas
+-- da tabela de conteúdo, não do índice. O contador bate mesmo com o índice vazio.
+--
+-- O `rebuild` do índice de metadados e o do `search_verses_fts` ainda cabem numa
+-- instrução; o de trigrama, não — ele é várias vezes maior.
+--
+-- A população é feita por scripts/seed-mcp-versions.mjs, uma versão por
+-- instrução (~31 mil linhas cada). Depois de carregar dados novos, rode:
+--
+--   node scripts/seed-mcp-versions.mjs --reindex
+--
+-- e confira com uma consulta de verdade, não com COUNT(*):
+--
+--   SELECT COUNT(*) FROM search_verses_fts
+--    WHERE search_verses_fts MATCH '"amor"' AND version='nvi';

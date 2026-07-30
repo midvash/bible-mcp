@@ -139,7 +139,13 @@ export interface IndexHit {
 }
 
 export interface SearchIndexOptions {
-  locale: IndexLocale;
+  /**
+   * Slug da versão a buscar. Desde que as 35 versões do catálogo entraram no
+   * índice, cada uma é buscada em si mesma — antes o índice tinha só uma
+   * versão de referência por idioma, e o ranking de uma versão vinha
+   * emprestado de outra.
+   */
+  version: string;
   /** Restringe a um livro (1..66). */
   bookId?: number;
   /** Restringe a um testamento. Ignorado quando `bookId` está definido. */
@@ -170,8 +176,8 @@ async function runFts(
   match: string,
   opts: SearchIndexOptions,
 ): Promise<IndexHit[]> {
-  const filters: string[] = [`${table} MATCH ?`, 'locale = ?'];
-  const params: unknown[] = [match, opts.locale];
+  const filters: string[] = [`${table} MATCH ?`, 'version = ?'];
+  const params: unknown[] = [match, opts.version];
 
   if (opts.bookId !== undefined) {
     filters.push('book_id = ?');

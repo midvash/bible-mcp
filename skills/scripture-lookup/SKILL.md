@@ -19,9 +19,30 @@ return the exact wording of the version you name.
 | You remember wording but not where it is | `search_bible` |
 | You need the same passage in several versions | `compare_passage` |
 | You need to know what is available | `list_versions`, `list_books` |
+| You want related passages ("what else speaks to this?") | `get_cross_references` |
+| You need background on a chapter, a person, or a term | `search_study`, `get_commentary` |
+| The question is what an original-language word means | `get_strongs` |
 
 `get_passage` is the usual entry point — it parses natural references and
-accepts book names in the user's own language, so it saves a lookup step.
+accepts book names in the user's own language, so it saves a lookup step. It
+also takes ranges that cross chapters ("Romans 8:1-9:5") and several references
+at once ("John 3:16; Romans 8:1"), so a passage list is one call, not five.
+
+For study, the natural order is: read the passage, call `get_commentary` for the
+chapter's context, then `get_cross_references` on the verse that carries the
+weight. The server also ships ready-made prompts — sermon preparation, a
+devotional, a word study, a translation comparison — if the client exposes them.
+
+## Original languages
+
+`get_strongs` takes a Strong's number ("H430", "G2316") or the word itself, in
+the original script or transliterated ("elohim", "θεός"), and returns the lemma,
+the senses, and how the KJV renders it, translated into the requested language.
+
+**There is no word-by-word mapping between a verse and its Strong's numbers.**
+The morphological source this server has access to arrives without those tags.
+If you are not certain which entry a given word in a verse maps to, say so
+instead of asserting one.
 
 ## Rules
 

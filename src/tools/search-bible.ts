@@ -1,5 +1,5 @@
 import { BOOKS, type BookDefinition } from '../data/books';
-import { VERSIONS, type VersionDefinition } from '../data/versions';
+import type { VersionDefinition } from '../data/versions';
 import { lookupBook } from '../lib/books-lookup';
 import type { ConnectionContext } from '../lib/context';
 import { resolveVersion } from '../lib/tool-guards';
@@ -10,10 +10,8 @@ import {
   versionFields,
   SEARCH_OUTPUT_SCHEMA,
 } from '../lib/structured';
-import { chapterKey, fetchChapters, type ChapterKey } from '../lib/r2';
+import { chapterKey, fetchChapters } from '../lib/r2';
 import {
-  indexLocaleForLanguage,
-  indexVersionForLocale,
   parseQuery,
   searchIndex,
   textMatchesQuery,
@@ -24,21 +22,6 @@ import type { Tool } from '../mcp/types';
 
 const DEFAULT_LIMIT = 20;
 const MAX_LIMIT = 50;
-
-/**
- * Quantos hits pedir ao índice quando o texto será exibido em outra versão:
- * parte dos resultados é descartada na conferência, então pedimos folga.
- */
-const CROSS_VERSION_OVERFETCH = 3;
-
-/**
- * Teto de leituras de capítulo por busca. O Worker tem limite de subrequests
- * por requisição — este teto garante que nenhuma busca chegue perto dele.
- */
-const MAX_CHAPTER_READS = 60;
-
-/** Quantas referências não confirmadas listar no rodapé. */
-const MAX_UNVERIFIED_SHOWN = 5;
 
 function textResult(text: string, isError = false) {
   return { content: [{ type: 'text' as const, text }], isError };
@@ -139,70 +122,12 @@ function renderNativeHits(hits: IndexHit[], limit: number): ResultLine[] {
   return lines;
 }
 
-// ─── Estratégia 2: índice de um idioma, texto de outra versão ────────────
-
-interface CrossVersionRender {
-  lines: ResultLine[];
-  /** Referências que casaram no índice mas não na redação da versão pedida. */
-  unverified: ResultLine[];
-}
+// ─── Estratégia 2: varredura limitada a um livro ─────────────────────────
 
 /**
- * O índice dá as referências ranqueadas e o texto vem do R2 da versão
- * pedida. Como as traduções diferem, cada versículo é conferido contra a
- * query — os que não batem vão para `unverified` em vez de sumirem.
- */
-async function renderCrossVersionHits(
-  ctx: ConnectionContext,
-  version: VersionDefinition,
-  hits: IndexHit[],
-  parsed: ParsedQuery,
-  limit: number,
-  executionCtx: ExecutionContext,
-): Promise<CrossVersionRender> {
-  // Um capítulo pode conter vários hits — deduplica antes de ler.
-  const wanted: Array<[number, number]> = [];
-  const seen = new Set<ChapterKey>();
-  for (const hit of hits) {
-    const key = chapterKey(hit.bookId, hit.chapter);
-    if (seen.has(key)) continue;
-    seen.add(key);
-    if (wanted.length >= MAX_CHAPTER_READS) break;
-    wanted.push([hit.bookId, hit.chapter]);
-  }
-
-  const chapters = await fetchChapters(ctx.env, version.slug, wanted, executionCtx);
-
-  const lines: ResultLine[] = [];
-  const unverified: ResultLine[] = [];
-
-  for (const hit of hits) {
-    if (lines.length >= limit) break;
-
-    const book = BOOK_BY_ID.get(hit.bookId);
-    if (!book) continue;
-
-    const verses = chapters.get(chapterKey(hit.bookId, hit.chapter));
-    const text = verses?.[hit.verse - 1];
-    if (!text) continue; // versículo não existe nesta versão
-
-    const line = { book, chapter: hit.chapter, verse: hit.verse, text };
-    if (textMatchesQuery(text, parsed)) {
-      lines.push(line);
-    } else if (unverified.length < MAX_UNVERIFIED_SHOWN) {
-      unverified.push(line);
-    }
-  }
-
-  return { lines, unverified };
-}
-
-// ─── Estratégia 3: varredura limitada a um livro ─────────────────────────
-
-/**
- * Versões em hebraico, grego e latim não estão no índice FTS5. Para elas a
- * busca varre o R2, e só com filtro de livro — assim o número de leituras
- * fica limitado ao maior livro da Bíblia (Salmos, 150 capítulos).
+ * Rede de segurança para quando o índice não está acessível. Varre o R2, e só
+ * com filtro de livro — assim o número de leituras fica limitado ao maior livro
+ * da Bíblia (Salmos, 150 capítulos).
  */
 async function scanBook(
   ctx: ConnectionContext,
@@ -327,19 +252,25 @@ export const searchBibleTool: Tool = {
         ? args.testament
         : undefined;
 
-    const locale = indexLocaleForLanguage(version.language);
+    // ── Varredura: sem índice, ou hebraico ───────────────────────────────
+    //
+    // O tokenizer `unicode61 remove_diacritics 2` do FTS5 remove diacríticos
+    // latinos e gregos, mas **não** o niqqud hebraico: no índice, אֱלֹהִים fica
+    // com as vogais, e quem digita as consoantes soltas (אלהים) não casa nada.
+    // A varredura usa `normalizeText`, que remove o niqqud, então para o
+    // hebraico ela é o caminho correto — mais lenta, e exigindo filtro de
+    // livro, mas com o resultado certo.
+    const needsScan = version.language === 'he';
 
-    // ── Estratégia 3: idioma fora do índice, ou índice indisponível ──────
-    if (!locale || !ctx.env.SEARCH_DB) {
+    if (needsScan || !ctx.env.SEARCH_DB) {
       if (!book) {
-        const reason = locale
-          ? 'The search index is unavailable right now'
-          : `Version **${version.shortName}** is in ${version.language}, which the search index does not cover`;
         return textResult(
           [
-            `${reason}, so searching it requires a **book** filter.`,
+            needsScan
+              ? `Searching **${version.shortName}** requires a **book** filter: Hebrew is indexed with its vowel points, so it is scanned instead of ranked.`
+              : 'The search index is unavailable right now, so searching requires a **book** filter.',
             '',
-            `Retry with \`book\` set (ex.: \`book: "Psalms"\`), or search a modern-language version and read the result in ${version.shortName} with \`compare_passage\`.`,
+            'Retry with `book` set (ex.: `book: "Genesis"`).',
           ].join('\n'),
           true,
         );
@@ -353,91 +284,38 @@ export const searchBibleTool: Tool = {
         limit,
         executionCtx,
       );
-      const notes = [
-        `Scanned all ${chaptersRead} chapters of ${bookNameForVersion(book, version)} in ${version.shortName}. This version is not in the ranked index, so matches appear in canonical order.`,
-      ];
-      return searchResult(displayQuery, version, lines, notes, 'scan');
+      return searchResult(displayQuery, version, lines, [
+        `Scanned all ${chaptersRead} chapters of ${bookNameForVersion(book, version)} in ${version.shortName}. ${
+          needsScan
+            ? 'Hebrew is indexed with its vowel points, so this version is scanned rather than ranked'
+            : 'The ranked index was unavailable'
+        }, and matches appear in canonical order.`,
+      ], 'scan');
     }
 
-    // ── Estratégias 1 e 2: índice FTS5 ──────────────────────────────────
-    const indexVersion = indexVersionForLocale(locale);
-    const isNative = indexVersion === version.slug;
-
+    // ── Índice FTS5: toda versão é buscada em si mesma ──────────────────
     const result = await searchIndex(ctx.env, parsed, {
-      locale,
+      version: version.slug,
       bookId: book?.id,
       testament: book ? undefined : testament,
-      limit: isNative
-        ? limit
-        : Math.min(limit * CROSS_VERSION_OVERFETCH, MAX_LIMIT * 3),
+      limit,
     });
 
     const notes: string[] = [];
+    const strategy = result.strategy === 'trigram' ? 'substring' : 'ranked';
     if (result.strategy === 'trigram') {
       notes.push(
         'No whole-word matches, so these come from substring matching (partial words).',
       );
     }
 
-    if (result.hits.length === 0) {
-      return searchResult(
-        displayQuery,
-        version,
-        [],
-        notes,
-        result.strategy === 'trigram' ? 'substring' : 'ranked',
-      );
-    }
-
-    if (isNative) {
-      const lines = renderNativeHits(result.hits, limit);
+    const lines = renderNativeHits(result.hits, limit);
+    if (lines.length > 0) {
       notes.unshift(
         `${lines.length} matches ranked by relevance (BM25) across the whole ${version.shortName} index.`,
       );
-      return searchResult(
-        displayQuery,
-        version,
-        lines,
-        notes,
-        result.strategy === 'trigram' ? 'substring' : 'ranked',
-      );
     }
 
-    const { lines, unverified } = await renderCrossVersionHits(
-      ctx,
-      version,
-      result.hits,
-      parsed,
-      limit,
-      executionCtx,
-    );
-
-    const indexShortName =
-      VERSIONS.find((v) => v.slug === indexVersion)?.shortName ??
-      indexVersion.toUpperCase();
-
-    notes.unshift(
-      `${lines.length} matches. Ranking comes from the ${indexShortName} index for ${version.language}; the text shown is ${version.shortName}.`,
-    );
-
-    if (unverified.length > 0) {
-      const refs = unverified
-        .map(
-          (u) =>
-            `${bookNameForVersion(u.book, version)} ${u.chapter}:${u.verse}`,
-        )
-        .join(', ');
-      notes.push(
-        `Also matched in ${indexShortName} but worded differently in ${version.shortName}: ${refs}.`,
-      );
-    }
-
-    return searchResult(
-      displayQuery,
-      version,
-      lines,
-      notes,
-      result.strategy === 'trigram' ? 'substring' : 'ranked-cross-version',
-    );
+    return searchResult(displayQuery, version, lines, notes, strategy);
   },
 };
