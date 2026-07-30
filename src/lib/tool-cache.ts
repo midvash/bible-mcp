@@ -14,10 +14,16 @@ import type { ToolResult } from '../mcp/types';
  */
 
 /**
- * Muda quando o formato de saída de alguma tool muda — entradas antigas
- * deixam de casar e o cache se renova sozinho, sem purge manual.
+ * Faz parte da chave: mudar aqui invalida todo o cache de uma vez, sem purge.
+ *
+ * **Suba este número em todo deploy que mude a saída de alguma tool.** O TTL é
+ * de 24 horas, então sem isso um cliente continua recebendo a resposta gerada
+ * pelo código anterior por até um dia depois do deploy — com o Markdown antigo,
+ * as mensagens antigas e sem os campos novos.
+ *
+ * v1 → v2: saída em inglês, `structuredContent`, e o ranking por versão.
  */
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 
 /** Um dia. O texto bíblico não muda; o teto existe só para limitar staleness. */
 const CACHE_TTL_SECONDS = 86400;
