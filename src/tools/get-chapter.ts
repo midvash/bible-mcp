@@ -1,8 +1,17 @@
-import { VERSIONS } from '../data/versions';
-import { lookupBook } from '../lib/books-lookup';
-import { isLanguageAllowed, isVersionAllowed } from '../lib/context';
 import { fetchChapter } from '../lib/r2';
-import { formatChapter } from '../lib/markdown';
+import { formatChapter, localeForVersion } from '../lib/markdown';
+import {
+  dualResult,
+  structuredVerse,
+  versionFields,
+  VERSES_OUTPUT_SCHEMA,
+} from '../lib/structured';
+import {
+  chapterNotFound,
+  resolveBook,
+  resolveChapter,
+  resolveVersion,
+} from '../lib/tool-guards';
 import type { Tool } from '../mcp/types';
 
 function textResult(text: string, isError = false) {
@@ -35,6 +44,7 @@ export const getChapterTool: Tool = {
       },
       required: ['version', 'book', 'chapter'],
     },
+    outputSchema: VERSES_OUTPUT_SCHEMA,
     annotations: {
       title: 'Get Bible chapter',
       readOnlyHint: true,
@@ -45,55 +55,42 @@ export const getChapterTool: Tool = {
   },
 
   async handler(args, ctx, executionCtx) {
-    const versionSlug = String(args.version ?? '').toLowerCase().trim();
-    const bookInput = String(args.book ?? '').trim();
-    const chapter = Number(args.chapter);
+    const version = resolveVersion(ctx, args.version, { required: true });
+    if (!version.ok) return textResult(version.message, true);
 
-    if (!versionSlug || !bookInput || !chapter) {
-      return textResult(
-        'Parâmetros obrigatórios faltando: version, book, chapter.',
-        true,
-      );
-    }
+    const book = resolveBook(args.book, { required: true });
+    if (!book.ok) return textResult(book.message, true);
 
-    const version = VERSIONS.find((v) => v.slug === versionSlug);
-    if (!version) {
-      return textResult(`Versão "${versionSlug}" não encontrada.`, true);
-    }
-    if (!isVersionAllowed(ctx, versionSlug)) {
-      const allowed = ctx.allowedVersions?.join(', ').toUpperCase() ?? '';
-      return textResult(
-        `A versão **${version.shortName}** não está habilitada nesta conexão.\nVersões disponíveis: ${allowed}`,
-        true,
-      );
-    }
-    if (!isLanguageAllowed(ctx, version.language)) {
-      const allowed = ctx.allowedLanguages?.join(', ') ?? '';
-      return textResult(
-        `O idioma da versão **${version.shortName}** (${version.language}) não está habilitado nesta conexão.\nIdiomas disponíveis: ${allowed}`,
-        true,
-      );
-    }
+    const chapter = resolveChapter(book.value, args.chapter);
+    if (!chapter.ok) return textResult(chapter.message, true);
 
-    const book = lookupBook(bookInput);
-    if (!book) {
-      return textResult(`Livro "${bookInput}" não encontrado.`, true);
-    }
-    if (chapter < 1 || chapter > book.chapters) {
-      return textResult(
-        `Capítulo inválido: ${chapter}. ${book.names.en} tem ${book.chapters} capítulos.`,
-        true,
-      );
-    }
-
-    const verses = await fetchChapter(ctx.env, versionSlug, book.id, chapter, executionCtx);
+    const verses = await fetchChapter(
+      ctx.env,
+      version.value.slug,
+      book.value.id,
+      chapter.value,
+      executionCtx,
+    );
     if (!verses || verses.length === 0) {
       return textResult(
-        `Capítulo não encontrado: ${book.names.en} ${chapter} (${version.shortName}).`,
+        chapterNotFound(book.value, version.value, chapter.value),
         true,
       );
     }
 
-    return textResult(formatChapter(book, version, chapter, verses));
+    const locale = localeForVersion(version.value);
+
+    return dualResult(
+      formatChapter(book.value, version.value, chapter.value, verses),
+      {
+        ...versionFields(version.value),
+        verses: verses
+          .map((text, i) =>
+            structuredVerse(book.value, locale, chapter.value, i + 1, text),
+          )
+          // Alguns capítulos têm buracos no dado de origem.
+          .filter((v) => v.text.trim() !== ''),
+      },
+    );
   },
 };

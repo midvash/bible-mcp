@@ -56,9 +56,19 @@ Example (Claude Desktop / `mcp.json`):
 | `list_books` | List the 66 books, optionally filtered by testament. |
 | `search_study` | Search the study library — chapter commentaries, Bible characters, dictionary entries and theology articles — in 9 languages. |
 | `get_commentary` | Fetch the commentary for the chapter a reference points to. All 1,189 chapters, in 9 languages. |
+| `get_cross_references` | Find other passages that relate to a verse, ranked by how widely the link is attested. 343,546 links. |
+| `get_strongs` | Look up a word in Strong's lexicon by number ("H430") or by the word itself. 14,197 entries, definitions in 9 languages. |
 
 Study tools return a summary of up to 500 characters plus a link to the full
 article on [midvash.com](https://midvash.com).
+Beyond tools, the server exposes **Resources** — `bible://{version}/{book}/{chapter}`
+addresses the text directly — and four study **Prompts**: sermon preparation, a
+devotional, a word study, and a translation comparison. Book and version
+arguments support autocompletion.
+
+Tools that return data also return `structuredContent` alongside the Markdown,
+so a client does not have to parse formatted text.
+
 
 ## Limits
 
@@ -92,13 +102,18 @@ https://mcp.midvash.com/mcp/{id}?v=nvi,kjv&lang=pt-br,en
 | Store | Contents |
 |---|---|
 | R2 bucket `bible` | Chapter text, `{version}/{book}/{chapter}.json`, cached at the edge |
-| D1 `midvash-mcp-search` | FTS5 index: 278,682 verses and 18,792 study documents |
+| D1 `midvash-mcp-search` | FTS5 index: 1,224,921 verses and 18,792 study documents |
 
 The D1 database belongs to this MCP alone. It is a copy, rebuilt by
 [`scripts/seed-mcp-search.sh`](./scripts/seed-mcp-search.sh), and the Worker
 only ever reads from it. Keeping it separate means the Cloudflare dashboard
 reports this server's usage on its own, and a D1 binding — which grants access
 to an entire database — reaches nothing but public Bible content.
+
+Search is ranked per version. The five Hebrew texts (WLC, BHS, ALEPPO, MH,
+OSMH) are the exception: SQLite's tokenizer does not strip Hebrew vowel points,
+so those versions are scanned per book instead of ranked, and `search_bible`
+asks for a `book` filter when one of them is used.
 
 ## Benchmark
 

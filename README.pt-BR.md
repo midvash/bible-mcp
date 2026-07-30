@@ -56,9 +56,19 @@ Exemplo (Claude Desktop / `mcp.json`):
 | `list_books` | Lista os 66 livros, opcionalmente filtrados por testamento. |
 | `search_study` | Busca na biblioteca de estudo — comentários de capítulo, personagens bíblicos, verbetes de dicionário e artigos de teologia — em 9 idiomas. |
 | `get_commentary` | Busca o comentário do capítulo a que uma referência aponta. Os 1.189 capítulos, em 9 idiomas. |
+| `get_cross_references` | Encontra outras passagens relacionadas a um versículo, ordenadas pela força da ligação. 343.546 ligações. |
+| `get_strongs` | Consulta uma palavra no léxico Strong por número ("H430") ou pela própria palavra. 14.197 verbetes, definições em 9 idiomas. |
 
 As ferramentas de estudo devolvem um resumo de até 500 caracteres e o link para
 o artigo completo em [midvash.com](https://midvash.com).
+Além das ferramentas, o servidor expõe **Resources** — `bible://{versão}/{livro}/{capítulo}`
+endereça o texto diretamente — e quatro **Prompts** de estudo: preparo de sermão,
+devocional, estudo de palavra e comparação de traduções. Argumentos de livro e
+versão têm autocompletar.
+
+As ferramentas que devolvem dados também devolvem `structuredContent` junto do
+Markdown, para o cliente não precisar interpretar texto formatado.
+
 
 ## Limites
 
@@ -92,13 +102,18 @@ https://mcp.midvash.com/mcp/{id}?v=nvi,kjv&lang=pt-br,en
 | Armazenamento | Conteúdo |
 |---|---|
 | Bucket R2 `bible` | Texto dos capítulos, `{versão}/{livro}/{capítulo}.json`, com cache no edge |
-| D1 `midvash-mcp-search` | Índice FTS5: 278.682 versículos e 18.792 documentos de estudo |
+| D1 `midvash-mcp-search` | Índice FTS5: 1.224.921 versículos e 18.792 documentos de estudo |
 
 O banco D1 é exclusivo deste MCP. É uma cópia, reconstruída por
 [`scripts/seed-mcp-search.sh`](./scripts/seed-mcp-search.sh), e o Worker apenas
 lê dela. Mantê-lo separado faz o painel da Cloudflare reportar o uso deste
 servidor isoladamente, e faz com que um binding de D1 — que dá acesso ao banco
 inteiro — não alcance nada além de conteúdo bíblico público.
+
+A busca é ranqueada por versão. As cinco em hebraico (WLC, BHS, ALEPPO, MH,
+OSMH) são a exceção: o tokenizer do SQLite não remove as vogais hebraicas, então
+essas versões são varridas por livro em vez de ranqueadas, e o `search_bible`
+pede um filtro de `book` quando uma delas é usada.
 
 ## Benchmark
 

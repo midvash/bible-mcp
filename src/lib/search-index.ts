@@ -49,11 +49,29 @@ export function indexVersionForLocale(locale: IndexLocale): string {
 
 // ─── Normalização e parsing da query ─────────────────────────────────────
 
-/** Minúscula sem acento — mesma normalização do tokenizer do índice. */
+/**
+ * Minúscula sem marcas diacríticas — a mesma normalização que o tokenizer
+ * `remove_diacritics 2` do índice aplica, estendida para as escritas que a
+ * varredura por livro precisa comparar na mão.
+ *
+ * Cobre três casos:
+ *
+ *  - **Latim e grego politônico.** NFD separa a marca combinante da letra, e
+ *    U+0300–U+036F remove a marca. `Coração` → `coracao`, `ἀγάπη` → `αγαπη`.
+ *  - **Hebraico.** WLC, BHS, ALEPPO e MH gravam niqqud e ta'amim intercalados
+ *    entre as consoantes (`בְּרֵאשִׁית` são 11 codepoints para 6 letras), então
+ *    buscar `בראשית` não casava nada. U+0591–U+05C7 remove todos. O maqaf
+ *    (U+05BE) é hífen: viraria cola entre palavras, então vira espaço.
+ *  - **Sigma final.** Em grego, `ς` só aparece em fim de palavra e `σ` no
+ *    resto — a mesma letra. Sem unificar, quem digita `ουτωσ` não acha `ουτως`.
+ */
 export function normalizeText(input: string): string {
   return input
     .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
+    .replace(/[̀-ͯ]/g, '') // U+0300–U+036F — marcas combinantes
+    .replace(/־/g, ' ') // maqaf: separa palavras, não as junta
+    .replace(/[֑-ׇ]/g, '') // niqqud e ta'amim hebraicos
+    .replace(/ς/g, 'σ') // sigma final → sigma
     .toLowerCase();
 }
 
@@ -121,7 +139,13 @@ export interface IndexHit {
 }
 
 export interface SearchIndexOptions {
-  locale: IndexLocale;
+  /**
+   * Slug da versão a buscar. Desde que as 35 versões do catálogo entraram no
+   * índice, cada uma é buscada em si mesma — antes o índice tinha só uma
+   * versão de referência por idioma, e o ranking de uma versão vinha
+   * emprestado de outra.
+   */
+  version: string;
   /** Restringe a um livro (1..66). */
   bookId?: number;
   /** Restringe a um testamento. Ignorado quando `bookId` está definido. */
@@ -152,8 +176,8 @@ async function runFts(
   match: string,
   opts: SearchIndexOptions,
 ): Promise<IndexHit[]> {
-  const filters: string[] = [`${table} MATCH ?`, 'locale = ?'];
-  const params: unknown[] = [match, opts.locale];
+  const filters: string[] = [`${table} MATCH ?`, 'version = ?'];
+  const params: unknown[] = [match, opts.version];
 
   if (opts.bookId !== undefined) {
     filters.push('book_id = ?');

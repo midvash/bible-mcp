@@ -69,9 +69,12 @@ describe('toolCacheKey', () => {
   });
 
   it('produces a namespaced, versioned URL', async () => {
+    // A versão faz parte da chave: subir CACHE_VERSION invalida tudo de uma
+    // vez, o que é o que impede uma resposta do código anterior de ser servida
+    // por até 24 horas depois de um deploy que mude a saída.
     const url = await key('search_bible', { query: 'love' }, ctx());
     expect(url).toMatch(
-      /^https:\/\/mcp\.midvash\.com\/_toolcache\/v1\/search_bible\/[0-9a-f]{64}$/,
+      /^https:\/\/mcp\.midvash\.com\/_toolcache\/v\d+\/search_bible\/[0-9a-f]{64}$/,
     );
   });
 });

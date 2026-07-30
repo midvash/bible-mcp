@@ -19,7 +19,7 @@ const BOOK_LOCALES = new Set<string>([
   'ko',
 ]);
 
-function localeForVersion(version: VersionDefinition): Locale {
+export function localeForVersion(version: VersionDefinition): Locale {
   const lang: string = version.language;
   if (lang === 'pt-pt') return 'pt-br';
   if (BOOK_LOCALES.has(lang)) return lang as Locale;

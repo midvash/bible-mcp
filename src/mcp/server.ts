@@ -2,6 +2,15 @@ import { TOOLS, getToolByName } from '../tools';
 import type { ConnectionContext } from '../lib/context';
 import { readToolCache, toolCacheKey, writeToolCache } from '../lib/tool-cache';
 import {
+  listResourceTemplates,
+  listResources,
+  readResource,
+  ResourceError,
+  visibleVersions,
+} from './resources';
+import { listPrompts, PROMPT_BY_NAME } from './prompts';
+import { completionsFor } from './completions';
+import {
   JSON_RPC_ERRORS,
   type JsonRpcRequest,
   type JsonRpcResponse,
@@ -20,9 +29,13 @@ const SERVER_INFO = {
 } as const;
 
 const SERVER_CAPABILITIES = {
-  tools: {
-    listChanged: false,
-  },
+  tools: { listChanged: false },
+  // Declarados desde que passaram a ter conteúdo de verdade. Antes as duas
+  // listas voltavam vazias só para não deixar aviso no relatório dos scanners
+  // de diretório, e declarar teria feito clientes desenharem seções vazias.
+  resources: { listChanged: false, subscribe: false },
+  prompts: { listChanged: false },
+  completions: {},
 } as const;
 
 function success(id: string | number | null, result: unknown): JsonRpcResponse {
@@ -86,11 +99,76 @@ export async function handleMcpMessage(
       // do servidor. Responder lista vazia é a resposta honesta — nenhum
       // resource, nenhum prompt — e mantém o relatório limpo.
       case 'resources/list': {
-        return success(id, { resources: [] });
+        return success(id, { resources: listResources(connectionCtx) });
+      }
+
+      case 'resources/templates/list': {
+        return success(id, { resourceTemplates: listResourceTemplates() });
+      }
+
+      case 'resources/read': {
+        const uri = String(
+          (message.params as { uri?: unknown } | undefined)?.uri ?? '',
+        );
+        if (!uri) {
+          return error(id, JSON_RPC_ERRORS.INVALID_PARAMS, 'Missing resource uri.');
+        }
+        try {
+          const contents = await readResource(uri, connectionCtx, executionCtx);
+          return success(id, { contents: [contents] });
+        } catch (err) {
+          if (err instanceof ResourceError) {
+            return error(id, JSON_RPC_ERRORS.INVALID_PARAMS, err.message);
+          }
+          throw err;
+        }
       }
 
       case 'prompts/list': {
-        return success(id, { prompts: [] });
+        return success(id, { prompts: listPrompts() });
+      }
+
+      case 'prompts/get': {
+        const params = (message.params ?? {}) as {
+          name?: string;
+          arguments?: Record<string, string>;
+        };
+        const prompt = params.name ? PROMPT_BY_NAME.get(params.name) : undefined;
+        if (!prompt) {
+          return error(
+            id,
+            JSON_RPC_ERRORS.INVALID_PARAMS,
+            `Unknown prompt: ${params.name ?? '(none)'}`,
+          );
+        }
+
+        const args = params.arguments ?? {};
+        const missing = prompt.arguments
+          .filter((a) => a.required && !args[a.name])
+          .map((a) => a.name);
+        if (missing.length > 0) {
+          return error(
+            id,
+            JSON_RPC_ERRORS.INVALID_PARAMS,
+            `Missing required argument(s): ${missing.join(', ')}.`,
+          );
+        }
+
+        return success(id, {
+          description: prompt.description,
+          messages: [
+            {
+              role: 'user',
+              content: { type: 'text', text: prompt.build(args) },
+            },
+          ],
+        });
+      }
+
+      case 'completion/complete': {
+        return success(id, {
+          completion: completionsFor(message.params, connectionCtx),
+        });
       }
 
       case 'tools/call': {

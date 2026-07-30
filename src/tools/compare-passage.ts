@@ -1,9 +1,6 @@
 import { VERSIONS } from '../data/versions';
-import {
-  isLanguageAllowed,
-  isVersionAllowed,
-  type ConnectionContext,
-} from '../lib/context';
+import { isLanguageAllowed, type ConnectionContext } from '../lib/context';
+import { resolveVersion } from '../lib/tool-guards';
 import { fetchChapter } from '../lib/r2';
 import { parseReference } from '../lib/reference-parser';
 import type { Tool } from '../mcp/types';
@@ -84,6 +81,16 @@ export const comparePassageTool: Tool = {
       return textResult(parsed.error, true);
     }
 
+    // Comparar até 8 versões de um trecho que cruza capítulos daria uma parede
+    // de texto sem serventia. A comparação é sobre redação, e redação se
+    // compara em passagens curtas.
+    if (parsed.reference.endChapter !== undefined) {
+      return textResult(
+        'compare_passage works within a single chapter. Compare a shorter passage, or use get_passage for the full range in one version.',
+        true,
+      );
+    }
+
     const requestedVersions = normalizeVersions(args.versions);
     const versionSlugs = (requestedVersions.length > 0
       ? requestedVersions
@@ -102,21 +109,15 @@ export const comparePassageTool: Tool = {
     const errors: string[] = [];
 
     for (const versionSlug of versionSlugs) {
-      const version = VERSIONS.find((v) => v.slug === versionSlug);
-      if (!version) {
-        errors.push(`- Version "${versionSlug}" was not found.`);
+      // `resolveVersion` cobre as três checagens de uma vez, com o mesmo texto
+      // que as outras tools usam. Aqui a falha não aborta: cada versão que não
+      // dá é listada no rodapé e a comparação segue com as que dão.
+      const resolved = resolveVersion(ctx, versionSlug, { required: true });
+      if (!resolved.ok) {
+        errors.push(`- ${resolved.message.replace(/\n/g, ' ')}`);
         continue;
       }
-      if (!isVersionAllowed(ctx, versionSlug)) {
-        errors.push(`- ${version.shortName} is not enabled for this connection.`);
-        continue;
-      }
-      if (!isLanguageAllowed(ctx, version.language)) {
-        errors.push(
-          `- ${version.shortName} uses language ${version.language}, which is not enabled for this connection.`,
-        );
-        continue;
-      }
+      const version = resolved.value;
 
       const verses = await fetchChapter(
         ctx.env,

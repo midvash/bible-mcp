@@ -1,5 +1,13 @@
 import type { Env } from '../env';
 
+/** Leituras simultâneas ao R2 dentro de uma chamada. */
+const READ_CONCURRENCY = 24;
+
+export type ChapterKey = string; // `${bookId}:${chapter}`
+
+export const chapterKey = (bookId: number, chapter: number): ChapterKey =>
+  `${bookId}:${chapter}`;
+
 /**
  * Busca um capítulo do R2 com cache no edge (Cache API do Cloudflare).
  *
@@ -80,4 +88,37 @@ export async function fetchChapter(
     console.error(`[R2] Error fetching ${version}/${bookId}/${chapter}:`, error);
     return null;
   }
+}
+
+/**
+ * Lê vários capítulos de uma versão em paralelo, em lotes. Devolve um mapa
+ * chave → versículos; capítulos ausentes ficam de fora do mapa.
+ *
+ * Em lotes, e não tudo de uma vez, porque o Worker tem teto de subrequests por
+ * requisição — com 24 por lote, varrer o maior livro da Bíblia (Salmos, 150
+ * capítulos) cabe em ~7 rodadas.
+ */
+export async function fetchChapters(
+  env: Env,
+  version: string,
+  keys: Array<[number, number]>,
+  ctx: ExecutionContext,
+): Promise<Map<ChapterKey, string[]>> {
+  const out = new Map<ChapterKey, string[]>();
+
+  for (let i = 0; i < keys.length; i += READ_CONCURRENCY) {
+    const batch = keys.slice(i, i + READ_CONCURRENCY);
+    const loaded = await Promise.all(
+      batch.map(([bookId, chapter]) =>
+        fetchChapter(env, version, bookId, chapter, ctx).then(
+          (verses) => [chapterKey(bookId, chapter), verses] as const,
+        ),
+      ),
+    );
+    for (const [key, verses] of loaded) {
+      if (verses && verses.length > 0) out.set(key, verses);
+    }
+  }
+
+  return out;
 }

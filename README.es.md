@@ -56,9 +56,19 @@ Ejemplo (Claude Desktop / `mcp.json`):
 | `list_books` | Lista los 66 libros, opcionalmente filtrados por testamento. |
 | `search_study` | Busca en la biblioteca de estudio — comentarios de capítulo, personajes bíblicos, entradas de diccionario y artículos de teología — en 9 idiomas. |
 | `get_commentary` | Obtiene el comentario del capítulo al que apunta una referencia. Los 1.189 capítulos, en 9 idiomas. |
+| `get_cross_references` | Encuentra otros pasajes relacionados con un versículo, ordenados por la fuerza del vínculo. 343.546 vínculos. |
+| `get_strongs` | Consulta una palabra en el léxico Strong por número ("H430") o por la palabra misma. 14.197 entradas, definiciones en 9 idiomas. |
 
 Las herramientas de estudio devuelven un resumen de hasta 500 caracteres y el
 enlace al artículo completo en [midvash.com](https://midvash.com).
+Además de las herramientas, el servidor expone **Resources** — `bible://{versión}/{libro}/{capítulo}`
+direcciona el texto directamente — y cuatro **Prompts** de estudio: preparación de
+sermón, devocional, estudio de palabra y comparación de traducciones. Los
+argumentos de libro y versión tienen autocompletado.
+
+Las herramientas que devuelven datos también devuelven `structuredContent` junto
+al Markdown, para que el cliente no tenga que interpretar texto formateado.
+
 
 ## Límites
 
@@ -92,13 +102,18 @@ https://mcp.midvash.com/mcp/{id}?v=nvi,kjv&lang=pt-br,en
 | Almacenamiento | Contenido |
 |---|---|
 | Bucket R2 `bible` | Texto de los capítulos, `{versión}/{libro}/{capítulo}.json`, con caché en el edge |
-| D1 `midvash-mcp-search` | Índice FTS5: 278.682 versículos y 18.792 documentos de estudio |
+| D1 `midvash-mcp-search` | Índice FTS5: 1.224.921 versículos y 18.792 documentos de estudio |
 
 La base D1 es exclusiva de este MCP. Es una copia, reconstruida por
 [`scripts/seed-mcp-search.sh`](./scripts/seed-mcp-search.sh), y el Worker solo
 lee de ella. Mantenerla separada hace que el panel de Cloudflare reporte el uso
 de este servidor por separado, y que un binding de D1 — que da acceso a la base
 completa — no alcance nada más que contenido bíblico público.
+
+La búsqueda está ordenada por versión. Las cinco en hebreo (WLC, BHS, ALEPPO,
+MH, OSMH) son la excepción: el tokenizer de SQLite no elimina las vocales
+hebreas, así que esas versiones se recorren por libro en vez de ordenarse, y
+`search_bible` pide un filtro de `book` cuando se usa una de ellas.
 
 ## Benchmark
 
