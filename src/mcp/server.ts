@@ -78,6 +78,20 @@ export async function handleMcpMessage(
         });
       }
 
+      // Este servidor só expõe tools — não anunciamos `resources` nem `prompts`
+      // em SERVER_CAPABILITIES, então um cliente que segue a spec nem chega
+      // aqui. Mas scanners de diretório (Smithery, por exemplo) sondam os dois
+      // métodos de qualquer forma e registram um -32601 como aviso no relatório
+      // do servidor. Responder lista vazia é a resposta honesta — nenhum
+      // resource, nenhum prompt — e mantém o relatório limpo.
+      case 'resources/list': {
+        return success(id, { resources: [] });
+      }
+
+      case 'prompts/list': {
+        return success(id, { prompts: [] });
+      }
+
       case 'tools/call': {
         const params = (message.params ?? {}) as {
           name?: string;
