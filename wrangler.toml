@@ -42,7 +42,7 @@ bucket_name = "bible"
 [[d1_databases]]
 binding = "SEARCH_DB"
 database_name = "midvash-mcp-search"
-database_id = "146643cc-f8ce-4045-8192-de4d815da26a"
+database_id = "e00cefd7-918d-4bcd-9c98-30e5f5f39959"
 
 # Observability - Logs e traces para debug
 [observability]
