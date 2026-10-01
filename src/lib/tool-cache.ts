@@ -26,8 +26,9 @@ import type { ToolResult } from '../mcp/types';
  * v3 → v4: saem as versões sem licença (resposta cacheada ainda traria o texto
  *          delas por um dia) e entra o crédito CC BY-SA no fim do texto.
  * v4 → v5: entram as versões livres dos outros idiomas (list_versions).
+ * v5 → v6: versão padrão sem filtro passa de ONBV pra BSB (inglês).
  */
-const CACHE_VERSION = 'v5';
+const CACHE_VERSION = 'v6';
 
 /** Um dia. O texto bíblico não muda; o teto existe só para limitar staleness. */
 const CACHE_TTL_SECONDS = 86400;

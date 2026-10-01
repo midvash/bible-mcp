@@ -26,9 +26,9 @@ function message(guard: { ok: boolean } & Record<string, unknown>): string {
 }
 
 describe('resolveVersion', () => {
-  it('falls back to ONBV with no argument and no connection filter', () => {
+  it('falls back to BSB (English) with no argument and no connection filter', () => {
     const r = resolveVersion(ctx(), undefined);
-    expect(r.ok && r.value.slug).toBe('onbv');
+    expect(r.ok && r.value.slug).toBe('bsb');
   });
 
   it('falls back to the first version allowed by the connection', () => {

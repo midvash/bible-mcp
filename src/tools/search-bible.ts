@@ -185,7 +185,7 @@ export const searchBibleTool: Tool = {
         version: {
           type: 'string',
           description:
-            'Optional Bible version slug such as "onbv", "kjv", "bsb", or "rvr1909". If omitted, uses the first version enabled by the connection URL, or "onbv".',
+            'Optional Bible version slug such as "onbv", "kjv", "bsb", or "rvr1909". If omitted, uses the first version enabled by the connection URL, or "bsb" (English). When the user writes in another language, pass a version in that language.',
         },
         book: {
           type: 'string',

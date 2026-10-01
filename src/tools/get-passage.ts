@@ -144,7 +144,7 @@ export const getPassageTool: Tool = {
         version: {
           type: 'string',
           description:
-            'Optional Bible version slug. If omitted, uses the first version enabled by the connection URL, or "onbv" when no version filter exists.',
+            'Optional Bible version slug. If omitted, uses the first version enabled by the connection URL, or "bsb" (English) when no version filter exists. When the user writes in another language, pass a version in that language.',
         },
       },
       required: ['reference'],
