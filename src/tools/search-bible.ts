@@ -173,7 +173,7 @@ export const searchBibleTool: Tool = {
   definition: {
     name: 'search_bible',
     description:
-      'Searches the Bible text for words or an exact phrase and returns matching verses ranked by relevance. Matching ignores letter case and accents; wrap the query in double quotes for an exact phrase. Use this for discovery questions like "find verses about love". For a known citation, use get_passage or get_verse.',
+      'Searches the Bible text for words or an exact phrase and returns matching verses ranked by relevance. Matching ignores letter case, accents, and Hebrew and Arabic vowel marks; wrap the query in double quotes for an exact phrase. Use this for discovery questions like "find verses about love". For a known citation, use get_passage or get_verse.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -190,7 +190,7 @@ export const searchBibleTool: Tool = {
         book: {
           type: 'string',
           description:
-            'Optional book name, slug, or abbreviation in any supported book locale (ex.: "John", "João", "Salmos"). Required for versions in Hebrew, Greek, or Latin.',
+            'Optional book name, slug, or abbreviation in any supported book locale (ex.: "John", "João", "Salmos").',
         },
         testament: {
           type: 'string',
@@ -256,23 +256,14 @@ export const searchBibleTool: Tool = {
         ? args.testament
         : undefined;
 
-    // ── Varredura: sem índice, ou hebraico ───────────────────────────────
-    //
-    // O tokenizer `unicode61 remove_diacritics 2` do FTS5 remove diacríticos
-    // latinos e gregos, mas **não** o niqqud hebraico: no índice, אֱלֹהִים fica
-    // com as vogais, e quem digita as consoantes soltas (אלהים) não casa nada.
-    // A varredura usa `normalizeText`, que remove o niqqud, então para o
-    // hebraico ela é o caminho correto — mais lenta, e exigindo filtro de
-    // livro, mas com o resultado certo.
-    const needsScan = version.language === 'he';
-
-    if (needsScan || !ctx.env.SEARCH_DB) {
+    // ── Varredura: só quando o índice não está disponível ──────────────
+    // Hebraico e árabe vão pelo índice: ele guarda o texto sem sinais de
+    // vogal (ver `foldScripts`).
+    if (!ctx.env.SEARCH_DB) {
       if (!book) {
         return textResult(
           [
-            needsScan
-              ? `Searching **${version.shortName}** requires a **book** filter: Hebrew is indexed with its vowel points, so it is scanned instead of ranked.`
-              : 'The search index is unavailable right now, so searching requires a **book** filter.',
+            'The search index is unavailable right now, so searching requires a **book** filter.',
             '',
             'Retry with `book` set (ex.: `book: "Genesis"`).',
           ].join('\n'),
@@ -289,11 +280,7 @@ export const searchBibleTool: Tool = {
         executionCtx,
       );
       return searchResult(displayQuery, version, lines, [
-        `Scanned all ${chaptersRead} chapters of ${bookNameForVersion(book, version)} in ${version.shortName}. ${
-          needsScan
-            ? 'Hebrew is indexed with its vowel points, so this version is scanned rather than ranked'
-            : 'The ranked index was unavailable'
-        }, and matches appear in canonical order.`,
+        `Scanned all ${chaptersRead} chapters of ${bookNameForVersion(book, version)} in ${version.shortName}. The ranked index was unavailable, and matches appear in canonical order.`,
       ], 'scan');
     }
 

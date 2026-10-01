@@ -131,10 +131,10 @@ function splitValues(body) {
 const INSERT_RE = /^INSERT INTO "verses"\s*\(([^)]*)\)\s*VALUES\((.*)\);\s*$/;
 
 /**
- * Mesma regra de `foldArabic` em src/lib/search-index.ts (o teste
- * seed-mcp-versions.test.ts confere que as duas batem). O árabe entra no
- * índice sem sinais de vogal pra casar com a query digitada sem eles; o texto
- * que o usuário lê vem do R2, intacto.
+ * Mesmas regras de `foldArabic` e `foldHebrew` em src/lib/search-index.ts (o
+ * teste src/lib/script-fold.test.ts confere que batem). Árabe e hebraico
+ * entram no índice sem sinais de vogal pra casar com a query digitada sem
+ * eles; o texto que o usuário lê vem do R2, intacto.
  */
 export function foldArabic(input) {
   return input
@@ -142,6 +142,12 @@ export function foldArabic(input) {
     .replace(/[\u0671\u0622\u0623\u0625]/g, '\u0627')
     .replace(/\u0649/g, '\u064A');
 }
+
+export function foldHebrew(input) {
+  return input.replace(/\u05BE/g, ' ').replace(/[\u0591-\u05C7]/g, '');
+}
+
+const FOLD_BY_LOCALE = { ar: foldArabic, he: foldHebrew };
 
 /** Converte o dump de uma versão para INSERTs na tabela do índice. */
 export async function transform(inputPath, outputPath, version, locale) {
@@ -171,7 +177,8 @@ export async function transform(inputPath, outputPath, version, locale) {
     const chapter = pick('chapter');
     const verse = pick('number');
     const raw = pick('text');
-    const text = locale === 'ar' && raw !== undefined ? foldArabic(raw) : raw;
+    const fold = FOLD_BY_LOCALE[locale];
+    const text = fold && raw !== undefined ? fold(raw) : raw;
 
     if (!bookId || !chapter || !verse || text === undefined) {
       skipped++;
