@@ -24,11 +24,11 @@ const fail = (message: string): Guard<never> => ({ ok: false, message });
 const pass = <T>(value: T): Guard<T> => ({ ok: true, value });
 
 /** Versão usada quando nem o argumento nem a conexão indicam uma. */
-const FALLBACK_VERSION = 'nvi';
+const FALLBACK_VERSION = 'onbv';
 
 /**
  * Resolve a versão a usar: a pedida, senão a primeira liberada na conexão,
- * senão NVI. Confere que existe e que a conexão permite ela e o idioma dela.
+ * senão ONBV. Confere que existe e que a conexão permite ela e o idioma dela.
  */
 export function resolveVersion(
   ctx: ConnectionContext,

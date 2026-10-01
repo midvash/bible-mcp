@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 /**
- * Carrega as versões bíblicas que faltam no índice `midvash-mcp-search`.
+ * Carrega no índice `midvash-mcp-search` as versões bíblicas do catálogo
+ * (src/data/versions.ts) — e só elas.
  *
- * O índice nasceu com 9 versões — uma de referência por idioma, herdadas do
- * `midvash-search` do app web. Com todas as 35 do catálogo dentro, cada versão
- * ganha ranking BM25 próprio, e o hebraico, o grego e o latim deixam de cair na
- * varredura lenta do R2.
+ * Cada versão é buscada em si mesma, com ranking BM25 próprio: o índice tem uma
+ * cópia do texto de cada versão do catálogo, vinda do banco `bible-{slug}`.
+ * Versão que sai do catálogo (ex.: sem licença pra redistribuir) tem que sair
+ * do índice também — é o que o `--prune` faz.
  *
  * Cada banco `bible-{slug}` tem `verses(id, book_id, chapter, number, text)`;
  * o destino tem `search_verses(locale, version, book_id, chapter, verse, text)`.
@@ -13,7 +14,7 @@
  * a linha, sem carregar o arquivo inteiro na memória.
  *
  *   node scripts/seed-mcp-versions.mjs            # o que faltar
- *   node scripts/seed-mcp-versions.mjs nvi kjv    # só estas
+ *   node scripts/seed-mcp-versions.mjs onbv kjv   # só estas
  *
  * Idempotente por versão: apaga as linhas da versão antes de recarregá-la.
  * Ao final, reconstrói os índices FTS5 — eles são derivados, e reconstruir uma
@@ -30,9 +31,16 @@ import { readFileSync } from 'node:fs';
 
 const TARGET_DB = 'midvash-mcp-search';
 
-/** Lê o catálogo direto do fonte, para não duplicar a lista. */
-function loadVersions() {
-  const src = readFileSync(new URL('../src/data/versions.ts', import.meta.url), 'utf8');
+/**
+ * Lê o catálogo direto do fonte, para não duplicar a lista. Linhas comentadas
+ * são versões fora do ar e não entram — sem tirar os comentários, a regex
+ * pegaria a kjf e a rvr1960 de volta.
+ */
+export function loadVersions() {
+  const src = readFileSync(new URL('../src/data/versions.ts', import.meta.url), 'utf8')
+    .split('\n')
+    .filter((line) => !line.trim().startsWith('//'))
+    .join('\n');
   const out = [];
   for (const m of src.matchAll(/\{\s*slug:\s*'([^']+)'[^}]*?language:\s*'([^']+)'/g)) {
     out.push({ slug: m[1], language: m[2] });
@@ -103,7 +111,7 @@ function splitValues(body) {
 const INSERT_RE = /^INSERT INTO "verses"\s*\(([^)]*)\)\s*VALUES\((.*)\);\s*$/;
 
 /** Converte o dump de uma versão para INSERTs na tabela do índice. */
-async function transform(inputPath, outputPath, version, locale) {
+export async function transform(inputPath, outputPath, version, locale) {
   const output = createWriteStream(outputPath);
   const reader = createInterface({
     input: createReadStream(inputPath),
@@ -199,8 +207,31 @@ function reindex() {
   }
 }
 
+/**
+ * Apaga do índice toda versão que não está no catálogo. Sem isso, o texto de
+ * uma versão retirada (sem licença) continuaria guardado no banco do MCP.
+ * Devolve quantas versões saíram; o chamador reconstrói o FTS5 se for > 0.
+ */
+function prune(catalog) {
+  const keep = new Set(catalog.map((v) => v.slug));
+  const present = query('SELECT DISTINCT version FROM search_verses;').map((r) => r.version);
+  const gone = present.filter((v) => !keep.has(v));
+
+  if (gone.length === 0) {
+    console.log('Nada a podar — o índice só tem versões do catálogo.');
+    return 0;
+  }
+
+  console.log(`Podando ${gone.length} versões fora do catálogo: ${gone.join(', ')}`);
+  for (const v of gone) {
+    query(`DELETE FROM search_verses WHERE version='${v}';`);
+  }
+  return gone.length;
+}
+
 async function main() {
-  const requested = process.argv.slice(2).filter((a) => a !== '--reindex');
+  const flags = new Set(['--reindex', '--prune']);
+  const requested = process.argv.slice(2).filter((a) => !flags.has(a));
 
   if (process.argv.includes('--reindex')) {
     reindex();
@@ -208,6 +239,13 @@ async function main() {
   }
 
   const catalog = loadVersions();
+
+  if (process.argv.includes('--prune')) {
+    // O FTS5 é de conteúdo externo: linha apagada da tabela de conteúdo só sai
+    // do índice com a reconstrução.
+    if (prune(catalog) > 0) reindex();
+    return;
+  }
 
   const present = new Set(
     query('SELECT DISTINCT version FROM search_verses;').map((r) => r.version),
@@ -285,4 +323,7 @@ async function main() {
   );
 }
 
-await main();
+// Importável (para testar loadVersions/transform) sem disparar a carga.
+if (import.meta.url === `file://${process.argv[1]}`) {
+  await main();
+}

@@ -99,7 +99,7 @@ const en: Translations = {
   meta: {
     title: 'Midvash MCP — Connect any AI to the Bible',
     description:
-      "The free, public Bible MCP server. Get accurate Scripture in 35+ versions and 9 language families, plus commentary on all 1,189 chapters — directly inside ChatGPT, Claude, and Gemini.",
+      "The free, public Bible MCP server. Get accurate Scripture in 16 free Bible versions and 8 languages, plus commentary on all 1,189 chapters — directly inside ChatGPT, Claude, and Gemini.",
   },
   nav: {
     skipToContent: 'Skip to content',
@@ -109,7 +109,7 @@ const en: Translations = {
     title: 'Connect any AI to the',
     titleAccent: 'Bible',
     subtitle:
-      'Give ChatGPT, Claude, or Gemini direct access to accurate Scripture in 35+ Bible versions and 9 language families, plus commentary on every chapter — straight from Midvash.',
+      'Give ChatGPT, Claude, or Gemini direct access to accurate Scripture in 16 free Bible versions and 8 languages, plus commentary on every chapter — straight from Midvash.',
     cta: 'Set up my connection',
   },
   how: {
@@ -118,7 +118,7 @@ const en: Translations = {
       {
         num: '01',
         title: 'Pick your Bibles',
-        body: 'Choose the languages and versions you want your AI to use. NIV, KJV, ESV, NVI, NTV and 30+ more.',
+        body: 'Choose the languages and versions you want your AI to use. KJV, BSB, WEB, ONBV, RVR1909 and more, all free to share.',
       },
       {
         num: '02',
@@ -208,7 +208,7 @@ const es: Translations = {
   meta: {
     title: 'Midvash MCP — Conecta cualquier IA a la Biblia',
     description:
-      'El servidor MCP público y gratuito de la Biblia. Obtén citas precisas en más de 35 versiones y 9 familias de idioma, además de comentarios de los 1.189 capítulos — directamente en ChatGPT, Claude y Gemini.',
+      'El servidor MCP público y gratuito de la Biblia. Obtén citas precisas en 16 versiones bíblicas libres y 8 idiomas, además de comentarios de los 1.189 capítulos — directamente en ChatGPT, Claude y Gemini.',
   },
   nav: {
     skipToContent: 'Saltar al contenido',
@@ -218,7 +218,7 @@ const es: Translations = {
     title: 'Conecta cualquier IA a la',
     titleAccent: 'Biblia',
     subtitle:
-      'Dale a ChatGPT, Claude o Gemini acceso directo a citas bíblicas precisas en más de 35 versiones y 9 familias de idioma, además de comentarios de cada capítulo — directamente desde Midvash.',
+      'Dale a ChatGPT, Claude o Gemini acceso directo a citas bíblicas precisas en 16 versiones bíblicas libres y 8 idiomas, además de comentarios de cada capítulo — directamente desde Midvash.',
     cta: 'Configurar mi conexión',
   },
   how: {
@@ -227,7 +227,7 @@ const es: Translations = {
       {
         num: '01',
         title: 'Elige tus Biblias',
-        body: 'Elige los idiomas y versiones que quieres que use tu IA. NVI, NTV, RVR1909, KJV y más de 30 opciones.',
+        body: 'Elige los idiomas y versiones que quieres que use tu IA. RVR1909, KJV, BSB, ONBV y más, todas de libre distribución.',
       },
       {
         num: '02',
@@ -317,7 +317,7 @@ const ptBr: Translations = {
   meta: {
     title: 'Midvash MCP — Conecte qualquer IA à Bíblia',
     description:
-      'O servidor MCP público e gratuito da Bíblia. Receba citações bíblicas precisas em mais de 35 versões e 9 famílias de idioma, além de comentários dos 1.189 capítulos — direto no ChatGPT, Claude e Gemini.',
+      'O servidor MCP público e gratuito da Bíblia. Receba citações bíblicas precisas em 16 versões bíblicas livres e 8 idiomas, além de comentários dos 1.189 capítulos — direto no ChatGPT, Claude e Gemini.',
   },
   nav: {
     skipToContent: 'Pular para o conteúdo',
@@ -327,7 +327,7 @@ const ptBr: Translations = {
     title: 'Conecte qualquer IA à',
     titleAccent: 'Bíblia',
     subtitle:
-      'Dê ao ChatGPT, Claude ou Gemini acesso direto a citações bíblicas precisas em mais de 35 versões e 9 famílias de idioma, além de comentários de cada capítulo — direto do Midvash.',
+      'Dê ao ChatGPT, Claude ou Gemini acesso direto a citações bíblicas precisas em 16 versões bíblicas livres e 8 idiomas, além de comentários de cada capítulo — direto do Midvash.',
     cta: 'Configurar minha conexão',
   },
   how: {
@@ -336,7 +336,7 @@ const ptBr: Translations = {
       {
         num: '01',
         title: 'Escolha suas Bíblias',
-        body: 'Escolha os idiomas e versões que sua IA vai usar. NVI, ARA, ACF, NAA, NTLH e mais de 30 opções.',
+        body: 'Escolha os idiomas e versões que sua IA vai usar. ONBV, Bíblia Livre, NVA, KJV, RVR1909 e outras, todas de distribuição livre.',
       },
       {
         num: '02',
@@ -426,7 +426,7 @@ const fr: Translations = {
   meta: {
     title: 'Midvash MCP — Connectez votre IA à la Bible',
     description:
-      "Le serveur MCP public et gratuit de la Bible. Obtenez des citations précises dans plus de 35 versions et 9 familles de langues, ainsi qu'un commentaire pour les 1 189 chapitres — directement dans ChatGPT, Claude et Gemini.",
+      "Le serveur MCP public et gratuit de la Bible. Obtenez des citations précises dans 16 versions libres de la Bible et 8 langues, ainsi qu'un commentaire pour les 1 189 chapitres — directement dans ChatGPT, Claude et Gemini.",
   },
   nav: { skipToContent: 'Aller au contenu' },
   hero: {
@@ -434,13 +434,13 @@ const fr: Translations = {
     title: 'Connectez votre IA à la',
     titleAccent: 'Bible',
     subtitle:
-      "Donnez à ChatGPT, Claude ou Gemini un accès direct à des Écritures précises dans plus de 35 versions et 9 familles de langues, avec un commentaire pour chaque chapitre — directement depuis Midvash.",
+      "Donnez à ChatGPT, Claude ou Gemini un accès direct à des Écritures précises dans 16 versions libres de la Bible et 8 langues, avec un commentaire pour chaque chapitre — directement depuis Midvash.",
     cta: 'Configurer ma connexion',
   },
   how: {
     title: 'Comment ça marche',
     cards: [
-      { num: '01', title: 'Choisissez vos Bibles', body: 'Sélectionnez les langues et les versions que votre IA utilisera. NIV, KJV, ESV, NVI, NTV et plus de 30 autres.' },
+      { num: '01', title: 'Choisissez vos Bibles', body: 'Sélectionnez les langues et les versions que votre IA utilisera. LSG, KJV, BSB, WEB, ONBV et d’autres, toutes libres de diffusion.' },
       { num: '02', title: 'Récupérez votre lien', body: 'Nous générons un lien de connexion personnel — sans compte, sans email, sans installation.' },
       { num: '03', title: 'Collez-le dans votre IA', body: 'Ajoutez le lien à ChatGPT, Claude ou Gemini en deux clics. Votre IA cite la Bible parfaitement.' },
     ],
@@ -497,7 +497,7 @@ const de: Translations = {
   meta: {
     title: 'Midvash MCP — Verbinde jede KI mit der Bibel',
     description:
-      'Der kostenlose, öffentliche Bibel-MCP-Server. Hol dir präzise Bibelzitate in über 35 Bibelversionen und 9 Sprachfamilien, dazu Kommentare zu allen 1.189 Kapiteln — direkt in ChatGPT, Claude und Gemini.',
+      'Der kostenlose, öffentliche Bibel-MCP-Server. Hol dir präzise Bibelzitate in 16 frei verfügbaren Bibelversionen und 8 Sprachen, dazu Kommentare zu allen 1.189 Kapiteln — direkt in ChatGPT, Claude und Gemini.',
   },
   nav: { skipToContent: 'Zum Inhalt springen' },
   hero: {
@@ -505,13 +505,13 @@ const de: Translations = {
     title: 'Verbinde jede KI mit der',
     titleAccent: 'Bibel',
     subtitle:
-      'Gib ChatGPT, Claude oder Gemini direkten Zugriff auf präzise Schriftstellen in über 35 Bibelversionen und 9 Sprachfamilien, dazu Kommentare zu jedem Kapitel — direkt von Midvash.',
+      'Gib ChatGPT, Claude oder Gemini direkten Zugriff auf präzise Schriftstellen in 16 frei verfügbaren Bibelversionen und 8 Sprachen, dazu Kommentare zu jedem Kapitel — direkt von Midvash.',
     cta: 'Verbindung einrichten',
   },
   how: {
     title: 'So funktioniert es',
     cards: [
-      { num: '01', title: 'Wähle deine Bibeln', body: 'Wähle die Sprachen und Übersetzungen, die deine KI nutzen soll. NIV, KJV, ESV, NVI, NTV und über 30 weitere.' },
+      { num: '01', title: 'Wähle deine Bibeln', body: 'Wähle die Sprachen und Übersetzungen, die deine KI nutzen soll. KJV, BSB, WEB, LSG, ONBV und weitere, alle frei verfügbar.' },
       { num: '02', title: 'Erhalte deinen Link', body: 'Wir generieren einen persönlichen Verbindungslink — ohne Konto, ohne E-Mail, ohne Setup.' },
       { num: '03', title: 'Füge ihn in deiner KI ein', body: 'Trage den Link in ChatGPT, Claude oder Gemini in zwei Klicks ein. Deine KI zitiert die Bibel perfekt.' },
     ],
@@ -568,7 +568,7 @@ const it: Translations = {
   meta: {
     title: "Midvash MCP — Collega qualsiasi IA alla Bibbia",
     description:
-      'Il server MCP pubblico e gratuito della Bibbia. Ottieni citazioni bibliche precise in oltre 35 versioni e 9 famiglie linguistiche, più i commenti a tutti i 1.189 capitoli — direttamente in ChatGPT, Claude e Gemini.',
+      'Il server MCP pubblico e gratuito della Bibbia. Ottieni citazioni bibliche precise in 16 versioni libere della Bibbia e 8 lingue, più i commenti a tutti i 1.189 capitoli — direttamente in ChatGPT, Claude e Gemini.',
   },
   nav: { skipToContent: 'Vai al contenuto' },
   hero: {
@@ -576,13 +576,13 @@ const it: Translations = {
     title: 'Collega qualsiasi IA alla',
     titleAccent: 'Bibbia',
     subtitle:
-      'Dai a ChatGPT, Claude o Gemini accesso diretto a citazioni bibliche precise in oltre 35 versioni e 9 famiglie linguistiche, più i commenti a ogni capitolo — direttamente da Midvash.',
+      'Dai a ChatGPT, Claude o Gemini accesso diretto a citazioni bibliche precise in 16 versioni libere della Bibbia e 8 lingue, più i commenti a ogni capitolo — direttamente da Midvash.',
     cta: 'Configura la mia connessione',
   },
   how: {
     title: 'Come funziona',
     cards: [
-      { num: '01', title: 'Scegli le tue Bibbie', body: 'Scegli le lingue e versioni che la tua IA userà. NIV, KJV, ESV, NVI, NTV e oltre 30 altre.' },
+      { num: '01', title: 'Scegli le tue Bibbie', body: 'Scegli le lingue e versioni che la tua IA userà. NRI, KJV, BSB, WEB, ONBV e altre, tutte di libera diffusione.' },
       { num: '02', title: 'Ottieni il tuo link', body: 'Generiamo un link di connessione personale — senza account, senza email, senza installazione.' },
       { num: '03', title: "Incollalo nella tua IA", body: 'Aggiungi il link in ChatGPT, Claude o Gemini con due clic. La tua IA citerà la Bibbia perfettamente.' },
     ],
@@ -639,7 +639,7 @@ const zh: Translations = {
   meta: {
     title: 'Midvash MCP — 把任意 AI 接入圣经',
     description:
-      '免费、公开的圣经 MCP 服务器。在 ChatGPT、Claude 与 Gemini 中直接获取 35+ 圣经版本、9 个语系的精准经文，以及全部 1,189 章的注释。',
+      '免费、公开的圣经 MCP 服务器。在 ChatGPT、Claude 与 Gemini 中直接获取 16 个可自由使用的圣经版本、8 种语言的精准经文，以及全部 1,189 章的注释。',
   },
   nav: { skipToContent: '跳到主要内容' },
   hero: {
@@ -647,13 +647,13 @@ const zh: Translations = {
     title: '把任意 AI 接入',
     titleAccent: '圣经',
     subtitle:
-      '让 ChatGPT、Claude 或 Gemini 直接获取 35+ 圣经版本、9 个语系的精准经文，以及每一章的注释 — 来自 Midvash。',
+      '让 ChatGPT、Claude 或 Gemini 直接获取 16 个可自由使用的圣经版本、8 种语言的精准经文，以及每一章的注释 — 来自 Midvash。',
     cta: '配置我的连接',
   },
   how: {
     title: '使用流程',
     cards: [
-      { num: '01', title: '挑选圣经', body: '选择 AI 使用的语言与版本。NIV、KJV、ESV、NVI、NTV 等 30 多个版本。' },
+      { num: '01', title: '挑选圣经', body: '选择 AI 使用的语言与版本。KJV、BSB、WEB、ONBV、RVR1909 等，均可自由使用。' },
       { num: '02', title: '获取链接', body: '我们为你生成专属连接链接 — 不需要账号、邮箱或安装。' },
       { num: '03', title: '粘贴到 AI', body: '两次点击即可把链接添加到 ChatGPT、Claude 或 Gemini，AI 即刻完美引用圣经。' },
     ],
@@ -710,7 +710,7 @@ const ru: Translations = {
   meta: {
     title: 'Midvash MCP — Подключите любой ИИ к Библии',
     description:
-      'Бесплатный публичный MCP-сервер Библии. Получайте точные цитаты в 35+ версиях и 9 языковых группах, а также комментарии ко всем 1189 главам — прямо в ChatGPT, Claude и Gemini.',
+      'Бесплатный публичный MCP-сервер Библии. Получайте точные цитаты в 16 свободных версиях Библии на 8 языках, а также комментарии ко всем 1189 главам — прямо в ChatGPT, Claude и Gemini.',
   },
   nav: { skipToContent: 'Перейти к контенту' },
   hero: {
@@ -718,13 +718,13 @@ const ru: Translations = {
     title: 'Подключите любой ИИ к',
     titleAccent: 'Библии',
     subtitle:
-      'Дайте ChatGPT, Claude или Gemini прямой доступ к точным библейским текстам в 35+ версиях и 9 языковых группах, а также к комментариям к каждой главе — напрямую от Midvash.',
+      'Дайте ChatGPT, Claude или Gemini прямой доступ к точным библейским текстам в 16 свободных версиях Библии на 8 языках, а также к комментариям к каждой главе — напрямую от Midvash.',
     cta: 'Настроить подключение',
   },
   how: {
     title: 'Как это работает',
     cards: [
-      { num: '01', title: 'Выберите Библии', body: 'Выберите языки и переводы, которые будет использовать ИИ. NIV, KJV, ESV, NVI, NTV и ещё 30+.' },
+      { num: '01', title: 'Выберите Библии', body: 'Выберите языки и переводы, которые будет использовать ИИ. KJV, BSB, WEB, ONBV, RVR1909 и другие, все в свободном доступе.' },
       { num: '02', title: 'Получите ссылку', body: 'Мы создадим персональную ссылку для подключения — без аккаунта, email и установки.' },
       { num: '03', title: 'Вставьте в ИИ', body: 'Добавьте ссылку в ChatGPT, Claude или Gemini в два клика. ИИ начнёт идеально цитировать Библию.' },
     ],
@@ -781,7 +781,7 @@ const ko: Translations = {
   meta: {
     title: 'Midvash MCP — 모든 AI를 성경에 연결하세요',
     description:
-      '무료 공개 성경 MCP 서버. ChatGPT, Claude, Gemini에서 35개 이상의 성경 버전과 9개 언어 계열로 정확한 말씀을, 그리고 1,189개 장 전체의 주석을 받아보세요.',
+      '무료 공개 성경 MCP 서버. ChatGPT, Claude, Gemini에서 자유롭게 쓸 수 있는 16개 성경 버전과 8개 언어로 정확한 말씀을, 그리고 1,189개 장 전체의 주석을 받아보세요.',
   },
   nav: { skipToContent: '본문으로 건너뛰기' },
   hero: {
@@ -789,13 +789,13 @@ const ko: Translations = {
     title: '모든 AI를 성경에',
     titleAccent: '연결',
     subtitle:
-      'ChatGPT, Claude, Gemini가 35+ 성경 버전과 9개 언어 계열의 정확한 말씀과 각 장의 주석에 바로 접근할 수 있게 — Midvash에서 직접.',
+      'ChatGPT, Claude, Gemini가 자유롭게 쓸 수 있는 16개 성경 버전과 8개 언어의 정확한 말씀과 각 장의 주석에 바로 접근할 수 있게 — Midvash에서 직접.',
     cta: '연결 설정하기',
   },
   how: {
     title: '사용 방법',
     cards: [
-      { num: '01', title: '성경 선택', body: 'AI가 사용할 언어와 번역본을 고르세요. NIV, KJV, ESV, NVI, NTV 등 30여 종.' },
+      { num: '01', title: '성경 선택', body: 'AI가 사용할 언어와 번역본을 고르세요. KJV, BSB, WEB, ONBV, RVR1909 등, 모두 자유 배포 가능.' },
       { num: '02', title: '링크 받기', body: '계정·이메일·설치 없이 개인 연결 링크를 생성합니다.' },
       { num: '03', title: 'AI에 붙여넣기', body: '두 번 클릭으로 ChatGPT, Claude 또는 Gemini에 추가하세요. AI가 성경을 완벽히 인용합니다.' },
     ],

@@ -41,13 +41,13 @@ describe('toolCacheKey', () => {
   });
 
   it('separates connections with different version filters', async () => {
-    // Sem isso, uma conexão restrita a NVI receberia a resposta gerada para
+    // Sem isso, uma conexão restrita a ONBV receberia a resposta gerada para
     // uma conexão sem restrição.
     const open = await key('list_versions', {}, ctx());
     const narrow = await key(
       'list_versions',
       {},
-      ctx({ allowedVersions: ['nvi'] }),
+      ctx({ allowedVersions: ['onbv'] }),
     );
     expect(open).not.toBe(narrow);
   });

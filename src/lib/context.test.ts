@@ -14,14 +14,14 @@ function ctx(overrides: Partial<ConnectionContext> = {}): ConnectionContext {
 
 describe('connection context filters', () => {
   it('allows every version and language by default', () => {
-    expect(isVersionAllowed(ctx(), 'nvi')).toBe(true);
+    expect(isVersionAllowed(ctx(), 'onbv')).toBe(true);
     expect(isLanguageAllowed(ctx(), 'en')).toBe(true);
   });
 
   it('filters versions by slug', () => {
-    const connection = ctx({ allowedVersions: ['nvi'] });
+    const connection = ctx({ allowedVersions: ['onbv'] });
 
-    expect(isVersionAllowed(connection, 'nvi')).toBe(true);
+    expect(isVersionAllowed(connection, 'onbv')).toBe(true);
     expect(isVersionAllowed(connection, 'kjv')).toBe(false);
   });
 

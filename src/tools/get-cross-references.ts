@@ -1,5 +1,9 @@
 import { crossRefsFor, type CrossRef } from '../lib/cross-refs';
-import { bookNameForVersion, localeForVersion } from '../lib/markdown';
+import {
+  bookNameForVersion,
+  localeForVersion,
+  withAttribution,
+} from '../lib/markdown';
 import {
   dualResult,
   versionFields,
@@ -47,7 +51,7 @@ export const getCrossReferencesTool: Tool = {
         version: {
           type: 'string',
           description:
-            'Optional Bible version slug for the text of the related passages. Defaults to the connection version, or "nvi".',
+            'Optional Bible version slug for the text of the related passages. Defaults to the connection version, or "onbv".',
         },
         limit: {
           type: 'integer',
@@ -194,7 +198,7 @@ export const getCrossReferencesTool: Tool = {
       `_${refs.length} passages, most widely attested first. Text shown in ${version.value.shortName}._`,
     );
 
-    return dualResult(lines.join('\n'), {
+    return dualResult(withAttribution(lines.join('\n'), version.value), {
       ...versionFields(version.value),
       source,
       passages: structuredPassages(texts),

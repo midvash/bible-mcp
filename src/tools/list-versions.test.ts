@@ -33,22 +33,23 @@ describe('list_versions', () => {
     expect(text).not.toContain('### pt-br');
   });
 
-  it('normalizes pt to include Brazilian and Portugal Portuguese', async () => {
+  it('normalizes pt to Portuguese', async () => {
     const text = await callListVersions({ language: 'pt' });
 
     expect(text).toContain('### pt-br');
-    expect(text).toContain('### pt-pt');
+    expect(text).toContain('Bíblia Livre');
+    expect(text).not.toContain('### en');
   });
 
   it('respects versions enabled by connection URL', async () => {
     const text = await callListVersions(
       {},
-      { allowedVersions: ['nvi', 'kjv'] },
+      { allowedVersions: ['onbv', 'kjv'] },
     );
 
-    expect(text).toContain('Nova Versão Internacional');
+    expect(text).toContain('Open Nova Bíblia Viva');
     expect(text).toContain('King James Version');
-    expect(text).not.toContain('Almeida Revista e Atualizada');
+    expect(text).not.toContain('Bíblia Livre');
   });
 
   it('respects language filters enabled by connection URL', async () => {

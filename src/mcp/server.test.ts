@@ -52,7 +52,7 @@ describe('catálogos', () => {
   it('resources/list respeita o filtro de versões da conexão', async () => {
     const narrow = await handleMcpMessage(
       { jsonrpc: '2.0', id: 1, method: 'resources/list' },
-      { ...connectionCtx, allowedVersions: ['nvi'] },
+      { ...connectionCtx, allowedVersions: ['onbv'] },
       executionCtx,
     );
     const resources = (narrow as { result: { resources: Array<{ uri: string }> } })
@@ -140,14 +140,14 @@ describe('resources/read', () => {
   });
 
   it('lista os livros de uma versão sem tocar no R2', async () => {
-    const res = await result('resources/read', { uri: 'bible://nvi' });
+    const res = await result('resources/read', { uri: 'bible://onbv' });
     const contents = res.contents as Array<{ text: string; mimeType: string }>;
     expect(contents[0].mimeType).toBe('text/markdown');
     expect(contents[0].text).toContain('Gênesis');
   });
 
   it('recusa capítulo fora do livro', async () => {
-    const res = await send('resources/read', { uri: 'bible://nvi/john/99' });
+    const res = await send('resources/read', { uri: 'bible://onbv/john/99' });
     expect(res).toHaveProperty('error.code', JSON_RPC_ERRORS.INVALID_PARAMS);
   });
 });
@@ -163,9 +163,9 @@ describe('completion/complete', () => {
 
   it('sugere slugs de versão', async () => {
     const res = await result('completion/complete', {
-      argument: { name: 'version', value: 'nv' },
+      argument: { name: 'version', value: 'on' },
     });
-    expect((res.completion as { values: string[] }).values).toContain('nvi');
+    expect((res.completion as { values: string[] }).values).toContain('onbv');
   });
 
   it('devolve lista vazia para argumento desconhecido, não erro', async () => {

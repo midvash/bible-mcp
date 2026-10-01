@@ -1,9 +1,9 @@
 import type { Env } from '../env';
 
 /**
- * Camada de busca sobre o índice FTS5 do Midvash (D1 `midvash-search`).
+ * Camada de busca sobre o índice FTS5 do MCP (D1 `midvash-mcp-search`).
  *
- * O índice guarda **uma versão de referência por idioma** — 278k versículos
+ * O índice guarda o texto de cada versão do catálogo (src/data/versions.ts),
  * em duas tabelas FTS5 sobre o mesmo conteúdo:
  *
  *  - `search_verses_fts` → tokenizer `unicode61 remove_diacritics 2`.
@@ -12,18 +12,22 @@ import type { Env } from '../env';
  *    (`ressurrei` → `ressurreição`, `ressuscitou`), usado como fallback
  *    quando a busca por termos não retorna nada.
  *
- * Este módulo só lê. O índice é populado pelo pipeline do Midvash.
+ * Este módulo só lê. O índice é populado por scripts/seed-mcp-search.sh.
  */
 
-/** Versão indexada em `search_verses` para cada locale. */
+/**
+ * Versão de referência de cada locale. Hoje só as chaves importam (são os
+ * locales do material de estudo); en/es/pt-br apontam pra versões livres do
+ * catálogo — nunca pra uma versão sem licença pra redistribuir.
+ */
 export const INDEX_VERSION_BY_LOCALE = {
   de: 'luth1912',
-  en: 'niv',
-  es: 'nvies',
+  en: 'bsb',
+  es: 'rvr1909',
   fr: 'darby-fr',
   it: 'riveduta',
   ko: 'kor',
-  'pt-br': 'naa',
+  'pt-br': 'onbv',
   ru: 'synodal',
   zh: 'cuvs',
 } as const;
@@ -42,7 +46,7 @@ export function indexLocaleForLanguage(language: string): IndexLocale | null {
   return INDEX_LOCALES.has(lang) ? (lang as IndexLocale) : null;
 }
 
-/** Retorna a versão indexada de um locale — ex.: 'pt-br' → 'naa'. */
+/** Retorna a versão indexada de um locale — ex.: 'pt-br' → 'onbv'. */
 export function indexVersionForLocale(locale: IndexLocale): string {
   return INDEX_VERSION_BY_LOCALE[locale];
 }

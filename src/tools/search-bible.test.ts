@@ -54,7 +54,7 @@ describe('search_bible', () => {
   it('rejects a version the connection does not allow', async () => {
     const { text, isError } = await callSearch(
       { query: 'love', version: 'kjv' },
-      { allowedVersions: ['nvi'] },
+      { allowedVersions: ['onbv'] },
     );
     expect(isError).toBe(true);
     expect(text).toContain('not enabled');
@@ -82,7 +82,7 @@ describe('search_bible', () => {
   it('asks for a book filter when the index binding is missing', async () => {
     const { text, isError } = await callSearch({
       query: 'amor',
-      version: 'nvi',
+      version: 'onbv',
     });
     expect(isError).toBe(true);
     expect(text).toContain('unavailable');

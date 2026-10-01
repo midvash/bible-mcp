@@ -30,7 +30,30 @@ function bookNameFor(book: BookDefinition, version: VersionDefinition): string {
   return book.names[localeForVersion(version)];
 }
 
-/** Nome do livro no idioma da versão — ex.: (João, NVI) → "João". */
+/**
+ * Linha de crédito que a licença da versão exige (CC BY-SA etc.), em itálico.
+ * `null` quando a versão não pede atribuição.
+ */
+export function attributionLine(version: VersionDefinition): string | null {
+  return version.copyright ? `_${version.copyright}_` : null;
+}
+
+/**
+ * Anexa o crédito das versões ao fim de um texto bíblico. Cada crédito sai uma
+ * vez só, mesmo que a versão apareça em vários trechos do mesmo texto.
+ */
+export function withAttribution(
+  text: string,
+  versions: VersionDefinition | VersionDefinition[],
+): string {
+  const list = Array.isArray(versions) ? versions : [versions];
+  const lines = Array.from(
+    new Set(list.map(attributionLine).filter((l): l is string => l !== null)),
+  );
+  return lines.length === 0 ? text : [text, ...lines].join('\n\n');
+}
+
+/** Nome do livro no idioma da versão — ex.: (João, ONBV) → "João". */
 export function bookNameForVersion(
   book: BookDefinition,
   version: VersionDefinition,
@@ -42,7 +65,7 @@ export function bookNameForVersion(
  * Formata um único versículo (ou intervalo) em Markdown.
  *
  * Exemplo:
- *   **João 3:16** (NVI)
+ *   **João 3:16** (ONBV)
  *   *"Porque Deus amou o mundo..."*
  */
 export function formatVerse(
@@ -52,6 +75,7 @@ export function formatVerse(
   verseStart: number,
   verseEnd: number,
   verses: string[],
+  { attribution = true }: { attribution?: boolean } = {},
 ): string {
   const bookName = bookNameFor(book, version);
   const ref =
@@ -70,14 +94,15 @@ export function formatVerse(
     }
   }
 
-  return lines.join('\n');
+  const text = lines.join('\n');
+  return attribution ? withAttribution(text, version) : text;
 }
 
 /**
  * Formata um capítulo completo em Markdown.
  *
  * Exemplo:
- *   ## João 3 (NVI)
+ *   ## João 3 (ONBV)
  *
  *   **1** No princípio era o Verbo...
  *   **2** Ele estava no princípio...
@@ -87,6 +112,7 @@ export function formatChapter(
   version: VersionDefinition,
   chapter: number,
   verses: string[],
+  { attribution = true }: { attribution?: boolean } = {},
 ): string {
   const bookName = bookNameFor(book, version);
   const lines: string[] = [`## ${bookName} ${chapter} (${version.shortName})`, ''];
@@ -97,7 +123,8 @@ export function formatChapter(
     lines.push(`**${i + 1}** ${text}`);
   }
 
-  return lines.join('\n');
+  const text = lines.join('\n');
+  return attribution ? withAttribution(text, version) : text;
 }
 
 /**
@@ -106,7 +133,7 @@ export function formatChapter(
  * Exemplo:
  *   ## Versões disponíveis nesta conexão
  *
- *   - **NVI** — Nova Versão Internacional (pt-br)
+ *   - **ONBV** — Open Nova Bíblia Viva (pt-br)
  *   - **KJV** — King James Version (en)
  */
 export function formatVersionList(versions: VersionDefinition[]): string {

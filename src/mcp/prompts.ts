@@ -124,7 +124,7 @@ export const PROMPTS: PromptDefinition[] = [
       {
         name: 'versions',
         description:
-          'Comma-separated version slugs, such as "nvi,ara,kjv". Defaults to the connection versions.',
+          'Comma-separated version slugs, such as "onbv,almeida-livre,kjv". Defaults to the connection versions.',
       },
     ],
     build: ({ reference, versions }) =>

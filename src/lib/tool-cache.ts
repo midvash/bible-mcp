@@ -23,8 +23,10 @@ import type { ToolResult } from '../mcp/types';
  *
  * v1 → v2: saída em inglês, `structuredContent`, e o ranking por versão.
  * v2 → v3: `reader_url` nas tools de leitura (botão da tela do ChatGPT).
+ * v3 → v4: saem as versões sem licença (resposta cacheada ainda traria o texto
+ *          delas por um dia) e entra o crédito CC BY-SA no fim do texto.
  */
-const CACHE_VERSION = 'v3';
+const CACHE_VERSION = 'v4';
 
 /** Um dia. O texto bíblico não muda; o teto existe só para limitar staleness. */
 const CACHE_TTL_SECONDS = 86400;
@@ -57,7 +59,7 @@ async function sha256Hex(input: string): Promise<string> {
 
 /**
  * Chave de cache de uma chamada. Inclui os filtros da conexão (`?v=`, `?lang=`)
- * porque eles mudam a saída — sem isso, uma conexão restrita a NVI receberia a
+ * porque eles mudam a saída — sem isso, uma conexão restrita a ONBV receberia a
  * resposta gerada para uma conexão sem restrição.
  */
 export async function toolCacheKey(

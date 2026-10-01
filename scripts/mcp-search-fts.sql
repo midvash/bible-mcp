@@ -65,4 +65,4 @@ CREATE VIRTUAL TABLE IF NOT EXISTS search_metadata_fts USING fts5(
 -- e confira com uma consulta de verdade, não com COUNT(*):
 --
 --   SELECT COUNT(*) FROM search_verses_fts
---    WHERE search_verses_fts MATCH '"amor"' AND version='nvi';
+--    WHERE search_verses_fts MATCH '"amor"' AND version='onbv';
