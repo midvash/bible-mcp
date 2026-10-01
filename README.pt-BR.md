@@ -7,7 +7,7 @@
 
 Servidor [Model Context Protocol](https://modelcontextprotocol.io) gratuito e sem
 chave do [Midvash](https://midvash.com). Leia, busque e estude as Escrituras em
-**99 versões bíblicas livres em 68 idiomas** (domínio público ou licença aberta,
+**106 versões bíblicas livres em 68 idiomas** (domínio público ou licença aberta,
 o mesmo catálogo da [api.midvash.com](https://api.midvash.com)) no ChatGPT,
 Claude, Gemini, Cursor e qualquer outro cliente MCP. Servido a partir da edge da
 Cloudflare. Alimenta [mcp.midvash.com](https://mcp.midvash.com).
@@ -96,7 +96,7 @@ do tempo.
 ## Catálogo atual
 
 O MCP expõe hoje o catálogo compilado em
-[`src/data/versions.ts`](./src/data/versions.ts): 99 versões, todas em domínio
+[`src/data/versions.ts`](./src/data/versions.ts): 106 versões, todas em domínio
 público ou com licença livre, em 68 códigos de idioma: `ar`, `as`, `bn`, `ceb`, `ckb`, `cs`, `da`, `de`, `ee`, `en`, `eo`, `es`, `fa`, `fi`, `fr`, `gr` (grego), `gu`, `ha`, `haw`, `he`, `hi`, `hil`, `hne`, `ht`, `hu`, `id`, `ig`, `ilo`, `it`, `ja`, `ki`, `kn`, `ko`, `la`, `lg`, `ln`, `luo`, `ml`, `mr`, `my`, `nb`, `nd`, `ne`, `nl`, `ny`, `om`, `or`, `pa`, `pl`, `pt-br`, `ro`, `ru`, `sn`, `sr`, `sv`, `sw`, `ta`, `te`, `tl`, `to`, `tr`, `tw`, `ug`, `uk`, `ur`, `vi`, `yo`, `zh`. As versões cuja licença pede atribuição (CC BY-SA e afins) têm
 uma linha `copyright`, impressa no fim de todo texto que as tools devolvem.
 

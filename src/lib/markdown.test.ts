@@ -26,6 +26,11 @@ describe('attribution', () => {
     }
   });
 
+  it('CC BY versions carry a credit too', () => {
+    expect(VERSIONS.find((v) => v.slug === 'almeida-livre')?.copyright).toContain('Atribuição 4.0');
+    expect(VERSIONS.find((v) => v.slug === 'pdt')?.copyright).toContain('CC BY 4.0');
+  });
+
   it('ends the text of a CC BY-SA version with its credit, in italics', () => {
     const text = formatVerse(JOHN, ONBV, 3, 16, 16, ['Porque Deus amou o mundo']);
     expect(text.split('\n').at(-1)).toBe(`_${ONBV.copyright}_`);

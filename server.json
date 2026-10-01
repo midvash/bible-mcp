@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "com.midvash/bible",
   "title": "Bible by Midvash",
-  "description": "Free, no-key Bible MCP: 99 free versions in 68 languages, search, commentary and Strong's.",
+  "description": "Free, no-key Bible MCP: 106 free versions in 68 languages, search, commentary and Strong's.",
   "version": "1.0.0",
   "websiteUrl": "https://mcp.midvash.com",
   "repository": {
