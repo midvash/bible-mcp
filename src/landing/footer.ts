@@ -32,7 +32,22 @@ const PRODUCT_ORDER: ProductKey[] = [
   'android',
 ];
 
-const SOON_PRODUCTS: ReadonlySet<ProductKey> = new Set<ProductKey>(['ios', 'android']);
+// Os apps iOS e Android já estão nas lojas: nenhum produto é "em breve" hoje.
+const SOON_PRODUCTS: ReadonlySet<ProductKey> = new Set<ProductKey>();
+
+// Slug da página da extensão no midvash.com por idioma (ROUTES.chromeExtension
+// do monorepo). O midvash.app está em desativação: tudo aponta pro .com.
+const CHROME_SLUGS: Record<Locale, string> = {
+  en: '/chrome-extension',
+  'pt-br': '/extensao-chrome',
+  es: '/extension-chrome',
+  fr: '/extension-chrome',
+  de: '/chrome-erweiterung',
+  it: '/estensione-chrome',
+  zh: '/chrome-extension',
+  ru: '/chrome-extension',
+  ko: '/chrome-extension',
+};
 
 function productHref(key: ProductKey, locale: Locale): string | null {
   const suffix = locale === 'en' ? '' : `/${locale}`;
@@ -44,12 +59,13 @@ function productHref(key: ProductKey, locale: Locale): string | null {
     case 'mcp':
       return `https://mcp.midvash.com${suffix}`;
     case 'wordpress':
-      return `https://wordpress.midvash.com${suffix}`;
+      return `https://midvash.com${suffix}/wordpress-plugin`;
     case 'chrome':
-      return 'https://midvash.app/chrome-extension/';
+      return `https://midvash.com${suffix}${CHROME_SLUGS[locale]}`;
     case 'ios':
+      return 'https://apps.apple.com/app/id6775930176';
     case 'android':
-      return null;
+      return 'https://play.google.com/store/apps/details?id=com.midvash.mobile';
   }
 }
 
@@ -88,6 +104,7 @@ interface OssRepo {
 }
 
 const OSS_REPOS: OssRepo[] = [
+  { name: 'bible-mcp', href: 'https://github.com/midvash/bible-mcp' },
   { name: 'bible-api', href: 'https://github.com/midvash/bible-api' },
   { name: 'bible-data', href: 'https://github.com/midvash/bible-data' },
   { name: 'bible-data-js', href: 'https://github.com/midvash/bible-data-js' },
