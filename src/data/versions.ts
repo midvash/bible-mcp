@@ -43,7 +43,9 @@ export const VERSIONS: VersionDefinition[] = [
     { slug: 'nvl', name: 'Nova Vulgata', shortName: 'NVL', language: 'la', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1038 },
     { slug: 'nvt', name: 'Nova Versão Transformadora', shortName: 'NVT', language: 'pt-br', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1036 },
     { slug: 'osmh', name: 'Open Scriptures Morphological Hebrew', shortName: 'OSMH', language: 'he', hasOldTestament: true, hasNewTestament: false, totalBooks: 39, totalChapters: 775 },
-    { slug: 'rvr1960', name: 'Reina-Valera 1960', shortName: 'RVR1960', language: 'es', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1036 },
+    // rvr1960 fora do ar: as Sociedades Bíblicas Unidas não licenciaram (out/2026). Religar = voltar esta linha.
+    // { slug: 'rvr1960', name: 'Reina-Valera 1960', shortName: 'RVR1960', language: 'es', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1036 },
+    { slug: 'rvr1909', name: 'Reina-Valera 1909', shortName: 'RVR1909', language: 'es', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1036 },
     { slug: 'tr', name: 'Textus Receptus', shortName: 'TR', language: 'gr', hasOldTestament: false, hasNewTestament: true, totalBooks: 27, totalChapters: 257 },
     { slug: 'vulg', name: 'Biblia Sacra Vulgata', shortName: 'VULG', language: 'la', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1031 },
     { slug: 'wlc', name: 'Westminster Leningrad Codex', shortName: 'WLC', language: 'he', hasOldTestament: true, hasNewTestament: false, totalBooks: 39, totalChapters: 776 }
