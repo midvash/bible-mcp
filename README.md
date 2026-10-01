@@ -43,6 +43,21 @@ Example (Claude Desktop / `mcp.json`):
 }
 ```
 
+## ChatGPT plugin
+
+ChatGPT plugins are MCP servers, so this same server is the plugin. The
+endpoint registered in the OpenAI plugin portal is:
+
+```
+https://mcp.midvash.com/mcp/chatgpt
+```
+
+`get_passage`, `get_verse` and `get_chapter` point at an interactive view
+(`ui://midvash/passage-v1.html`, [MCP Apps](https://github.com/modelcontextprotocol/ext-apps)
+standard) that shows the numbered verses and a button to read the passage on
+midvash.com. Hosts without UI support keep getting the Markdown. Submission
+data lives in [docs/chatgpt-plugin.md](docs/chatgpt-plugin.md).
+
 ## Tools
 
 | Tool | Description |

@@ -3,6 +3,7 @@ import { formatVerse, localeForVersion } from '../lib/markdown';
 import {
   dualResult,
   structuredVerse,
+  readerUrl,
   versionFields,
   VERSES_OUTPUT_SCHEMA,
 } from '../lib/structured';
@@ -14,6 +15,7 @@ import {
   resolveVersion,
 } from '../lib/tool-guards';
 import type { Tool } from '../mcp/types';
+import { PASSAGE_TOOL_META } from '../ui/passage-widget';
 
 function textResult(text: string, isError = false) {
   return { content: [{ type: 'text' as const, text }], isError };
@@ -57,6 +59,7 @@ export const getVerseTool: Tool = {
       required: ['version', 'book', 'chapter', 'verse'],
     },
     outputSchema: VERSES_OUTPUT_SCHEMA,
+    _meta: PASSAGE_TOOL_META,
     annotations: {
       title: 'Get Bible verse',
       readOnlyHint: true,
@@ -115,6 +118,12 @@ export const getVerseTool: Tool = {
       ),
       {
         ...versionFields(version.value),
+        reader_url: readerUrl(
+          version.value,
+          book.value,
+          chapter.value,
+          range.value.start,
+        ),
         verses: selected.map((text, i) =>
           structuredVerse(
             book.value,

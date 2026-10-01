@@ -4,6 +4,11 @@ import { lookupBook } from '../lib/books-lookup';
 import { isLanguageAllowed, isVersionAllowed, type ConnectionContext } from '../lib/context';
 import { formatChapter, localeForVersion } from '../lib/markdown';
 import { fetchChapter } from '../lib/r2';
+import {
+  PASSAGE_WIDGET_URI,
+  passageWidgetListing,
+  passageWidgetResource,
+} from '../ui/passage-widget';
 
 /**
  * Resources do MCP: o texto bíblico como conteúdo endereçável, além das tools.
@@ -35,6 +40,7 @@ export interface ResourceContents {
   uri: string;
   mimeType: string;
   text: string;
+  _meta?: Record<string, unknown>;
 }
 
 const MIME = 'text/markdown';
@@ -47,12 +53,13 @@ export function visibleVersions(ctx: ConnectionContext): VersionDefinition[] {
 }
 
 export function listResources(ctx: ConnectionContext): Resource[] {
-  return visibleVersions(ctx).map((version) => ({
+  const versions = visibleVersions(ctx).map((version) => ({
     uri: `bible://${version.slug}`,
     name: `${version.shortName} — ${version.name}`,
     description: `Book list for ${version.name} (${version.language}). Append /{book}/{chapter} to read a chapter.`,
     mimeType: MIME,
   }));
+  return [...versions, passageWidgetListing()];
 }
 
 export function listResourceTemplates(): ResourceTemplate[] {
@@ -153,6 +160,8 @@ export async function readResource(
   ctx: ConnectionContext,
   executionCtx: ExecutionContext,
 ): Promise<ResourceContents> {
+  if (uri === PASSAGE_WIDGET_URI) return passageWidgetResource();
+
   const match = /^bible:\/\/([^/]+)(?:\/([^/]+))?(?:\/(\d+))?\/?$/.exec(uri);
   if (!match) {
     throw new ResourceError(

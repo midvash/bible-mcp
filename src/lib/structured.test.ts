@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { BOOKS } from '../data/books';
 import { TOOLS } from '../tools';
-import { dualResult, structuredVerse, versionFields } from './structured';
+import { dualResult, readerUrl, structuredVerse, versionFields } from './structured';
 import { VERSIONS } from '../data/versions';
 
 const JOHN = BOOKS.find((b) => b.id === 43)!;
@@ -71,5 +71,15 @@ describe('outputSchema contract', () => {
         );
       }
     }
+  });
+});
+
+describe('readerUrl', () => {
+  it('uses the English book slug for any version', () => {
+    expect(readerUrl(NVI, JOHN, 3)).toBe('https://midvash.com/nvi/john/3');
+  });
+
+  it('points at the verse page when a verse is given', () => {
+    expect(readerUrl(NVI, JOHN, 3, 16)).toBe('https://midvash.com/nvi/john/3/16');
   });
 });

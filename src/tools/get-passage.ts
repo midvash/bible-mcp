@@ -9,6 +9,7 @@ import {
 import {
   dualResult,
   structuredVerse,
+  readerUrl,
   versionFields,
   VERSES_OUTPUT_SCHEMA,
   type StructuredVerse,
@@ -21,6 +22,7 @@ import {
 } from '../lib/reference-parser';
 import { chapterNotFound, resolveVersion } from '../lib/tool-guards';
 import type { Tool } from '../mcp/types';
+import { PASSAGE_TOOL_META } from '../ui/passage-widget';
 
 function textResult(text: string, isError = false) {
   return { content: [{ type: 'text' as const, text }], isError };
@@ -146,6 +148,7 @@ export const getPassageTool: Tool = {
       required: ['reference'],
     },
     outputSchema: VERSES_OUTPUT_SCHEMA,
+    _meta: PASSAGE_TOOL_META,
     annotations: {
       title: 'Get Bible passage',
       readOnlyHint: true,
@@ -252,8 +255,21 @@ export const getPassageTool: Tool = {
       );
     }
 
+    // O botão da tela abre a primeira referência encontrada.
+    const first = parsed.references.find((r) =>
+      chapters.has(chapterKey(r.book.id, r.chapter)),
+    )!;
+    const singleVerseStart =
+      first.endChapter === undefined ? first.verseStart : undefined;
+
     return dualResult(sections.join('\n\n'), {
       ...versionFields(version.value),
+      reader_url: readerUrl(
+        version.value,
+        first.book,
+        first.chapter,
+        singleVerseStart,
+      ),
       verses: structured,
     });
   },

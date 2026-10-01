@@ -22,8 +22,9 @@ import type { ToolResult } from '../mcp/types';
  * as mensagens antigas e sem os campos novos.
  *
  * v1 → v2: saída em inglês, `structuredContent`, e o ranking por versão.
+ * v2 → v3: `reader_url` nas tools de leitura (botão da tela do ChatGPT).
  */
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v3';
 
 /** Um dia. O texto bíblico não muda; o teto existe só para limitar staleness. */
 const CACHE_TTL_SECONDS = 86400;
