@@ -23,7 +23,8 @@ export const VERSIONS: VersionDefinition[] = [
     { slug: 'esv', name: 'English Standard Version', shortName: 'ESV', language: 'en', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1036 },
     { slug: 'jfaa', name: 'João Ferreira de Almeida Atualizada', shortName: 'JFAA', language: 'pt-br', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1036 },
     { slug: 'kja', name: 'King James Atualizada', shortName: 'KJA', language: 'pt-br', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1036 },
-    { slug: 'kjf', name: 'King James Fiel', shortName: 'KJF', language: 'pt-br', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1036 },
+    // kjf (King James Fiel 1611) fora do ar: a BV Books Editora exige licença paga (out/2026). Religar = voltar esta linha.
+    // { slug: 'kjf', name: 'King James Fiel', shortName: 'KJF', language: 'pt-br', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1036 },
     { slug: 'kjv', name: 'King James Version', shortName: 'KJV', language: 'en', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1036 },
     { slug: 'lsg', name: 'Louis Segond', shortName: 'LSG', language: 'fr', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1036 },
     { slug: 'mh', name: 'Modern Hebrew', shortName: 'MH', language: 'he', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1046 },
