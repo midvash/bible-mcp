@@ -142,6 +142,12 @@ const LANGUAGE_TAGS: Record<string, string> = {
   nb: 'no',
 };
 
+/** Idiomas que o Intl.DisplayNames não conhece: o nome vem daqui. */
+const LANGUAGE_FALLBACKS: Record<string, string> = {
+  hne: 'Chhattisgarhi',
+  luo: 'Dholuo',
+};
+
 /**
  * Nome de cada idioma do catálogo escrito no idioma da página
  * ("Hebraico" em /pt-br, "Hebrew" em /). Cai no código se o runtime não
@@ -163,6 +169,7 @@ export function languageLabels(locale: Locale): Record<string, string> {
     } catch {
       label = code;
     }
+    if (label === code && LANGUAGE_FALLBACKS[code]) label = LANGUAGE_FALLBACKS[code];
     labels[code] = label.charAt(0).toLocaleUpperCase(pageTag) + label.slice(1);
   }
   return labels;

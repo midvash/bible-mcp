@@ -9,6 +9,23 @@ const ONBV = VERSIONS.find((v) => v.slug === 'onbv')!;
 const NVA = VERSIONS.find((v) => v.slug === 'nva')!;
 
 describe('attribution', () => {
+  it('every Biblica Open version carries the credit its license asks for', () => {
+    const ocv = VERSIONS.filter((v) => v.slug.startsWith('ocv-'));
+    expect(ocv).toHaveLength(20);
+    for (const v of ocv) {
+      expect(v.copyright).toContain('CC BY-SA 4.0');
+      expect(v.copyright).toContain(
+        'Original work available for free at www.biblica.com and open.bible.',
+      );
+    }
+  });
+
+  it('every CC BY-SA version of the eBible batch carries a credit', () => {
+    for (const slug of ['irv-hi', 'irv-as', 'bsa', 'ulb-ilo', 'muqeddes']) {
+      expect(VERSIONS.find((v) => v.slug === slug)?.copyright).toContain('CC BY-SA 4.0');
+    }
+  });
+
   it('ends the text of a CC BY-SA version with its credit, in italics', () => {
     const text = formatVerse(JOHN, ONBV, 3, 16, 16, ['Porque Deus amou o mundo']);
     expect(text.split('\n').at(-1)).toBe(`_${ONBV.copyright}_`);
