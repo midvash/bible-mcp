@@ -57,10 +57,14 @@ CREATE VIRTUAL TABLE IF NOT EXISTS search_metadata_fts USING fts5(
 -- O `rebuild` do índice de metadados e o do `search_verses_fts` ainda cabem numa
 -- instrução; o de trigrama, não — ele é várias vezes maior.
 --
--- A população é feita por scripts/seed-mcp-versions.mjs, uma versão por
--- instrução (~31 mil linhas cada). Depois de carregar dados novos, rode:
+-- Com 2,9 milhões de versículos (out/2026), nem o `delete-all` cabe mais: deu
+-- timeout, valeu mesmo assim, e o índice de trigrama ficou vazio em produção.
 --
---   node scripts/seed-mcp-versions.mjs --reindex
+-- A população é feita por scripts/seed-mcp-versions.mjs, uma versão por
+-- instrução (~31 mil linhas cada), junto com a carga de cada versão. Nunca se
+-- apaga nem reconstrói o índice inteiro. Se uma carga cair no meio, rode:
+--
+--   node scripts/seed-mcp-versions.mjs --reindex   # confere e completa
 --
 -- e confira com uma consulta de verdade, não com COUNT(*):
 --
