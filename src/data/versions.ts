@@ -2,7 +2,39 @@ export interface VersionDefinition {
     slug: string;
     name: string; // Full Name (e.g. "Almeida Revista e Atualizada")
     shortName: string; // Abbreviation (e.g. "ARA")
-    language: 'pt-br' | 'en' | 'es' | 'he' | 'la' | 'fr' | 'it' | 'gr' | 'pt-pt';
+    language:
+        | 'ar'
+        | 'cs'
+        | 'da'
+        | 'de'
+        | 'en'
+        | 'eo'
+        | 'es'
+        | 'fi'
+        | 'fr'
+        | 'gr'
+        | 'he'
+        | 'hu'
+        | 'id'
+        | 'it'
+        | 'ja'
+        | 'ko'
+        | 'la'
+        | 'nb'
+        | 'nl'
+        | 'pl'
+        | 'pt-br'
+        | 'pt-pt'
+        | 'ro'
+        | 'ru'
+        | 'sr'
+        | 'sv'
+        | 'sw'
+        | 'tl'
+        | 'tr'
+        | 'uk'
+        | 'vi'
+        | 'zh';
     hasOldTestament: boolean;
     hasNewTestament: boolean;
     totalBooks: number;
@@ -84,5 +116,54 @@ export const VERSIONS: VersionDefinition[] = [
     { slug: 'tr', name: 'Textus Receptus', shortName: 'TR', language: 'gr', hasOldTestament: false, hasNewTestament: true, totalBooks: 27, totalChapters: 257 },
     { slug: 'vulg', name: 'Biblia Sacra Vulgata', shortName: 'VULG', language: 'la', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1031 },
     { slug: 'web', name: 'World English Bible', shortName: 'WEB', language: 'en', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    // Livres dos demais idiomas (domínio público ou licença aberta), mesmo
+    // catálogo da API pública (out/2026). Banco D1 fora do padrão bible-{slug}
+    // está em DB_NAME_BY_SLUG de scripts/seed-mcp-versions.mjs.
+    { slug: 'luth1912', name: 'Lutherbibel 1912', shortName: 'LUTH1912', language: 'de', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'schl1951', name: 'Schlachter 1951', shortName: 'SCHL1951', language: 'de', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'elb1905', name: 'Elberfelder 1905', shortName: 'ELB1905', language: 'de', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'diodati', name: 'Bibbia Diodati 1649', shortName: 'DIODATI', language: 'it', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'riveduta', name: 'Bibbia Riveduta 1927', shortName: 'RIVEDUTA', language: 'it', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'cuv', name: '和合本 (Chinese Union Version, Traditional)', shortName: 'CUV', language: 'zh', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'cuvs', name: '和合本 (Chinese Union Version, Simplified)', shortName: 'CUVS', language: 'zh', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'synodal', name: 'Синодальный перевод', shortName: 'SYNODAL', language: 'ru', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'kor', name: '개역한글판', shortName: 'KOR', language: 'ko', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1188 },
+    { slug: 'darby-fr', name: 'Bible Darby Française', shortName: 'DARBY-FR', language: 'fr', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'martin1744', name: 'Bible David Martin 1744', shortName: 'MARTIN1744', language: 'fr', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'asv', name: 'American Standard Version', shortName: 'ASV', language: 'en', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'ylt', name: 'Young\'s Literal Translation', shortName: 'YLT', language: 'en', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'dra', name: 'Douay-Rheims American Edition', shortName: 'DRA', language: 'en', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'bbe', name: 'Bible in Basic English', shortName: 'BBE', language: 'en', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'svd', name: 'الكتاب المقدس فان دايك (Smith-Van Dyck)', shortName: 'SVD', language: 'ar', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'kgy', name: '口語訳聖書 (Kōgoyaku)', shortName: 'KGY', language: 'ja', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1171 },
+    { slug: 'bg', name: 'Biblia Gdańska', shortName: 'BG', language: 'pl', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'dutch1917', name: 'De Heilige Schrift 1917', shortName: 'NLD1917', language: 'nl', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'vdc', name: 'Biblia Cornilescu', shortName: 'VDC', language: 'ro', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1188 },
+    { slug: 'kar', name: 'Károli Biblia', shortName: 'KAR', language: 'hu', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'bkr', name: 'Bible kralická', shortName: 'BKR', language: 'cs', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'bnb', name: 'Banal na Bibliya (ULB)', shortName: 'BNB', language: 'tl', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189, copyright: 'Banal na Bibliya (ULB) (BNB) © 2018 Door43 World Missions Community. Lisensyang Creative Commons Attribution-ShareAlike 4.0 (CC BY-SA 4.0). Pinagmulan: eBible.org.' },
+    { slug: 'vi1934', name: 'Kinh Thánh 1934', shortName: 'VI1934', language: 'vi', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'ycv', name: 'Yorumsuz Türkçe Çeviri', shortName: 'YCV', language: 'tr', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189, copyright: 'Yorumsuz Türkçe Çeviri (YCV) © 2023-2025 İsmail Serinken ve eBible.org. Creative Commons Atıf-Türetilemez 4.0 lisansı (CC BY-ND 4.0) ile sunulmuştur. World English Bible\'dan çevrilmiştir.' },
+    { slug: 'indonesian', name: 'Alkitab Terjemahan Sederhana', shortName: 'TSI', language: 'id', hasOldTestament: true, hasNewTestament: true, totalBooks: 48, totalChapters: 762, copyright: 'Alkitab Terjemahan Sederhana Indonesia (TSI) © 2021 oleh Yayasan Alkitab BahasaKita (Albata) dan Pioneer Bible Translators International. Lisensi Creative Commons Atribusi-BerbagiSerupa 4.0 (CC BY-SA 4.0). Sumber: eBible.org.' },
+    { slug: 'kp', name: 'Куліш-Пулюй (1905)', shortName: 'KP', language: 'uk', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'sv1917', name: 'Bibeln 1917', shortName: 'SVE1917', language: 'sv', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'dansk1931', name: 'Dansk Bibel 1931', shortName: 'DAN1931', language: 'da', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189, copyright: 'Dansk Bibel 1931 (DAN1931) Det Nye Testamente er i offentlig eje (Public Domain). Det Gamle Testamente © 1931 Det Danske Bibelselskab. Udbredt via Project Gutenberg med tilladelse fra rettighedshaveren.' },
+    { slug: 'nb1930', name: 'Norsk Bibel', shortName: 'NB1930', language: 'nb', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'lsb', name: 'La Sankta Biblio (Esperanto)', shortName: 'LSB', language: 'eo', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'suv', name: 'Biblia Takatifu (NT)', shortName: 'SUV', language: 'sw', hasOldTestament: false, hasNewTestament: true, totalBooks: 26, totalChapters: 256 },
+    { slug: 'geneva1599', name: 'Geneva Bible 1599', shortName: 'GNV', language: 'en', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'sblgnt', name: 'SBL Greek New Testament', shortName: 'SBLGNT', language: 'gr', hasOldTestament: false, hasNewTestament: true, totalBooks: 27, totalChapters: 260, copyright: 'SBL Greek New Testament (SBLGNT) © 2010 Society of Biblical Literature and Logos Bible Software. Licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0). Source: github.com/LogosBible/SBLGNT.' },
+    { slug: 'rvg', name: 'Reina-Valera Gómez 2010', shortName: 'RVG', language: 'es', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189, copyright: 'Reina-Valera Gómez 2010 (RVG) © 2004, 2010, 2023 Dr. Humberto Gómez Caballero. Derechos reservados. Se permite reproducirla para distribución gratuita, sin fines de lucro y sin cambiar ninguna de las palabras escritas.' },
+    { slug: 'crampon', name: 'Bible Crampon', shortName: 'CRAMPON', language: 'fr', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'frasbl', name: 'La Sainte Bible libre', shortName: 'FRASBL', language: 'fr', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'men', name: 'Menge Bibel 1939', shortName: 'MEN', language: 'de', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'luth1545', name: 'Lutherbibel 1545', shortName: 'LUTH1545', language: 'de', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'byz', name: 'Byzantine Greek NT', shortName: 'BYZ', language: 'gr', hasOldTestament: false, hasNewTestament: true, totalBooks: 27, totalChapters: 260 },
+    { slug: 'lxx', name: 'Septuaginta', shortName: 'LXX', language: 'gr', hasOldTestament: true, hasNewTestament: false, totalBooks: 36, totalChapters: 896 },
+    { slug: 'pr1933', name: 'Pyhä Raamattu 1933/1938', shortName: 'PR1933', language: 'fi', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'blpt', name: 'Bíblia Livre Para Todos', shortName: 'BLPT', language: 'pt-br', hasOldTestament: false, hasNewTestament: true, totalBooks: 27, totalChapters: 260, copyright: 'Bíblia Livre Para Todos (BLPT) © 2022 Free Bible Ministry, Inc. Licença Creative Commons Atribuição-CompartilhaIgual 4.0 (CC BY-SA 4.0). Fonte: eBible.org.' },
+    { slug: 'tft', name: 'Tradução para Tradutores', shortName: 'TFT', language: 'pt-br', hasOldTestament: false, hasNewTestament: true, totalBooks: 27, totalChapters: 260, copyright: 'Tradução para Tradutores (TFT) © 2018 Ellis W. Deibler, Jr. Licença Creative Commons Atribuição-CompartilhaIgual 4.0 (CC BY-SA 4.0). Fonte: eBible.org.' },
+    { slug: 'skd', name: 'Sveto pismo (Daničić-Karadžić)', shortName: 'SKD', language: 'sr', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'sev', name: 'Sagradas Escrituras 1569 (Biblia del Oso)', shortName: 'SEV', language: 'es', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189, copyright: 'Sagradas Escrituras 1569 (SEV) Traducción de Casiodoro de Reina (Basilea, 1569), dominio público. Ortografía actualizada © 1996, 2002 Russell Martin Stendal: puede usarse libremente siempre que su contenido no sea alterado.' },
     { slug: 'wlc', name: 'Westminster Leningrad Codex', shortName: 'WLC', language: 'he', hasOldTestament: true, hasNewTestament: false, totalBooks: 39, totalChapters: 776 }
 ];

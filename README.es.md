@@ -6,7 +6,7 @@
 > 🌐 [English](./README.md) · [Português (BR)](./README.pt-BR.md) · **Español**
 
 Servidor [Model Context Protocol](https://modelcontextprotocol.io) gratuito y sin clave para
-la API bíblica pública. Lee las Escrituras en **16 versiones bíblicas libres en 8
+la API bíblica pública. Lee las Escrituras en **62 versiones bíblicas libres en 31
 idiomas** desde cualquier cliente MCP — Claude, Cursor y cualquier otro que hable
 MCP. Servido desde el edge de Cloudflare. Impulsa
 [mcp.midvash.com](https://mcp.midvash.com).
@@ -88,7 +88,7 @@ responde en una fracción del tiempo.
 ## Catálogo actual
 
 El MCP expone hoy el catálogo compilado en
-[`src/data/versions.ts`](./src/data/versions.ts): 16 versiones, todas de dominio
+[`src/data/versions.ts`](./src/data/versions.ts): 62 versiones, todas de dominio
 público o con licencia libre, en los códigos de idioma `pt-br`, `en`, `es`, `he`,
 `la`, `fr`, `it` y `gr`. Las versiones cuya licencia pide atribución (CC BY-SA)
 llevan una línea `copyright`, impresa al final de todo texto que devuelven las tools.
