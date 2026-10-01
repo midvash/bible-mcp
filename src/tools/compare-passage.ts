@@ -1,11 +1,13 @@
 import { VERSIONS } from '../data/versions';
 import { isLanguageAllowed, type ConnectionContext } from '../lib/context';
 import { resolveVersion } from '../lib/tool-guards';
+import { attributionLine } from '../lib/markdown';
+import type { VersionDefinition } from '../data/versions';
 import { fetchChapter } from '../lib/r2';
 import { parseReference } from '../lib/reference-parser';
 import type { Tool } from '../mcp/types';
 
-const DEFAULT_COMPARE_VERSIONS = ['nvi', 'ara', 'kjv', 'rvr1909'];
+const DEFAULT_COMPARE_VERSIONS = ['onbv', 'almeida-livre', 'kjv', 'rvr1909'];
 const MAX_COMPARE_VERSIONS = 8;
 
 function textResult(text: string, isError = false) {
@@ -107,6 +109,7 @@ export const comparePassageTool: Tool = {
 
     const sections: string[] = [];
     const errors: string[] = [];
+    const shown: VersionDefinition[] = [];
 
     for (const versionSlug of versionSlugs) {
       // `resolveVersion` cobre as três checagens de uma vez, com o mesmo texto
@@ -155,6 +158,7 @@ export const comparePassageTool: Tool = {
           ...selected.map((text, index) => `**${start + index}** ${text}`),
         ].join('\n'),
       );
+      shown.push(version);
     }
 
     if (sections.length === 0) {
@@ -169,6 +173,12 @@ export const comparePassageTool: Tool = {
       '',
       ...sections,
     ];
+
+    // Crédito exigido pela licença de cada versão mostrada (CC BY-SA etc.).
+    const credits = Array.from(
+      new Set(shown.map(attributionLine).filter((l): l is string => l !== null)),
+    );
+    if (credits.length > 0) output.push(...credits);
 
     if (errors.length > 0) {
       output.push('', '## Skipped versions', '', ...errors);

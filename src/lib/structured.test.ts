@@ -5,7 +5,8 @@ import { dualResult, readerUrl, structuredVerse, versionFields } from './structu
 import { VERSIONS } from '../data/versions';
 
 const JOHN = BOOKS.find((b) => b.id === 43)!;
-const NVI = VERSIONS.find((v) => v.slug === 'nvi')!;
+const KJV = VERSIONS.find((v) => v.slug === 'kjv')!;
+const ONBV = VERSIONS.find((v) => v.slug === 'onbv')!;
 
 describe('structuredVerse', () => {
   it('names the book in the requested locale', () => {
@@ -30,10 +31,15 @@ describe('dualResult', () => {
 
 describe('versionFields', () => {
   it('exposes slug and human-readable name', () => {
-    expect(versionFields(NVI)).toEqual({
-      version: 'nvi',
-      version_name: 'Nova Versão Internacional',
+    expect(versionFields(KJV)).toEqual({
+      version: 'kjv',
+      version_name: 'King James Version',
     });
+  });
+
+  it('carries the attribution the license requires, when there is one', () => {
+    expect(versionFields(ONBV).copyright).toContain('CC BY-SA 4.0');
+    expect(versionFields(KJV)).not.toHaveProperty('copyright');
   });
 });
 
@@ -76,10 +82,10 @@ describe('outputSchema contract', () => {
 
 describe('readerUrl', () => {
   it('uses the English book slug for any version', () => {
-    expect(readerUrl(NVI, JOHN, 3)).toBe('https://midvash.com/nvi/john/3');
+    expect(readerUrl(ONBV, JOHN, 3)).toBe('https://midvash.com/onbv/john/3');
   });
 
   it('points at the verse page when a verse is given', () => {
-    expect(readerUrl(NVI, JOHN, 3, 16)).toBe('https://midvash.com/nvi/john/3/16');
+    expect(readerUrl(ONBV, JOHN, 3, 16)).toBe('https://midvash.com/onbv/john/3/16');
   });
 });

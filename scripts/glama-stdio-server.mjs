@@ -2,7 +2,7 @@
 
 const REMOTE_MCP_URL =
   process.env.MIDVASH_MCP_URL ??
-  'https://mcp.midvash.com/mcp/glama?v=nvi,kjv&lang=pt-br,en';
+  'https://mcp.midvash.com/mcp/glama?v=onbv,kjv&lang=pt-br,en';
 
 let buffer = Buffer.alloc(0);
 const DEBUG = process.env.GLAMA_STDIO_DEBUG === 'true';

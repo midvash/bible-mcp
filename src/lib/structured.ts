@@ -52,8 +52,13 @@ const VERSE_ITEM = {
 } as const;
 
 const VERSION_FIELDS = {
-  version: { type: 'string', description: 'Version slug, such as "nvi".' },
+  version: { type: 'string', description: 'Version slug, such as "kjv".' },
   version_name: { type: 'string', description: 'Human-readable version name.' },
+  copyright: {
+    type: 'string',
+    description:
+      'Attribution the version license requires (e.g. CC BY-SA). Present only for versions that need it; show it with the text.',
+  },
 } as const;
 
 /** Schema de uma resposta que devolve versículos. */
@@ -181,5 +186,9 @@ export function readerUrl(
 
 /** Campos de versão presentes em quase toda resposta estruturada. */
 export function versionFields(version: VersionDefinition) {
-  return { version: version.slug, version_name: version.name };
+  return {
+    version: version.slug,
+    version_name: version.name,
+    ...(version.copyright ? { copyright: version.copyright } : {}),
+  };
 }

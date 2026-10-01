@@ -4,6 +4,7 @@ import {
   bookNameForVersion,
   formatChapter,
   formatVerse,
+  withAttribution,
   localeForVersion,
 } from '../lib/markdown';
 import {
@@ -93,7 +94,7 @@ function formatSingleChapter(
   const { book, chapter, verseStart, verseEnd } = reference;
 
   if (verseStart === undefined) {
-    return formatChapter(book, version, chapter, verses);
+    return formatChapter(book, version, chapter, verses, { attribution: false });
   }
 
   const end = Math.min(verseEnd ?? verseStart, verses.length);
@@ -108,6 +109,7 @@ function formatSingleChapter(
     verseStart,
     end,
     verses.slice(verseStart - 1, end),
+    { attribution: false },
   );
 }
 
@@ -142,7 +144,7 @@ export const getPassageTool: Tool = {
         version: {
           type: 'string',
           description:
-            'Optional Bible version slug. If omitted, uses the first version enabled by the connection URL, or "nvi" when no version filter exists.',
+            'Optional Bible version slug. If omitted, uses the first version enabled by the connection URL, or "onbv" when no version filter exists.',
         },
       },
       required: ['reference'],
@@ -262,7 +264,8 @@ export const getPassageTool: Tool = {
     const singleVerseStart =
       first.endChapter === undefined ? first.verseStart : undefined;
 
-    return dualResult(sections.join('\n\n'), {
+    // O crédito da licença sai uma vez, no fim, e não em cada trecho.
+    return dualResult(withAttribution(sections.join('\n\n'), version.value), {
       ...versionFields(version.value),
       reader_url: readerUrl(
         version.value,

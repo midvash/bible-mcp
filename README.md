@@ -6,8 +6,8 @@
 > 🌐 **English** · [Português (BR)](./README.pt-BR.md) · [Español](./README.es.md)
 
 Free, no-key [Model Context Protocol](https://modelcontextprotocol.io) server for
-the public Bible API. Read scripture across **35+ Bible versions in 9 language
-families** from any MCP client — Claude, Cursor, and anything else that speaks
+the public Bible API. Read scripture across **16 free Bible versions in 8
+languages** from any MCP client — Claude, Cursor, and anything else that speaks
 MCP. Served from Cloudflare's edge. Powers
 [mcp.midvash.com](https://mcp.midvash.com).
 
@@ -25,7 +25,7 @@ Generate your personal connection URL at
 look like:
 
 ```
-https://mcp.midvash.com/mcp/{id}?v=nvi,kjv&lang=pt-br,en
+https://mcp.midvash.com/mcp/{id}?v=onbv,kjv&lang=pt-br,en
 ```
 
 - `v` — comma-separated version slugs to expose (optional; omit for all).
@@ -37,7 +37,7 @@ Example (Claude Desktop / `mcp.json`):
 {
   "mcpServers": {
     "bible": {
-      "url": "https://mcp.midvash.com/mcp/{id}?v=nvi,kjv&lang=pt-br,en"
+      "url": "https://mcp.midvash.com/mcp/{id}?v=onbv,kjv&lang=pt-br,en"
     }
   }
 }
@@ -103,13 +103,15 @@ the time.
 ## Current catalog
 
 The MCP currently exposes the version catalog compiled in
-[`src/data/versions.ts`](./src/data/versions.ts): 35 versions across the
-language codes `pt-br`, `en`, `es`, `he`, `la`, `fr`, `it`, `gr`, and `pt-pt`.
+[`src/data/versions.ts`](./src/data/versions.ts): 16 versions, all public domain or
+openly licensed, across the language codes `pt-br`, `en`, `es`, `he`, `la`, `fr`,
+`it`, and `gr`. Versions whose license asks for attribution (CC BY-SA) carry a
+`copyright` line, printed at the end of every text the tools return.
 
 The public URL can narrow that catalog per connection:
 
 ```
-https://mcp.midvash.com/mcp/{id}?v=nvi,kjv&lang=pt-br,en
+https://mcp.midvash.com/mcp/{id}?v=onbv,kjv&lang=pt-br,en
 ```
 
 ## Where the data comes from
@@ -117,7 +119,7 @@ https://mcp.midvash.com/mcp/{id}?v=nvi,kjv&lang=pt-br,en
 | Store | Contents |
 |---|---|
 | R2 bucket `bible` | Chapter text, `{version}/{book}/{chapter}.json`, cached at the edge |
-| D1 `midvash-mcp-search` | FTS5 index: 1,224,921 verses and 18,792 study documents |
+| D1 `midvash-mcp-search` | FTS5 index: the text of every catalog version and 18,792 study documents |
 
 The D1 database belongs to this MCP alone. It is a copy, rebuilt by
 [`scripts/seed-mcp-search.sh`](./scripts/seed-mcp-search.sh), and the Worker
@@ -125,7 +127,7 @@ only ever reads from it. Keeping it separate means the Cloudflare dashboard
 reports this server's usage on its own, and a D1 binding — which grants access
 to an entire database — reaches nothing but public Bible content.
 
-Search is ranked per version. The five Hebrew texts (WLC, BHS, ALEPPO, MH,
+Search is ranked per version. The three Hebrew texts (WLC, ALEPPO,
 OSMH) are the exception: SQLite's tokenizer does not strip Hebrew vowel points,
 so those versions are scanned per book instead of ranked, and `search_bible`
 asks for a `book` filter when one of them is used.

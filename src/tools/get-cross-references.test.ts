@@ -46,7 +46,7 @@ describe('get_cross_references', () => {
 
   it('suggests the fallback in the language of the version', async () => {
     // Responder "João 3" com "John 3:1" seria trocar o idioma no meio.
-    const { text } = await call({ reference: 'João 3', version: 'nvi' });
+    const { text } = await call({ reference: 'João 3', version: 'onbv' });
     expect(text).toContain('João 3:1');
   });
 

@@ -28,7 +28,7 @@ export const listVersionsTool: Tool = {
   definition: {
     name: 'list_versions',
     description:
-      'Lists Bible versions available to the current MCP connection, automatically respecting URL filters such as ?v=nvi,kjv and ?lang=pt-br,en. Use this before lookup, search, or comparison when the user has not specified a version.',
+      'Lists Bible versions available to the current MCP connection, automatically respecting URL filters such as ?v=onbv,kjv and ?lang=pt-br,en. Use this before lookup, search, or comparison when the user has not specified a version.',
     inputSchema: {
       type: 'object',
       properties: {

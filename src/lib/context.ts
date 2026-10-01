@@ -2,7 +2,7 @@ import type { Env } from '../env';
 
 /**
  * Contexto de uma conexão MCP — derivado dos query params da URL
- * (?v=nvi,kjv&lang=pt-br,en) e disponível em todas as tools.
+ * (?v=onbv,kjv&lang=pt-br,en) e disponível em todas as tools.
  */
 export interface ConnectionContext {
   /** Versões habilitadas nesta conexão. null = todas as versões disponíveis. */
@@ -16,7 +16,7 @@ export interface ConnectionContext {
 
 /**
  * Constrói o ConnectionContext a partir da URL da request MCP.
- * URL esperada: /mcp/{nanoId}?v=nvi,kjv&lang=pt-br,en
+ * URL esperada: /mcp/{nanoId}?v=onbv,kjv&lang=pt-br,en
  */
 export function buildConnectionContext(
   url: URL,

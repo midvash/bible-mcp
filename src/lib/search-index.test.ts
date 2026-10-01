@@ -110,8 +110,8 @@ describe('indexLocaleForLanguage', () => {
 
 describe('indexVersionForLocale', () => {
   it('names the reference version of each locale', () => {
-    expect(indexVersionForLocale('pt-br')).toBe('naa');
-    expect(indexVersionForLocale('en')).toBe('niv');
+    expect(indexVersionForLocale('pt-br')).toBe('onbv');
+    expect(indexVersionForLocale('en')).toBe('bsb');
   });
 });
 

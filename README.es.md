@@ -6,8 +6,8 @@
 > 🌐 [English](./README.md) · [Português (BR)](./README.pt-BR.md) · **Español**
 
 Servidor [Model Context Protocol](https://modelcontextprotocol.io) gratuito y sin clave para
-la API bíblica pública. Lee las Escrituras en **35+ versiones bíblicas en 9
-familias de idioma** desde cualquier cliente MCP — Claude, Cursor y cualquier otro que hable
+la API bíblica pública. Lee las Escrituras en **16 versiones bíblicas libres en 8
+idiomas** desde cualquier cliente MCP — Claude, Cursor y cualquier otro que hable
 MCP. Servido desde el edge de Cloudflare. Impulsa
 [mcp.midvash.com](https://mcp.midvash.com).
 
@@ -25,7 +25,7 @@ Genera tu URL de conexión personal en
 tienen este formato:
 
 ```
-https://mcp.midvash.com/mcp/{id}?v=nvi,kjv&lang=pt-br,en
+https://mcp.midvash.com/mcp/{id}?v=onbv,kjv&lang=pt-br,en
 ```
 
 - `v` — slugs de versión separados por comas a exponer (opcional; omite para todas).
@@ -37,7 +37,7 @@ Ejemplo (Claude Desktop / `mcp.json`):
 {
   "mcpServers": {
     "bible": {
-      "url": "https://mcp.midvash.com/mcp/{id}?v=nvi,kjv&lang=pt-br,en"
+      "url": "https://mcp.midvash.com/mcp/{id}?v=onbv,kjv&lang=pt-br,en"
     }
   }
 }
@@ -88,13 +88,15 @@ responde en una fracción del tiempo.
 ## Catálogo actual
 
 El MCP expone hoy el catálogo compilado en
-[`src/data/versions.ts`](./src/data/versions.ts): 35 versiones en los códigos de
-idioma `pt-br`, `en`, `es`, `he`, `la`, `fr`, `it`, `gr` y `pt-pt`.
+[`src/data/versions.ts`](./src/data/versions.ts): 16 versiones, todas de dominio
+público o con licencia libre, en los códigos de idioma `pt-br`, `en`, `es`, `he`,
+`la`, `fr`, `it` y `gr`. Las versiones cuya licencia pide atribución (CC BY-SA)
+llevan una línea `copyright`, impresa al final de todo texto que devuelven las tools.
 
 La URL pública puede limitar ese catálogo por conexión:
 
 ```
-https://mcp.midvash.com/mcp/{id}?v=nvi,kjv&lang=pt-br,en
+https://mcp.midvash.com/mcp/{id}?v=onbv,kjv&lang=pt-br,en
 ```
 
 ## De dónde vienen los datos
@@ -102,7 +104,7 @@ https://mcp.midvash.com/mcp/{id}?v=nvi,kjv&lang=pt-br,en
 | Almacenamiento | Contenido |
 |---|---|
 | Bucket R2 `bible` | Texto de los capítulos, `{versión}/{libro}/{capítulo}.json`, con caché en el edge |
-| D1 `midvash-mcp-search` | Índice FTS5: 1.224.921 versículos y 18.792 documentos de estudio |
+| D1 `midvash-mcp-search` | Índice FTS5: el texto de cada versión del catálogo y 18.792 documentos de estudio |
 
 La base D1 es exclusiva de este MCP. Es una copia, reconstruida por
 [`scripts/seed-mcp-search.sh`](./scripts/seed-mcp-search.sh), y el Worker solo
@@ -110,8 +112,8 @@ lee de ella. Mantenerla separada hace que el panel de Cloudflare reporte el uso
 de este servidor por separado, y que un binding de D1 — que da acceso a la base
 completa — no alcance nada más que contenido bíblico público.
 
-La búsqueda está ordenada por versión. Las cinco en hebreo (WLC, BHS, ALEPPO,
-MH, OSMH) son la excepción: el tokenizer de SQLite no elimina las vocales
+La búsqueda está ordenada por versión. Las tres en hebreo (WLC, ALEPPO,
+OSMH) son la excepción: el tokenizer de SQLite no elimina las vocales
 hebreas, así que esas versiones se recorren por libro en vez de ordenarse, y
 `search_bible` pide un filtro de `book` cuando se usa una de ellas.
 

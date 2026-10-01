@@ -31,7 +31,7 @@ export const getChapterTool: Tool = {
         version: {
           type: 'string',
           description:
-            'Bible version slug to read from, such as "nvi", "kjv", "ara", or "rvr1909". Must be enabled by the connection URL filters.',
+            'Bible version slug to read from, such as "onbv", "kjv", "bsb", or "rvr1909". Must be enabled by the connection URL filters.',
         },
         book: {
           type: 'string',

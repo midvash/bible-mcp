@@ -3,7 +3,11 @@ import type { VersionDefinition } from '../data/versions';
 import { lookupBook } from '../lib/books-lookup';
 import type { ConnectionContext } from '../lib/context';
 import { resolveVersion } from '../lib/tool-guards';
-import { bookNameForVersion, localeForVersion } from '../lib/markdown';
+import {
+  bookNameForVersion,
+  localeForVersion,
+  withAttribution,
+} from '../lib/markdown';
 import {
   dualResult,
   structuredVerse,
@@ -87,7 +91,7 @@ function formatResults(
     out.push('', ...notes.map((n) => `_${n}_`));
   }
 
-  return out.join('\n');
+  return withAttribution(out.join('\n'), version);
 }
 
 function emptyResult(
@@ -181,7 +185,7 @@ export const searchBibleTool: Tool = {
         version: {
           type: 'string',
           description:
-            'Optional Bible version slug such as "nvi", "kjv", "ara", or "rvr1909". If omitted, uses the first version enabled by the connection URL, or "nvi".',
+            'Optional Bible version slug such as "onbv", "kjv", "bsb", or "rvr1909". If omitted, uses the first version enabled by the connection URL, or "onbv".',
         },
         book: {
           type: 'string',

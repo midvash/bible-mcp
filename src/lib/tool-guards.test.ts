@@ -26,13 +26,13 @@ function message(guard: { ok: boolean } & Record<string, unknown>): string {
 }
 
 describe('resolveVersion', () => {
-  it('falls back to NVI with no argument and no connection filter', () => {
+  it('falls back to ONBV with no argument and no connection filter', () => {
     const r = resolveVersion(ctx(), undefined);
-    expect(r.ok && r.value.slug).toBe('nvi');
+    expect(r.ok && r.value.slug).toBe('onbv');
   });
 
   it('falls back to the first version allowed by the connection', () => {
-    const r = resolveVersion(ctx({ allowedVersions: ['kjv', 'esv'] }), undefined);
+    const r = resolveVersion(ctx({ allowedVersions: ['kjv', 'bsb'] }), undefined);
     expect(r.ok && r.value.slug).toBe('kjv');
   });
 
@@ -46,7 +46,7 @@ describe('resolveVersion', () => {
   });
 
   it('rejects a version the connection does not allow', () => {
-    const r = resolveVersion(ctx({ allowedVersions: ['nvi'] }), 'kjv');
+    const r = resolveVersion(ctx({ allowedVersions: ['onbv'] }), 'kjv');
     expect(message(r)).toContain('not enabled');
   });
 

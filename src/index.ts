@@ -319,7 +319,7 @@ export default {
     // /mcp sem nanoId — orienta o usuário
     if (path === '/mcp' || path === '/mcp/') {
       return new Response(
-        'Midvash MCP Server\n\nUse /mcp/{nanoId}?v=nvi,kjv&lang=pt-br,en\n\nGere sua URL em https://mcp.midvash.com/',
+        'Midvash MCP Server\n\nUse /mcp/{nanoId}?v=onbv,kjv&lang=pt-br,en\n\nGere sua URL em https://mcp.midvash.com/',
         {
           status: 400,
           headers: { 'Content-Type': 'text/plain; charset=utf-8', ...CORS_HEADERS },
