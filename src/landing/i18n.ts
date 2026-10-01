@@ -4,7 +4,7 @@
  * /fr, /de, /it, /zh, /ru, /ko. O idioma vem só do caminho da URL: cada
  * idioma tem URL própria e indexável, sem detecção por Accept-Language.
  *
- * Copy de site Midvash: sem travessão (em-dash). Contagens (62 versões,
+ * Copy de site Midvash: sem travessão (em-dash). Contagens (61 versões,
  * 31 idiomas, 11 tools) são conferidas em page.test.ts contra o código.
  */
 
@@ -58,7 +58,7 @@ export const DEFAULT_VERSION_BY_LOCALE: Record<Locale, string> = {
   es: 'rvr1909',
   fr: 'lsg',
   de: 'luth1912',
-  it: 'nri',
+  it: 'riveduta',
   zh: 'cuvs',
   ru: 'synodal',
   ko: 'kor',
@@ -175,7 +175,7 @@ const en: Translations = {
   meta: {
     title: 'Bible MCP for ChatGPT, Claude and Gemini | Midvash',
     description:
-      "Free Bible MCP: connect ChatGPT, Claude, Gemini or Cursor to 62 free Bible versions in 31 languages, plus commentary and Strong's. No account, no key.",
+      "Free Bible MCP: connect ChatGPT, Claude, Gemini or Cursor to 61 free Bible versions in 31 languages, plus commentary and Strong's. No account, no key.",
   },
   nav: {
     skipToContent: 'Skip to content',
@@ -185,10 +185,10 @@ const en: Translations = {
     title: 'Connect your AI to the',
     titleAccent: 'Bible',
     subtitle:
-      'Your AI stops quoting Scripture from memory. With Midvash it reads the real text in 62 free Bible versions and 31 languages, searches it, compares translations and explains every chapter. Works in ChatGPT, Claude, Gemini and Cursor.',
+      'Your AI stops quoting Scripture from memory. With Midvash it reads the real text in 61 free Bible versions and 31 languages, searches it, compares translations and explains every chapter. Works in ChatGPT, Claude, Gemini and Cursor.',
     cta: 'Create my link',
     ctaSecondary: 'See what you can ask',
-    facts: ['62 versions in 31 languages', '11 study tools', 'Commentary on all 1,189 chapters'],
+    facts: ['61 versions in 31 languages', '11 study tools', 'Commentary on all 1,189 chapters'],
   },
   uses: {
     title: 'Made for people who study the Bible',
@@ -298,7 +298,7 @@ const en: Translations = {
   },
   versions: {
     title: 'Versions and licenses',
-    body: 'The catalog has 62 versions in 31 languages, the same one served by the public Midvash API. Only versions in the public domain or under an open license are included, so the AI can quote them freely. Translations with reserved rights are not available here.',
+    body: 'The catalog has 61 versions in 31 languages, the same one served by the public Midvash API. Only versions in the public domain or under an open license are included, so the AI can quote them freely. Translations with reserved rights are not available here.',
     creditNote: 'Versions marked “credit” use licenses such as Creative Commons. The AI receives the credit line at the end of every text from them.',
     creditBadge: 'credit',
     apiCta: 'Need this text in your own app or site? Use the free Bible API',
@@ -376,7 +376,7 @@ const ptBr: Translations = {
   meta: {
     title: 'MCP da Bíblia para ChatGPT, Claude e Gemini | Midvash',
     description:
-      'MCP da Bíblia grátis: conecte ChatGPT, Claude, Gemini ou Cursor a 62 versões livres em 31 idiomas, com comentários e Strong. Sem conta e sem chave.',
+      'MCP da Bíblia grátis: conecte ChatGPT, Claude, Gemini ou Cursor a 61 versões livres em 31 idiomas, com comentários e Strong. Sem conta e sem chave.',
   },
   nav: {
     skipToContent: 'Pular para o conteúdo',
@@ -386,10 +386,10 @@ const ptBr: Translations = {
     title: 'Conecte sua IA à',
     titleAccent: 'Bíblia',
     subtitle:
-      'Sua IA para de citar a Bíblia de memória. Com o Midvash ela lê o texto de verdade em 62 versões bíblicas livres e 31 idiomas, faz buscas, compara traduções e explica cada capítulo. Funciona no ChatGPT, Claude, Gemini e Cursor.',
+      'Sua IA para de citar a Bíblia de memória. Com o Midvash ela lê o texto de verdade em 61 versões bíblicas livres e 31 idiomas, faz buscas, compara traduções e explica cada capítulo. Funciona no ChatGPT, Claude, Gemini e Cursor.',
     cta: 'Criar meu link',
     ctaSecondary: 'Veja o que dá pra pedir',
-    facts: ['62 versões em 31 idiomas', '11 ferramentas de estudo', 'Comentário dos 1.189 capítulos'],
+    facts: ['61 versões em 31 idiomas', '11 ferramentas de estudo', 'Comentário dos 1.189 capítulos'],
   },
   uses: {
     title: 'Feito pra quem estuda a Bíblia',
@@ -499,7 +499,7 @@ const ptBr: Translations = {
   },
   versions: {
     title: 'Versões e licenças',
-    body: 'O catálogo tem 62 versões em 31 idiomas, o mesmo da API pública do Midvash. Só entram versões de domínio público ou com licença aberta, que a IA pode citar livremente. Traduções com direitos reservados não estão disponíveis aqui.',
+    body: 'O catálogo tem 61 versões em 31 idiomas, o mesmo da API pública do Midvash. Só entram versões de domínio público ou com licença aberta, que a IA pode citar livremente. Traduções com direitos reservados não estão disponíveis aqui.',
     creditNote: 'As versões marcadas com “crédito” usam licenças como Creative Commons. A IA recebe a linha de crédito no fim de todo texto delas.',
     creditBadge: 'crédito',
     apiCta: 'Precisa desse texto no seu app ou site? Use a API da Bíblia, gratuita',
@@ -577,7 +577,7 @@ const es: Translations = {
   meta: {
     title: 'MCP de la Biblia para ChatGPT, Claude y Gemini | Midvash',
     description:
-      'MCP de la Biblia gratis: conecta ChatGPT, Claude, Gemini o Cursor a 62 versiones libres en 31 idiomas, con comentarios y Strong. Sin cuenta ni clave.',
+      'MCP de la Biblia gratis: conecta ChatGPT, Claude, Gemini o Cursor a 61 versiones libres en 31 idiomas, con comentarios y Strong. Sin cuenta ni clave.',
   },
   nav: {
     skipToContent: 'Saltar al contenido',
@@ -587,10 +587,10 @@ const es: Translations = {
     title: 'Conecta tu IA a la',
     titleAccent: 'Biblia',
     subtitle:
-      'Tu IA deja de citar la Biblia de memoria. Con Midvash lee el texto real en 62 versiones bíblicas libres y 31 idiomas, busca, compara traducciones y explica cada capítulo. Funciona en ChatGPT, Claude, Gemini y Cursor.',
+      'Tu IA deja de citar la Biblia de memoria. Con Midvash lee el texto real en 61 versiones bíblicas libres y 31 idiomas, busca, compara traducciones y explica cada capítulo. Funciona en ChatGPT, Claude, Gemini y Cursor.',
     cta: 'Crear mi enlace',
     ctaSecondary: 'Mira lo que puedes pedir',
-    facts: ['62 versiones en 31 idiomas', '11 herramientas de estudio', 'Comentario de los 1.189 capítulos'],
+    facts: ['61 versiones en 31 idiomas', '11 herramientas de estudio', 'Comentario de los 1.189 capítulos'],
   },
   uses: {
     title: 'Hecho para quien estudia la Biblia',
@@ -700,7 +700,7 @@ const es: Translations = {
   },
   versions: {
     title: 'Versiones y licencias',
-    body: 'El catálogo tiene 62 versiones en 31 idiomas, el mismo de la API pública de Midvash. Solo entran versiones de dominio público o con licencia abierta, que la IA puede citar libremente. Las traducciones con derechos reservados no están disponibles aquí.',
+    body: 'El catálogo tiene 61 versiones en 31 idiomas, el mismo de la API pública de Midvash. Solo entran versiones de dominio público o con licencia abierta, que la IA puede citar libremente. Las traducciones con derechos reservados no están disponibles aquí.',
     creditNote: 'Las versiones marcadas con “crédito” usan licencias como Creative Commons. La IA recibe la línea de crédito al final de cada texto.',
     creditBadge: 'crédito',
     apiCta: '¿Necesitas este texto en tu app o sitio? Usa la API de la Biblia, gratuita',
@@ -778,7 +778,7 @@ const fr: Translations = {
   meta: {
     title: 'MCP de la Bible pour ChatGPT, Claude et Gemini | Midvash',
     description:
-      'MCP de la Bible gratuit : reliez ChatGPT, Claude, Gemini ou Cursor à 62 versions libres en 31 langues, avec commentaires et Strong. Sans compte ni clé.',
+      'MCP de la Bible gratuit : reliez ChatGPT, Claude, Gemini ou Cursor à 61 versions libres en 31 langues, avec commentaires et Strong. Sans compte ni clé.',
   },
   nav: { skipToContent: 'Aller au contenu' },
   hero: {
@@ -786,10 +786,10 @@ const fr: Translations = {
     title: 'Reliez votre IA à la',
     titleAccent: 'Bible',
     subtitle:
-      "Votre IA arrête de citer la Bible de mémoire. Avec Midvash, elle lit le vrai texte dans 62 versions libres de la Bible et 31 langues, fait des recherches, compare les traductions et explique chaque chapitre. Fonctionne avec ChatGPT, Claude, Gemini et Cursor.",
+      "Votre IA arrête de citer la Bible de mémoire. Avec Midvash, elle lit le vrai texte dans 61 versions libres de la Bible et 31 langues, fait des recherches, compare les traductions et explique chaque chapitre. Fonctionne avec ChatGPT, Claude, Gemini et Cursor.",
     cta: 'Créer mon lien',
     ctaSecondary: 'Voir ce que vous pouvez demander',
-    facts: ['62 versions en 31 langues', "11 outils d'étude", 'Commentaire des 1 189 chapitres'],
+    facts: ['61 versions en 31 langues', "11 outils d'étude", 'Commentaire des 1 189 chapitres'],
   },
   uses: {
     title: 'Pensé pour ceux qui étudient la Bible',
@@ -855,7 +855,7 @@ const fr: Translations = {
   },
   versions: {
     title: 'Versions et licences',
-    body: "Le catalogue compte 62 versions en 31 langues, le même que celui de l'API publique de Midvash. Seules les versions du domaine public ou sous licence libre y figurent, pour que l'IA puisse les citer librement. Les traductions dont les droits sont réservés ne sont pas disponibles ici.",
+    body: "Le catalogue compte 61 versions en 31 langues, le même que celui de l'API publique de Midvash. Seules les versions du domaine public ou sous licence libre y figurent, pour que l'IA puisse les citer librement. Les traductions dont les droits sont réservés ne sont pas disponibles ici.",
     creditNote: "Les versions marquées « crédit » relèvent de licences comme Creative Commons. L'IA reçoit la ligne de crédit à la fin de chaque texte.",
     creditBadge: 'crédit',
     apiCta: 'Besoin de ce texte dans votre app ou votre site ? Utilisez l’API de la Bible, gratuite',
@@ -906,7 +906,7 @@ const de: Translations = {
   meta: {
     title: 'Bibel-MCP für ChatGPT, Claude und Gemini | Midvash',
     description:
-      'Kostenloser Bibel-MCP: Verbinde ChatGPT, Claude, Gemini oder Cursor mit 62 freien Bibeln in 31 Sprachen, samt Kommentar und Strong. Ohne Konto und Key.',
+      'Kostenloser Bibel-MCP: Verbinde ChatGPT, Claude, Gemini oder Cursor mit 61 freien Bibeln in 31 Sprachen, samt Kommentar und Strong. Ohne Konto und Key.',
   },
   nav: { skipToContent: 'Zum Inhalt springen' },
   hero: {
@@ -914,10 +914,10 @@ const de: Translations = {
     title: 'Verbinde deine KI mit der',
     titleAccent: 'Bibel',
     subtitle:
-      'Deine KI zitiert die Bibel nicht mehr aus dem Gedächtnis. Mit Midvash liest sie den echten Text in 62 freien Bibelübersetzungen und 31 Sprachen, durchsucht ihn, vergleicht Übersetzungen und erklärt jedes Kapitel. Funktioniert in ChatGPT, Claude, Gemini und Cursor.',
+      'Deine KI zitiert die Bibel nicht mehr aus dem Gedächtnis. Mit Midvash liest sie den echten Text in 61 freien Bibelübersetzungen und 31 Sprachen, durchsucht ihn, vergleicht Übersetzungen und erklärt jedes Kapitel. Funktioniert in ChatGPT, Claude, Gemini und Cursor.',
     cta: 'Meinen Link erstellen',
     ctaSecondary: 'Sieh, was du fragen kannst',
-    facts: ['62 Übersetzungen in 31 Sprachen', '11 Werkzeuge zum Bibelstudium', 'Kommentar zu allen 1.189 Kapiteln'],
+    facts: ['61 Übersetzungen in 31 Sprachen', '11 Werkzeuge zum Bibelstudium', 'Kommentar zu allen 1.189 Kapiteln'],
   },
   uses: {
     title: 'Für alle, die die Bibel studieren',
@@ -983,7 +983,7 @@ const de: Translations = {
   },
   versions: {
     title: 'Übersetzungen und Lizenzen',
-    body: 'Der Katalog umfasst 62 Übersetzungen in 31 Sprachen, derselbe wie in der öffentlichen Midvash-API. Aufgenommen werden nur gemeinfreie oder offen lizenzierte Übersetzungen, die die KI frei zitieren darf. Übersetzungen mit vorbehaltenen Rechten gibt es hier nicht.',
+    body: 'Der Katalog umfasst 61 Übersetzungen in 31 Sprachen, derselbe wie in der öffentlichen Midvash-API. Aufgenommen werden nur gemeinfreie oder offen lizenzierte Übersetzungen, die die KI frei zitieren darf. Übersetzungen mit vorbehaltenen Rechten gibt es hier nicht.',
     creditNote: 'Mit „Nachweis“ markierte Übersetzungen stehen unter Lizenzen wie Creative Commons. Die KI erhält die Nachweiszeile am Ende jedes Textes.',
     creditBadge: 'Nachweis',
     apiCta: 'Brauchst du den Text in deiner App oder Website? Nutze die kostenlose Bibel-API',
@@ -1034,7 +1034,7 @@ const it: Translations = {
   meta: {
     title: 'MCP della Bibbia per ChatGPT, Claude e Gemini | Midvash',
     description:
-      'MCP della Bibbia gratuito: collega ChatGPT, Claude, Gemini o Cursor a 62 versioni libere in 31 lingue, con commenti e Strong. Senza account né chiave.',
+      'MCP della Bibbia gratuito: collega ChatGPT, Claude, Gemini o Cursor a 61 versioni libere in 31 lingue, con commenti e Strong. Senza account né chiave.',
   },
   nav: { skipToContent: 'Vai al contenuto' },
   hero: {
@@ -1042,16 +1042,16 @@ const it: Translations = {
     title: 'Collega la tua IA alla',
     titleAccent: 'Bibbia',
     subtitle:
-      'La tua IA smette di citare la Bibbia a memoria. Con Midvash legge il testo vero in 62 versioni libere della Bibbia e 31 lingue, fa ricerche, confronta le traduzioni e spiega ogni capitolo. Funziona con ChatGPT, Claude, Gemini e Cursor.',
+      'La tua IA smette di citare la Bibbia a memoria. Con Midvash legge il testo vero in 61 versioni libere della Bibbia e 31 lingue, fa ricerche, confronta le traduzioni e spiega ogni capitolo. Funziona con ChatGPT, Claude, Gemini e Cursor.',
     cta: 'Crea il mio link',
     ctaSecondary: 'Guarda cosa puoi chiedere',
-    facts: ['62 versioni in 31 lingue', '11 strumenti di studio', 'Commento a tutti i 1.189 capitoli'],
+    facts: ['61 versioni in 31 lingue', '11 strumenti di studio', 'Commento a tutti i 1.189 capitoli'],
   },
   uses: {
     title: 'Pensato per chi studia la Bibbia',
     subtitle: 'Non serve essere programmatori. Chiedi con parole tue e la IA cerca per te, con il riferimento.',
     items: [
-      { who: 'Pastori', prompt: '«Aiutami a impostare una predicazione su Romani 8:28-39 e confronta la Nuova Riveduta con la Diodati.»' },
+      { who: 'Pastori', prompt: '«Aiutami a impostare una predicazione su Romani 8:28-39 e confronta la Riveduta con la Diodati.»' },
       { who: 'Insegnanti di scuola domenicale', prompt: '«Dammi i riferimenti incrociati di Giovanni 3:16 per la lezione di domenica.»' },
       { who: 'Studenti', prompt: '«Che cosa significa la parola greca agape e dove compare in 1 Corinzi 13?»' },
       { who: 'Meditazione quotidiana', prompt: '«Leggi il Salmo 23 nella Riveduta 1927 e spiega di che cosa parla il capitolo.»' },
@@ -1060,7 +1060,7 @@ const it: Translations = {
   how: {
     title: 'Come funziona',
     cards: [
-      { num: '01', title: 'Scegli le tue Bibbie', body: 'Scegli le versioni che userà la tua IA, come la Nuova Riveduta, la Diodati o la Riveduta 1927. Tutte sono di pubblico dominio o con licenza libera.' },
+      { num: '01', title: 'Scegli le tue Bibbie', body: 'Scegli le versioni che userà la tua IA, come la Riveduta, la Diodati o la Riveduta 1927. Tutte sono di pubblico dominio o con licenza libera.' },
       { num: '02', title: 'Copia il tuo link', body: 'Creiamo un link personale per te. Senza account, senza email, senza installare nulla.' },
       { num: '03', title: 'Incollalo nella tua IA', body: 'Aggiungi il link come connettore in ChatGPT, Claude, Gemini o Cursor. Da quel momento la IA consulta il testo vero e cita il riferimento.' },
     ],
@@ -1111,7 +1111,7 @@ const it: Translations = {
   },
   versions: {
     title: 'Versioni e licenze',
-    body: "Il catalogo ha 62 versioni in 31 lingue, lo stesso dell'API pubblica di Midvash. Entrano solo versioni di pubblico dominio o con licenza libera, che la IA può citare liberamente. Le traduzioni con diritti riservati qui non sono disponibili.",
+    body: "Il catalogo ha 61 versioni in 31 lingue, lo stesso dell'API pubblica di Midvash. Entrano solo versioni di pubblico dominio o con licenza libera, che la IA può citare liberamente. Le traduzioni con diritti riservati qui non sono disponibili.",
     creditNote: 'Le versioni con l’indicazione «crediti» usano licenze come Creative Commons. La IA riceve la riga dei crediti alla fine di ogni testo.',
     creditBadge: 'crediti',
     apiCta: 'Ti serve questo testo nella tua app o nel tuo sito? Usa l’API della Bibbia, gratuita',
@@ -1162,7 +1162,7 @@ const zh: Translations = {
   meta: {
     title: '适用于 ChatGPT、Claude 和 Gemini 的圣经 MCP | Midvash',
     description:
-      '免费的圣经 MCP：把 ChatGPT、Claude、Gemini 或 Cursor 连接到 31 种语言的 62 个可自由使用的圣经版本，附带注释与 Strong 词典。无需账号，无需密钥。',
+      '免费的圣经 MCP：把 ChatGPT、Claude、Gemini 或 Cursor 连接到 31 种语言的 61 个可自由使用的圣经版本，附带注释与 Strong 词典。无需账号，无需密钥。',
   },
   nav: { skipToContent: '跳到主要内容' },
   hero: {
@@ -1170,10 +1170,10 @@ const zh: Translations = {
     title: '让你的 AI 连接',
     titleAccent: '圣经',
     subtitle:
-      '你的 AI 不再凭记忆引用经文。借助 Midvash，它会读取 31 种语言、62 个可自由使用的圣经版本中的真实经文，进行搜索、比较译本，并讲解每一章。支持 ChatGPT、Claude、Gemini 和 Cursor。',
+      '你的 AI 不再凭记忆引用经文。借助 Midvash，它会读取 31 种语言、61 个可自由使用的圣经版本中的真实经文，进行搜索、比较译本，并讲解每一章。支持 ChatGPT、Claude、Gemini 和 Cursor。',
     cta: '创建我的链接',
     ctaSecondary: '看看可以问什么',
-    facts: ['31 种语言的 62 个版本', '11 个查经工具', '全部 1,189 章的注释'],
+    facts: ['31 种语言的 61 个版本', '11 个查经工具', '全部 1,189 章的注释'],
   },
   uses: {
     title: '为读经、查经的人而做',
@@ -1239,7 +1239,7 @@ const zh: Translations = {
   },
   versions: {
     title: '版本与许可',
-    body: '目录包含 31 种语言的 62 个版本，与 Midvash 公共 API 相同。只收录公有领域或开放许可的版本，AI 可以自由引用。保留版权的译本不在此提供。',
+    body: '目录包含 31 种语言的 61 个版本，与 Midvash 公共 API 相同。只收录公有领域或开放许可的版本，AI 可以自由引用。保留版权的译本不在此提供。',
     creditNote: '标有“署名”的版本采用 Creative Commons 等许可。AI 会在每段经文末尾收到署名信息。',
     creditBadge: '署名',
     apiCta: '想在自己的应用或网站中使用这些经文？试试免费的圣经 API',
@@ -1290,7 +1290,7 @@ const ru: Translations = {
   meta: {
     title: 'MCP Библии для ChatGPT, Claude и Gemini | Midvash',
     description:
-      'Бесплатный MCP Библии: подключите ChatGPT, Claude, Gemini или Cursor к 62 свободным переводам на 31 языке, с комментариями и Стронгом. Без аккаунта и ключа.',
+      'Бесплатный MCP Библии: подключите ChatGPT, Claude, Gemini или Cursor к 61 свободным переводам на 31 языке, с комментариями и Стронгом. Без аккаунта и ключа.',
   },
   nav: { skipToContent: 'Перейти к содержанию' },
   hero: {
@@ -1298,10 +1298,10 @@ const ru: Translations = {
     title: 'Подключите свой ИИ к',
     titleAccent: 'Библии',
     subtitle:
-      'Ваш ИИ перестанет цитировать Писание по памяти. С Midvash он читает настоящий текст в 62 свободных переводах Библии на 31 языке, ищет по нему, сравнивает переводы и объясняет каждую главу. Работает в ChatGPT, Claude, Gemini и Cursor.',
+      'Ваш ИИ перестанет цитировать Писание по памяти. С Midvash он читает настоящий текст в 61 свободных переводах Библии на 31 языке, ищет по нему, сравнивает переводы и объясняет каждую главу. Работает в ChatGPT, Claude, Gemini и Cursor.',
     cta: 'Создать ссылку',
     ctaSecondary: 'Что можно спросить',
-    facts: ['62 перевода на 31 языке', '11 инструментов для изучения', 'Комментарий ко всем 1189 главам'],
+    facts: ['61 перевода на 31 языке', '11 инструментов для изучения', 'Комментарий ко всем 1189 главам'],
   },
   uses: {
     title: 'Для тех, кто изучает Библию',
@@ -1367,7 +1367,7 @@ const ru: Translations = {
   },
   versions: {
     title: 'Переводы и лицензии',
-    body: 'В каталоге 62 перевода на 31 языке, тот же набор, что и в публичном API Midvash. Сюда входят только переводы в общественном достоянии или под открытой лицензией, которые ИИ может свободно цитировать. Переводы с охраняемыми правами здесь недоступны.',
+    body: 'В каталоге 61 перевода на 31 языке, тот же набор, что и в публичном API Midvash. Сюда входят только переводы в общественном достоянии или под открытой лицензией, которые ИИ может свободно цитировать. Переводы с охраняемыми правами здесь недоступны.',
     creditNote: 'Переводы с пометкой «атрибуция» распространяются по лицензиям вроде Creative Commons. ИИ получает строку с указанием авторства в конце каждого текста.',
     creditBadge: 'атрибуция',
     apiCta: 'Нужен этот текст в вашем приложении или на сайте? Используйте бесплатный API Библии',
@@ -1418,7 +1418,7 @@ const ko: Translations = {
   meta: {
     title: 'ChatGPT, Claude, Gemini용 성경 MCP | Midvash',
     description:
-      '무료 성경 MCP: ChatGPT, Claude, Gemini, Cursor를 31개 언어 62개 자유 성경 번역본과 주석, 스트롱 사전에 연결하세요. 계정도 키도 필요 없습니다.',
+      '무료 성경 MCP: ChatGPT, Claude, Gemini, Cursor를 31개 언어 61개 자유 성경 번역본과 주석, 스트롱 사전에 연결하세요. 계정도 키도 필요 없습니다.',
   },
   nav: { skipToContent: '본문으로 건너뛰기' },
   hero: {
@@ -1426,10 +1426,10 @@ const ko: Translations = {
     title: '당신의 AI를',
     titleAccent: '성경에 연결하세요',
     subtitle:
-      'AI가 더 이상 기억에 의존해 성경을 인용하지 않습니다. Midvash와 함께라면 31개 언어, 62개 자유 성경 번역본의 실제 본문을 읽고, 검색하고, 번역본을 비교하고, 각 장을 설명합니다. ChatGPT, Claude, Gemini, Cursor에서 사용할 수 있습니다.',
+      'AI가 더 이상 기억에 의존해 성경을 인용하지 않습니다. Midvash와 함께라면 31개 언어, 61개 자유 성경 번역본의 실제 본문을 읽고, 검색하고, 번역본을 비교하고, 각 장을 설명합니다. ChatGPT, Claude, Gemini, Cursor에서 사용할 수 있습니다.',
     cta: '내 링크 만들기',
     ctaSecondary: '무엇을 물어볼 수 있을까요',
-    facts: ['31개 언어, 62개 번역본', '11가지 성경 공부 도구', '1,189개 장 전체 주석'],
+    facts: ['31개 언어, 61개 번역본', '11가지 성경 공부 도구', '1,189개 장 전체 주석'],
   },
   uses: {
     title: '성경을 공부하는 분들을 위해 만들었습니다',
@@ -1495,7 +1495,7 @@ const ko: Translations = {
   },
   versions: {
     title: '번역본과 라이선스',
-    body: '카탈로그에는 31개 언어로 된 62개 번역본이 있으며, Midvash 공개 API와 같습니다. AI가 자유롭게 인용할 수 있도록 퍼블릭 도메인이거나 오픈 라이선스인 번역본만 포함합니다. 저작권이 보호되는 번역본은 여기서 제공하지 않습니다.',
+    body: '카탈로그에는 31개 언어로 된 61개 번역본이 있으며, Midvash 공개 API와 같습니다. AI가 자유롭게 인용할 수 있도록 퍼블릭 도메인이거나 오픈 라이선스인 번역본만 포함합니다. 저작권이 보호되는 번역본은 여기서 제공하지 않습니다.',
     creditNote: '“출처 표시”가 붙은 번역본은 Creative Commons 같은 라이선스를 따릅니다. AI는 본문 끝에 출처 표시 문구를 함께 받습니다.',
     creditBadge: '출처 표시',
     apiCta: '내 앱이나 사이트에서 이 본문이 필요하신가요? 무료 성경 API를 사용하세요',

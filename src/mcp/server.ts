@@ -83,7 +83,7 @@ export async function handleMcpMessage(
           capabilities: SERVER_CAPABILITIES,
           serverInfo: SERVER_INFO,
           instructions:
-            'Midvash MCP gives AI clients fast, no-key access to Scripture in 62 free Bible versions across 31 languages. Use get_passage for natural references, search_bible to find verses, and compare_passage to compare translations.',
+            'Midvash MCP gives AI clients fast, no-key access to Scripture in 61 free Bible versions across 31 languages. Use get_passage for natural references, search_bible to find verses, and compare_passage to compare translations.',
         });
       }
 

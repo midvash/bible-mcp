@@ -29,8 +29,9 @@ import type { ToolResult } from '../mcp/types';
  * v5 → v6: versão padrão sem filtro passa de ONBV pra BSB (inglês).
  * v6 → v7: busca em árabe e hebraico pelo índice, sem sinais de vogal
  *          (resultado vazio cacheado antes do conserto sumiria só em 24h).
+ * v7 → v8: sai a nri (duplicata da riveduta), list_versions muda.
  */
-const CACHE_VERSION = 'v7';
+const CACHE_VERSION = 'v8';
 
 /** Um dia. O texto bíblico não muda; o teto existe só para limitar staleness. */
 const CACHE_TTL_SECONDS = 86400;

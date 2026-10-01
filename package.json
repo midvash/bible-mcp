@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Free, no-key Bible MCP server by Midvash: 62 free Bible versions in 31 languages, search, cross-references, commentary and Strong's lexicon for ChatGPT, Claude, Gemini and Cursor. Powers mcp.midvash.com.",
+  "description": "Free, no-key Bible MCP server by Midvash: 61 free Bible versions in 31 languages, search, cross-references, commentary and Strong's lexicon for ChatGPT, Claude, Gemini and Cursor. Powers mcp.midvash.com.",
   "license": "MIT",
   "homepage": "https://mcp.midvash.com",
   "repository": {

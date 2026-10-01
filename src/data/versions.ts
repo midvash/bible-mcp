@@ -95,7 +95,8 @@ export const VERSIONS: VersionDefinition[] = [
     // nlt fora do ar: direitos reservados, sem licença pra redistribuir (out/2026). Religar = voltar esta linha.
     // { slug: 'nlt', name: 'New Living Translation', shortName: 'NLT', language: 'en', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1050 },
     { slug: 'nva', name: 'Bíblia Nova Versão de Acesso Livre', shortName: 'NVA', language: 'pt-br', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189, copyright: 'Bíblia Nova Versão de Acesso Livre (NVA). Licença CC BY-SA 4.0. Fonte: biblianva.com.br.' },
-    { slug: 'nri', name: 'Nuova Riveduta', shortName: 'NRI', language: 'it', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1038 },
+    // nri fora do ar: era a riveduta (Luzzi 1927) com o nome "Nuova Riveduta", outra tradução (out/2026). Religar = voltar esta linha.
+    // { slug: 'nri', name: 'Nuova Riveduta', shortName: 'NRI', language: 'it', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1038 },
     // ntlh fora do ar: direitos reservados, sem licença pra redistribuir (out/2026). Religar = voltar esta linha.
     // { slug: 'ntlh', name: 'Nova Tradução na Linguagem de Hoje', shortName: 'NTLH', language: 'pt-br', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1050 },
     // ntv fora do ar: direitos reservados, sem licença pra redistribuir (out/2026). Religar = voltar esta linha.
