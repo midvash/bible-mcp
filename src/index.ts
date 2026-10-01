@@ -5,9 +5,8 @@
  * Context Protocol (MCP) usando HTTP Streamable transport.
  *
  * Rotas:
- *   GET  /                  → landing page (inglês — idioma oficial)
- *   GET  /es                → landing page em espanhol
- *   GET  /pt-br             → landing page em português
+ *   GET  /                  → landing page (inglês, idioma oficial)
+ *   GET  /{locale}          → landing page em pt-br, es, fr, de, it, zh, ru, ko
  *   POST /mcp/{nanoId}      → endpoint MCP (JSON-RPC sobre HTTP)
  *   GET  /mcp/{nanoId}      → 405 (somente POST suportado neste servidor stateless)
  *   DELETE /mcp/{nanoId}    → 200 (encerramento de sessão; no-op aqui)
@@ -18,7 +17,7 @@ import { buildConnectionContext } from './lib/context';
 import { handleMcpMessage } from './mcp/server';
 import { JSON_RPC_ERRORS, type JsonRpcRequest, type JsonRpcResponse } from './mcp/types';
 import { renderLandingPage } from './landing/page';
-import { localeFromPath, SUPPORTED_LOCALES, pathForLocale } from './landing/i18n';
+import { localeFromPath, SUPPORTED_LOCALES, TRANSLATIONS, pathForLocale } from './landing/i18n';
 import { handleOAuth } from './oauth';
 
 const CORS_HEADERS = {
@@ -301,16 +300,21 @@ export default {
       return handleMcpRequest(request, env, ctx, nanoId);
     }
 
-    // Landing page — /, /es, /pt-br
+    // Landing page: / (inglês) e /{locale}. O idioma vem só do caminho,
+    // então cada idioma tem URL própria e não há Vary: Accept-Language.
     const locale = localeFromPath(path);
     if (locale) {
+      // /pt-br/ e afins viram a URL canônica, sem duplicata indexável.
+      const canonicalPath = pathForLocale(locale);
+      if (path !== canonicalPath) {
+        return Response.redirect(`${url.origin}${canonicalPath}${url.search}`, 301);
+      }
       return new Response(renderLandingPage(locale), {
         status: 200,
         headers: {
           'Content-Type': 'text/html; charset=utf-8',
           'Cache-Control': 'public, max-age=300',
-          'Content-Language': locale,
-          'Vary': 'Accept-Language',
+          'Content-Language': TRANSLATIONS[locale].htmlLang,
           ...CORS_HEADERS,
         },
       });
@@ -319,7 +323,7 @@ export default {
     // /mcp sem nanoId — orienta o usuário
     if (path === '/mcp' || path === '/mcp/') {
       return new Response(
-        'Midvash MCP Server\n\nUse /mcp/{nanoId}?v=onbv,kjv&lang=pt-br,en\n\nGere sua URL em https://mcp.midvash.com/',
+        'Midvash Bible MCP\n\nUse /mcp/{id}?v=bsb,kjv&lang=en\n\nCreate your link at https://mcp.midvash.com/',
         {
           status: 400,
           headers: { 'Content-Type': 'text/plain; charset=utf-8', ...CORS_HEADERS },

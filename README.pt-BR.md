@@ -5,18 +5,20 @@
 
 > 🌐 [English](./README.md) · **Português (BR)** · [Español](./README.es.md)
 
-Servidor [Model Context Protocol](https://modelcontextprotocol.io) gratuito e sem chave para
-a API bíblica pública. Leia as Escrituras em **62 versões bíblicas livres em 31
-idiomas** a partir de qualquer cliente MCP — Claude, Cursor e qualquer outro que fale
-MCP. Servido a partir da edge da Cloudflare. Alimenta
-[mcp.midvash.com](https://mcp.midvash.com).
+Servidor [Model Context Protocol](https://modelcontextprotocol.io) gratuito e sem
+chave do [Midvash](https://midvash.com). Leia, busque e estude as Escrituras em
+**62 versões bíblicas livres em 31 idiomas** (domínio público ou licença aberta,
+o mesmo catálogo da [api.midvash.com](https://api.midvash.com)) no ChatGPT,
+Claude, Gemini, Cursor e qualquer outro cliente MCP. Servido a partir da edge da
+Cloudflare. Alimenta [mcp.midvash.com](https://mcp.midvash.com).
 
 - **Sem chave de API, sem auth, sem cadastro.** Basta apontar seu cliente para a URL.
 - **Transporte HTTP Streamable** (JSON-RPC sem estado sobre `POST`).
 - Construído sobre Cloudflare Workers + R2, apoiado no mesmo conteúdo de
   [api.midvash.com](https://api.midvash.com).
-- Catálogo atual do MCP: versões em português, inglês, espanhol, hebraico,
-  latim, francês, italiano, grego e português de Portugal.
+- A busca funciona em todos os idiomas do catálogo, inclusive hebraico e árabe
+  digitados sem sinais de vogal.
+- Versões com licenças como CC BY-SA levam a linha de crédito no fim de todo texto.
 
 ## Conectando um cliente
 
@@ -25,19 +27,25 @@ Gere sua URL de conexão pessoal em
 têm este formato:
 
 ```
-https://mcp.midvash.com/mcp/{id}?v=onbv,kjv&lang=pt-br,en
+https://mcp.midvash.com/mcp/{id}?v=bsb,kjv&lang=en
 ```
 
-- `v` — slugs de versão separados por vírgula a expor (opcional; omita para todas).
-- `lang` — idiomas separados por vírgula a expor (opcional; omita para todos).
+- `v`: slugs de versão separados por vírgula a expor (opcional; omita para
+  todas). A primeira é a versão padrão da conexão; sem `v`, a padrão é a BSB
+  (inglês).
+- `lang`: idiomas separados por vírgula a expor (opcional; omita para todos).
 
-Exemplo (Claude Desktop / `mcp.json`):
+**claude.ai / ChatGPT:** adicione a URL como conector personalizado (Claude:
+Personalizar › Conectores; ChatGPT: Configurações › Aplicativos com o Modo
+desenvolvedor ligado). **Gemini CLI:** `gemini mcp add --transport http midvash "<url>"`.
+
+Exemplo (Cursor e outros editores, `mcp.json`):
 
 ```json
 {
   "mcpServers": {
     "bible": {
-      "url": "https://mcp.midvash.com/mcp/{id}?v=onbv,kjv&lang=pt-br,en"
+      "url": "https://mcp.midvash.com/mcp/{id}?v=bsb,kjv&lang=en"
     }
   }
 }
@@ -50,7 +58,7 @@ Exemplo (Claude Desktop / `mcp.json`):
 | `get_verse` | Busca um único versículo ou um intervalo de versículos. |
 | `get_chapter` | Busca um capítulo completo. |
 | `get_passage` | Busca uma passagem a partir de uma referência em texto livre (ex.: "John 3:16-18") — a forma mais natural de citar as Escrituras. |
-| `search_bible` | Busca palavras ou uma frase exata no texto bíblico, ranqueada por relevância (BM25) sobre um índice FTS5. Ignora caixa e acentos, com filtro opcional por livro ou testamento. |
+| `search_bible` | Busca palavras ou uma frase exata no texto bíblico, ranqueada por relevância (BM25) sobre um índice FTS5. Ignora caixa, acentos e sinais de vogal do hebraico e do árabe, com filtro opcional por livro ou testamento. |
 | `compare_passage` | Compara a mesma passagem em múltiplas versões bíblicas. |
 | `list_versions` | Lista as versões/traduções bíblicas disponíveis. |
 | `list_books` | Lista os 66 livros, opcionalmente filtrados por testamento. |
@@ -89,14 +97,13 @@ do tempo.
 
 O MCP expõe hoje o catálogo compilado em
 [`src/data/versions.ts`](./src/data/versions.ts): 62 versões, todas em domínio
-público ou com licença livre, nos códigos de idioma `pt-br`, `en`, `es`, `he`,
-`la`, `fr`, `it` e `gr`. As versões cuja licença pede atribuição (CC BY-SA) têm
+público ou com licença livre, em 31 códigos de idioma: `ar`, `cs`, `da`, `de`, `en`, `eo`, `es`, `fi`, `fr`, `gr` (grego), `he`, `hu`, `id`, `it`, `ja`, `ko`, `la`, `nb`, `nl`, `pl`, `pt-br`, `ro`, `ru`, `sr`, `sv`, `sw`, `tl`, `tr`, `uk`, `vi`, `zh`. As versões cuja licença pede atribuição (CC BY-SA e afins) têm
 uma linha `copyright`, impressa no fim de todo texto que as tools devolvem.
 
 A URL pública pode limitar esse catálogo por conexão:
 
 ```
-https://mcp.midvash.com/mcp/{id}?v=onbv,kjv&lang=pt-br,en
+https://mcp.midvash.com/mcp/{id}?v=bsb,kjv&lang=en
 ```
 
 ## De onde vêm os dados
@@ -112,10 +119,9 @@ lê dela. Mantê-lo separado faz o painel da Cloudflare reportar o uso deste
 servidor isoladamente, e faz com que um binding de D1 — que dá acesso ao banco
 inteiro — não alcance nada além de conteúdo bíblico público.
 
-A busca é ranqueada por versão. As três em hebraico (WLC, ALEPPO,
-OSMH) são a exceção: o tokenizer do SQLite não remove as vogais hebraicas, então
-essas versões são varridas por livro em vez de ranqueadas, e o `search_bible`
-pede um filtro de `book` quando uma delas é usada.
+A busca é ranqueada por versão em todas as versões do catálogo. Hebraico e árabe
+são indexados sem sinais de vogal, então uma palavra digitada sem eles também
+é encontrada.
 
 ## Benchmark
 
@@ -137,14 +143,9 @@ bíblicos.
 ## Roadmap
 
 - Expandir o catálogo do MCP para acompanhar a cobertura mais ampla dos dados/API Midvash.
-- Estender o índice de busca às versões restantes e aos textos em hebraico,
-  grego e latim, que ainda caem numa varredura limitada a um livro.
 - Melhorar `compare_passage` com formatação mais rica para passagens longas.
-- Adicionar ferramentas de referências cruzadas usando
-  [`bible-cross-references`](https://github.com/midvash/bible-cross-references).
 - Adicionar ferramentas de estudo para línguas originais, léxicos e morfologia
   quando houver dados abertos confiáveis.
-- Adicionar testes automatizados para parser de referências, filtros de catálogo e chamadas das ferramentas.
 
 ## Desenvolvimento
 
@@ -172,17 +173,17 @@ npm run deploy     # npx wrangler deploy
 
 ## O ecossistema Midvash
 
-Faz parte do [**Midvash**](https://midvash.com) — uma plataforma gratuita de leitura e estudo bíblico. Tudo é aberto e se interliga:
+Faz parte do [**Midvash: Bíblia & Devocional**](https://midvash.com), uma plataforma gratuita de leitura e estudo bíblico. Tudo é aberto e se interliga:
 
 | | |
 |---|---|
 | 📖 **Leitor (web)** | [midvash.com](https://midvash.com) — 9 idiomas |
-| 📱 **App iOS** | [midvash.app/ios](https://midvash.app/ios) |
+| 📱 **Apps iOS e Android** | [App Store](https://apps.apple.com/app/id6775930176) · [Google Play](https://play.google.com/store/apps/details?id=com.midvash.mobile) |
 | 🔌 **API** | [api.midvash.com](https://api.midvash.com) · [`bible-api`](https://github.com/midvash/bible-api) |
 | 🤖 **Servidor MCP** | [mcp.midvash.com](https://mcp.midvash.com) · [`bible-mcp`](https://github.com/midvash/bible-mcp) |
-| 🧩 **Plugin WordPress** | [midvash.app/wordpress-plugin](https://midvash.app/wordpress-plugin) · [`bible-wordpress-plugin`](https://github.com/midvash/bible-wordpress-plugin) |
-| 🧩 **Plugin EmDash** | [midvash.app/emdash-plugin](https://midvash.app/emdash-plugin) · [`emdash-plugin-bible`](https://github.com/midvash/emdash-plugin-bible) |
-| 🌐 **Extensão Chrome** | [midvash.app/chrome-extension](https://midvash.app/chrome-extension) · [`bible-chrome-extension`](https://github.com/midvash/bible-chrome-extension) |
+| 🧩 **Plugin WordPress** | [midvash.com/wordpress-plugin](https://midvash.com/wordpress-plugin) · [`bible-wordpress-plugin`](https://github.com/midvash/bible-wordpress-plugin) |
+| 🧩 **Plugin EmDash** | [midvash.com/emdash-plugin](https://midvash.com/emdash-plugin) · [`emdash-plugin-bible`](https://github.com/midvash/emdash-plugin-bible) |
+| 🌐 **Extensão Chrome** | [midvash.com/chrome-extension](https://midvash.com/chrome-extension) · [`bible-chrome-extension`](https://github.com/midvash/bible-chrome-extension) |
 | 📦 **Dados abertos** | [`bible-data`](https://github.com/midvash/bible-data) · [`bible-data-js`](https://github.com/midvash/bible-data-js) · [`bible-cross-references`](https://github.com/midvash/bible-cross-references) |
 
-<sub>Gratuito e aberto, feito pela [Midvash](https://midvash.com) · [midvash.com](https://midvash.com) · [midvash.app](https://midvash.app)</sub>
+<sub>Gratuito e aberto, feito pela [Midvash](https://midvash.com) · [midvash.com](https://midvash.com)</sub>

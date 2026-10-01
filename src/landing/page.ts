@@ -2,6 +2,8 @@ import { VERSIONS } from '../data/versions';
 import {
   TRANSLATIONS,
   SUPPORTED_LOCALES,
+  LANDING_TOOLS,
+  DEFAULT_VERSION_BY_LOCALE,
   pathForLocale,
   type Locale,
 } from './i18n';
@@ -132,6 +134,50 @@ const LANG_SWITCHER_SCRIPT = `(function(){
   });
 })();`;
 
+/** Código BCP 47 de cada idioma do catálogo, pra Intl.DisplayNames. */
+const LANGUAGE_TAGS: Record<string, string> = {
+  gr: 'el',
+  'pt-br': 'pt-BR',
+  'pt-pt': 'pt-PT',
+  nb: 'no',
+};
+
+/**
+ * Nome de cada idioma do catálogo escrito no idioma da página
+ * ("Hebraico" em /pt-br, "Hebrew" em /). Cai no código se o runtime não
+ * tiver o dado.
+ */
+export function languageLabels(locale: Locale): Record<string, string> {
+  const pageTag = locale === 'pt-br' ? 'pt-BR' : locale === 'zh' ? 'zh-Hans' : locale;
+  let names: Intl.DisplayNames | null = null;
+  try {
+    names = new Intl.DisplayNames([pageTag], { type: 'language' });
+  } catch {
+    names = null;
+  }
+  const labels: Record<string, string> = {};
+  for (const code of new Set<string>(VERSIONS.map((v) => v.language))) {
+    let label = code;
+    try {
+      label = names?.of(LANGUAGE_TAGS[code] ?? code) ?? code;
+    } catch {
+      label = code;
+    }
+    labels[code] = label.charAt(0).toLocaleUpperCase(pageTag) + label.slice(1);
+  }
+  return labels;
+}
+
+/** Idiomas do catálogo: o da página primeiro, depois em ordem alfabética. */
+function orderedLanguages(locale: Locale, labels: Record<string, string>): string[] {
+  const codes = Object.keys(labels);
+  return codes.sort((a, b) => {
+    if (a === locale) return -1;
+    if (b === locale) return 1;
+    return labels[a].localeCompare(labels[b], locale);
+  });
+}
+
 /**
  * Renderiza a landing page do mcp.midvash.com no idioma solicitado.
  *
@@ -142,6 +188,10 @@ const LANG_SWITCHER_SCRIPT = `(function(){
  */
 export function renderLandingPage(locale: Locale): string {
   const t = TRANSLATIONS[locale];
+  const pageUrl = `${SITE_URL}${pathForLocale(locale)}`;
+  const midvashHome = `https://midvash.com${locale === 'en' ? '' : `/${locale}`}`;
+  const labels = languageLabels(locale);
+  const languages = orderedLanguages(locale, labels);
 
   // Lista de versões serializada para o JS inline (filtros e seleção)
   const versionsJson = JSON.stringify(
@@ -151,11 +201,7 @@ export function renderLandingPage(locale: Locale): string {
       name: v.name,
       language: v.language,
     })),
-  );
-
-  // Default de idiomas selecionados — apenas o idioma da página atual.
-  // EN → ['en'], ES → ['es'], PT-BR → ['pt-br'].
-  const defaultLangs = [locale];
+  ).replace(/</g, '\\u003c');
 
   // Strings de UI passadas para o JS do navegador
   const uiStrings = JSON.stringify({
@@ -163,21 +209,42 @@ export function renderLandingPage(locale: Locale): string {
     copyBtn: t.configure.copyBtn,
     copiedBtn: t.configure.copiedBtn,
     copyError: t.configure.copyError,
-    defaultLangs,
-  });
+    defaultLangs: [locale],
+    defaultVersions: [DEFAULT_VERSION_BY_LOCALE[locale]],
+    languages,
+    labels,
+  }).replace(/</g, '\\u003c');
 
   const alternates = SUPPORTED_LOCALES.map(
     (l) =>
       `<link rel="alternate" hreflang="${l}" href="${SITE_URL}${pathForLocale(l)}">`,
   ).join('\n');
 
+  const ogAlternates = SUPPORTED_LOCALES.filter((l) => l !== locale)
+    .map((l) => `<meta property="og:locale:alternate" content="${OG_LOCALES[l]}">`)
+    .join('\n');
+
   const langSwitcherHtml = langSwitcherMarkup(locale, SELECT_LANGUAGE_LABEL[locale]);
+
+  const heroFacts = t.hero.facts
+    .map((f) => `<li>${escapeHtml(f)}</li>`)
+    .join('');
+
+  const useCards = t.uses.items
+    .map(
+      (u) => `
+      <figure class="use-card">
+        <figcaption>${escapeHtml(u.who)}</figcaption>
+        <blockquote>${escapeHtml(u.prompt)}</blockquote>
+      </figure>`,
+    )
+    .join('');
 
   const howCards = t.how.cards
     .map(
       (card) => `
       <article class="step-card">
-        <span class="step-num">${escapeHtml(card.num)}</span>
+        <span class="step-num" aria-hidden="true">${escapeHtml(card.num)}</span>
         <h3>${escapeHtml(card.title)}</h3>
         <p>${escapeHtml(card.body)}</p>
       </article>`,
@@ -185,21 +252,10 @@ export function renderLandingPage(locale: Locale): string {
     .join('');
 
   const clientCards = [
-    {
-      key: 'chatgpt',
-      ...t.clients.chatgpt,
-      logo: chatgptLogo(),
-    },
-    {
-      key: 'claude',
-      ...t.clients.claude,
-      logo: claudeLogo(),
-    },
-    {
-      key: 'gemini',
-      ...t.clients.gemini,
-      logo: geminiLogo(),
-    },
+    { key: 'chatgpt', ...t.clients.chatgpt, logo: chatgptLogo() },
+    { key: 'claude', ...t.clients.claude, logo: claudeLogo() },
+    { key: 'gemini', ...t.clients.gemini, logo: geminiLogo() },
+    { key: 'cursor', ...t.clients.cursor, logo: cursorLogo() },
   ]
     .map(
       (c) => `
@@ -214,6 +270,106 @@ export function renderLandingPage(locale: Locale): string {
     )
     .join('');
 
+  const toolItems = LANDING_TOOLS.map(
+    (name) => `
+      <li class="tool-item">
+        <code>${name}</code>
+        <p>${escapeHtml(t.tools.items[name])}</p>
+      </li>`,
+  ).join('');
+
+  const catalogItems = languages
+    .map((code) => {
+      const versions = VERSIONS.filter((v) => v.language === code)
+        .map(
+          (v) =>
+            `<li><strong>${escapeHtml(v.shortName)}</strong> <span class="cat-name">${escapeHtml(v.name)}</span>${
+              v.copyright ? ` <span class="cat-badge">${escapeHtml(t.versions.creditBadge)}</span>` : ''
+            }</li>`,
+        )
+        .join('');
+      return `
+      <div class="cat-lang">
+        <h3>${escapeHtml(labels[code])}</h3>
+        <ul>${versions}</ul>
+      </div>`;
+    })
+    .join('');
+
+  const faqItems = t.faq.items
+    .map(
+      (f) => `
+      <details class="faq-item">
+        <summary><h3>${escapeHtml(f.q)}</h3></summary>
+        <p>${escapeHtml(f.a)}</p>
+      </details>`,
+    )
+    .join('');
+
+  const moreCards = [
+    { ...t.more.reader, href: midvashHome },
+    { ...t.more.api, href: `https://api.midvash.com${pathForLocale(locale) === '/' ? '' : pathForLocale(locale)}` },
+    { ...t.more.wordpress, href: `${midvashHome}/wordpress-plugin` },
+  ]
+    .map(
+      (m) => `
+      <a class="more-card" href="${escapeHtml(m.href)}">
+        <h3>${escapeHtml(m.title)}</h3>
+        <p>${escapeHtml(m.body)}</p>
+        <span class="more-url">${escapeHtml(m.href.replace('https://', ''))}</span>
+      </a>`,
+    )
+    .join('');
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        '@id': 'https://midvash.com/#organization',
+        name: 'Midvash',
+        url: 'https://midvash.com',
+        logo: 'https://midvash.com/brand/icon.svg',
+        sameAs: ['https://instagram.com/midvash', 'https://github.com/midvash'],
+      },
+      {
+        '@type': 'WebPage',
+        '@id': `${pageUrl}#webpage`,
+        url: pageUrl,
+        name: t.meta.title,
+        description: t.meta.description,
+        inLanguage: t.htmlLang,
+        about: { '@id': `${SITE_URL}/#app` },
+        publisher: { '@id': 'https://midvash.com/#organization' },
+      },
+      {
+        '@type': 'SoftwareApplication',
+        '@id': `${SITE_URL}/#app`,
+        name: 'Midvash Bible MCP',
+        alternateName: ALTERNATE_NAMES[locale] ?? 'Midvash Bible MCP',
+        description: t.meta.description,
+        url: pageUrl,
+        applicationCategory: 'ReferenceApplication',
+        operatingSystem: 'Web',
+        isAccessibleForFree: true,
+        offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+        featureList: LANDING_TOOLS.map((name) => t.tools.items[name]),
+        publisher: { '@id': 'https://midvash.com/#organization' },
+        sameAs: ['https://github.com/midvash/bible-mcp'],
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': `${pageUrl}#faq`,
+        inLanguage: t.htmlLang,
+        mainEntity: t.faq.items.map((f) => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a },
+        })),
+      },
+    ],
+  };
+
   return `<!DOCTYPE html>
 <html lang="${t.htmlLang}">
 <head>
@@ -221,31 +377,32 @@ export function renderLandingPage(locale: Locale): string {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${escapeHtml(t.meta.title)}</title>
 <meta name="description" content="${escapeHtml(t.meta.description)}">
+<link rel="canonical" href="${pageUrl}">
+${alternates}
+<link rel="alternate" hreflang="x-default" href="${SITE_URL}/">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
 <meta property="og:title" content="${escapeHtml(t.meta.title)}">
 <meta property="og:description" content="${escapeHtml(t.meta.description)}">
 <meta property="og:type" content="website">
-<meta property="og:url" content="${SITE_URL}${pathForLocale(locale)}">
+<meta property="og:url" content="${pageUrl}">
 <meta property="og:site_name" content="Midvash">
 <meta property="og:locale" content="${OG_LOCALES[locale]}">
+${ogAlternates}
 <meta property="og:image" content="https://midvash.com/brand/og-mcp.jpg">
 <meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="600">
+<meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="${escapeHtml(t.meta.title)}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${escapeHtml(t.meta.title)}">
 <meta name="twitter:description" content="${escapeHtml(t.meta.description)}">
 <meta name="twitter:image" content="https://midvash.com/brand/og-mcp.jpg">
-<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
 <meta name="theme-color" content="#B17027">
 <link rel="icon" href="https://midvash.com/brand/favicon.ico" sizes="any">
 <link rel="icon" type="image/svg+xml" href="https://midvash.com/brand/icon.svg">
 <link rel="apple-touch-icon" href="https://midvash.com/brand/apple-touch-icon.png">
-<link rel="canonical" href="${SITE_URL}${pathForLocale(locale)}">
-${alternates}
-<link rel="alternate" hreflang="x-default" href="${SITE_URL}/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Gloock&family=JetBrains+Mono:wght@400;500;600&family=Literata:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Gloock&family=Literata:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --primary: #B17027;
@@ -269,7 +426,7 @@ ${alternates}
   --font-sans: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-serif: 'Literata', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
   --font-display: 'Gloock', 'Literata', Georgia, serif;
-  --font-mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, ui-monospace, monospace;
+  --font-mono: 'SF Mono', Menlo, Consolas, ui-monospace, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -684,7 +841,7 @@ section.alt { background: var(--bg-soft); border-top: 1px solid var(--border); b
 .result.visible { display: block; }
 .result-block { margin-bottom: 24px; }
 .result-block:last-child { margin-bottom: 0; }
-.result-block label {
+.result-label {
   display: block;
   font-family: var(--font-serif);
   font-size: 1rem;
@@ -698,14 +855,14 @@ section.alt { background: var(--bg-soft); border-top: 1px solid var(--border); b
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 20px 24px;
-  font-family: 'SF Mono', Menlo, Consolas, ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-size: 0.8125rem;
   color: var(--text);
   overflow-x: auto;
-  white-space: pre-wrap;
   word-break: break-all;
   line-height: 1.5;
 }
+.code-box > span { display: block; white-space: pre-wrap; padding-right: 72px; }
 .copy-btn {
   position: absolute;
   top: 10px;
@@ -808,6 +965,81 @@ section.alt { background: var(--bg-soft); border-top: 1px solid var(--border); b
   justify-content: center;
 }
 
+section[id] { scroll-margin-top: 72px; }
+
+/* HERO EXTRAS */
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px 20px; justify-content: center; align-items: center; }
+.hero .cta-secondary { color: var(--primary); font-weight: 600; text-decoration: none; padding: 12px 4px; }
+.hero .cta-secondary:hover { text-decoration: underline; }
+.hero-facts {
+  list-style: none; display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 8px 24px; margin-top: 36px; font-size: 0.9rem; color: var(--text-muted); font-weight: 500;
+}
+.hero-facts li::before { content: '✓'; color: var(--primary); margin-right: 8px; font-weight: 700; }
+
+/* USES */
+.uses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px; }
+.use-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 24px; box-shadow: var(--shadow-sm);
+}
+.use-card figcaption {
+  font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--primary); margin-bottom: 10px;
+}
+.use-card blockquote { font-family: var(--font-serif); font-size: 1rem; line-height: 1.55; color: var(--text); }
+
+/* CONFIG EXTRAS */
+.config-error { color: #B3261E; font-size: 0.875rem; margin-top: 12px; }
+.config-error:empty { display: none; }
+.result-helper { font-size: 0.875rem; color: var(--text-muted); margin: -4px 0 10px; }
+
+/* TOOLS */
+.tools-list {
+  list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;
+}
+.tool-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; }
+.tool-item code { font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 600; color: var(--primary); }
+.tool-item p { font-size: 0.925rem; color: var(--text-soft); margin-top: 6px; line-height: 1.5; }
+.tools-note { text-align: center; color: var(--text-soft); margin-top: 28px; }
+
+/* VERSIONS */
+.versions-intro { max-width: 720px; margin: 0 auto 32px; text-align: center; color: var(--text-soft); }
+.versions-intro p + p { margin-top: 12px; font-size: 0.925rem; color: var(--text-muted); }
+.catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.cat-lang { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; }
+.cat-lang h3 { font-family: var(--font-serif); font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+.cat-lang ul { list-style: none; font-size: 0.875rem; line-height: 1.45; color: var(--text-soft); }
+.cat-lang li + li { margin-top: 6px; }
+.cat-lang strong { color: var(--text); font-weight: 600; }
+.cat-name { color: var(--text-muted); }
+.cat-badge {
+  display: inline-block; font-size: 0.6875rem; font-weight: 600; padding: 1px 8px; border-radius: 999px;
+  background: var(--primary-soft); color: var(--primary); border: 1px solid var(--border); vertical-align: 1px;
+}
+.api-link { display: block; text-align: center; margin-top: 32px; color: var(--primary); font-weight: 600; text-decoration: none; }
+.api-link:hover { text-decoration: underline; }
+
+/* FAQ */
+.faq-list { max-width: 760px; margin: 0 auto; }
+.faq-item { border-bottom: 1px solid var(--border); padding: 18px 0; }
+.faq-item summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after { content: '+'; color: var(--primary); font-size: 1.4rem; line-height: 1; }
+.faq-item[open] summary::after { content: '−'; }
+.faq-item summary h3 { font-family: var(--font-serif); font-size: 1.075rem; font-weight: 600; color: var(--text); }
+.faq-item p { margin-top: 10px; color: var(--text-soft); }
+
+/* MORE */
+.more-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+.more-card {
+  display: block; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 28px; text-decoration: none; color: inherit; box-shadow: var(--shadow-sm); transition: all 0.2s ease;
+}
+.more-card:hover { border-color: var(--primary); box-shadow: var(--shadow-md); }
+.more-card h3 { font-family: var(--font-serif); font-size: 1.2rem; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+.more-card p { color: var(--text-soft); font-size: 0.95rem; }
+.more-url { display: inline-block; margin-top: 14px; color: var(--primary); font-weight: 600; font-size: 0.875rem; }
 ${FOOTER_CSS}
 
 @media (max-width: 640px) {
@@ -816,51 +1048,19 @@ ${FOOTER_CSS}
   .config-block { padding: 28px 20px; }
   .header-inner { height: 64px; }
   .brand-name { font-size: 17px; }
+  .code-box > span { padding-right: 0; padding-top: 28px; }
 }
 </style>
 <script type="application/ld+json">
-${JSON.stringify({
-  '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
-  name: 'Midvash Bible MCP',
-  alternateName: ALTERNATE_NAMES[locale] ?? 'Midvash Bible MCP',
-  description: t.meta.description,
-  url: `${SITE_URL}${pathForLocale(locale)}`,
-  applicationCategory: 'DeveloperApplication',
-  operatingSystem: 'Cross-platform',
-  inLanguage: SUPPORTED_LOCALES as readonly string[],
-  isAccessibleForFree: true,
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  provider: {
-    '@type': 'Organization',
-    name: 'Midvash',
-    url: 'https://midvash.com',
-    logo: 'https://midvash.com/brand/icon.svg',
-  },
-})}
-</script>
-<script type="application/ld+json">
-${JSON.stringify({
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Midvash', item: 'https://midvash.com' + (locale === 'en' ? '' : '/' + locale) },
-    {
-      '@type': 'ListItem',
-      position: 2,
-      name: locale === 'pt-br' ? 'MCP da Bíblia' : locale === 'es' ? 'MCP de la Biblia' : 'Bible MCP',
-      item: `${SITE_URL}${pathForLocale(locale)}`,
-    },
-  ],
-})}
+${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}
 </script>
 </head>
 <body>
-<a href="#configure" class="skip-link">${escapeHtml(t.nav.skipToContent)}</a>
+<a href="#main" class="skip-link">${escapeHtml(t.nav.skipToContent)}</a>
 
 <header class="site-header">
   <div class="container header-inner">
-    <a href="${pathForLocale(locale)}" class="brand" aria-label="Bible MCP">
+    <a href="${pathForLocale(locale)}" class="brand" aria-label="Midvash Bible MCP">
       <span class="brand-mark">${midvashLogo()}</span>
       <span class="brand-name">Bible MCP</span>
     </a>
@@ -868,18 +1068,34 @@ ${JSON.stringify({
   </div>
 </header>
 
-<main>
+<main id="main">
 
 <section class="hero">
   <div class="container hero-inner">
     <span class="eyebrow">${escapeHtml(t.hero.eyebrow)}</span>
     <h1>${escapeHtml(t.hero.title)} <span class="accent">${escapeHtml(t.hero.titleAccent)}</span></h1>
     <p class="hero-sub">${escapeHtml(t.hero.subtitle)}</p>
-    <a href="#configure" class="cta">${escapeHtml(t.hero.cta)}</a>
+    <div class="hero-actions">
+      <a href="#configure" class="cta">${escapeHtml(t.hero.cta)}</a>
+      <a href="#uses" class="cta-secondary">${escapeHtml(t.hero.ctaSecondary)}</a>
+    </div>
+    <ul class="hero-facts">${heroFacts}</ul>
   </div>
 </section>
 
-<section class="block alt">
+<section id="uses" class="block alt">
+  <div class="container">
+    <div class="section-head">
+      <h2>${escapeHtml(t.uses.title)}</h2>
+      <p>${escapeHtml(t.uses.subtitle)}</p>
+    </div>
+    <div class="uses-grid">
+      ${useCards}
+    </div>
+  </div>
+</section>
+
+<section id="how" class="block">
   <div class="container">
     <div class="section-head">
       <h2>${escapeHtml(t.how.title)}</h2>
@@ -890,7 +1106,7 @@ ${JSON.stringify({
   </div>
 </section>
 
-<section id="configure" class="block">
+<section id="configure" class="block alt">
   <div class="container">
     <div class="section-head">
       <h2>${escapeHtml(t.configure.title)}</h2>
@@ -898,35 +1114,44 @@ ${JSON.stringify({
     </div>
     <div class="config-block">
       <div class="config-step">
-        <div class="config-label">${escapeHtml(t.configure.languagesLabel)}</div>
-        <div class="lang-filters" id="lang-filters"></div>
+        <h3 class="config-label" id="lang-filters-label">${escapeHtml(t.configure.languagesLabel)}</h3>
+        <div class="lang-filters" id="lang-filters" role="group" aria-labelledby="lang-filters-label"></div>
       </div>
 
       <div class="config-step">
-        <div class="config-label">${escapeHtml(t.configure.versionsLabel)}</div>
+        <h3 class="config-label" id="versions-label">${escapeHtml(t.configure.versionsLabel)}</h3>
         <div class="versions-toolbar">
           <button type="button" class="toolbar-btn" id="select-all-btn">${escapeHtml(t.configure.selectAll)}</button>
           <button type="button" class="toolbar-btn" id="clear-all-btn">${escapeHtml(t.configure.clearAll)}</button>
         </div>
-        <div class="versions-helper">${escapeHtml(t.configure.versionsHelper)}</div>
-        <div class="versions-grid" id="versions-grid"></div>
+        <p class="versions-helper">${escapeHtml(t.configure.versionsHelper)}</p>
+        <div class="versions-grid" id="versions-grid" role="group" aria-labelledby="versions-label"></div>
       </div>
 
-      <button class="generate-btn" id="generate-btn">${escapeHtml(t.configure.generateBtn)}</button>
+      <button type="button" class="generate-btn" id="generate-btn">${escapeHtml(t.configure.generateBtn)}</button>
+      <p class="config-error" id="config-error" role="alert"></p>
 
       <div class="result" id="result">
         <div class="result-block">
-          <label>${escapeHtml(t.configure.urlLabel)}</label>
+          <h3 class="result-label">${escapeHtml(t.configure.urlLabel)}</h3>
+          <p class="result-helper">${escapeHtml(t.configure.urlHelper)}</p>
           <div class="code-box">
-            <button class="copy-btn" data-target="url-output">${escapeHtml(t.configure.copyBtn)}</button>
+            <button type="button" class="copy-btn" data-target="url-output">${escapeHtml(t.configure.copyBtn)}</button>
             <span id="url-output"></span>
           </div>
         </div>
         <div class="result-block">
-          <label>${escapeHtml(t.configure.jsonLabel)}</label>
+          <h3 class="result-label">${escapeHtml(t.configure.jsonLabel)}</h3>
           <div class="code-box">
-            <button class="copy-btn" data-target="json-output">${escapeHtml(t.configure.copyBtn)}</button>
+            <button type="button" class="copy-btn" data-target="json-output">${escapeHtml(t.configure.copyBtn)}</button>
             <span id="json-output"></span>
+          </div>
+        </div>
+        <div class="result-block">
+          <h3 class="result-label">${escapeHtml(t.configure.geminiLabel)}</h3>
+          <div class="code-box">
+            <button type="button" class="copy-btn" data-target="gemini-output">${escapeHtml(t.configure.copyBtn)}</button>
+            <span id="gemini-output"></span>
           </div>
         </div>
       </div>
@@ -934,7 +1159,7 @@ ${JSON.stringify({
   </div>
 </section>
 
-<section class="block alt">
+<section id="clients" class="block">
   <div class="container">
     <div class="section-head">
       <h2>${escapeHtml(t.clients.title)}</h2>
@@ -946,6 +1171,57 @@ ${JSON.stringify({
   </div>
 </section>
 
+<section id="tools" class="block alt">
+  <div class="container">
+    <div class="section-head">
+      <h2>${escapeHtml(t.tools.title)}</h2>
+      <p>${escapeHtml(t.tools.subtitle)}</p>
+    </div>
+    <ul class="tools-list">
+      ${toolItems}
+    </ul>
+    <p class="tools-note">${escapeHtml(t.tools.prompts)}</p>
+  </div>
+</section>
+
+<section id="versions" class="block">
+  <div class="container">
+    <div class="section-head">
+      <h2>${escapeHtml(t.versions.title)}</h2>
+    </div>
+    <div class="versions-intro">
+      <p>${escapeHtml(t.versions.body)}</p>
+      <p>${escapeHtml(t.versions.creditNote)}</p>
+    </div>
+    <div class="catalog">
+      ${catalogItems}
+    </div>
+    <a class="api-link" href="https://api.midvash.com${pathForLocale(locale) === '/' ? '' : pathForLocale(locale)}">${escapeHtml(t.versions.apiCta)} →</a>
+  </div>
+</section>
+
+<section id="faq" class="block alt">
+  <div class="container">
+    <div class="section-head">
+      <h2>${escapeHtml(t.faq.title)}</h2>
+    </div>
+    <div class="faq-list">
+      ${faqItems}
+    </div>
+  </div>
+</section>
+
+<section id="more" class="block">
+  <div class="container">
+    <div class="section-head">
+      <h2>${escapeHtml(t.more.title)}</h2>
+    </div>
+    <div class="more-grid">
+      ${moreCards}
+    </div>
+  </div>
+</section>
+
 </main>
 
 ${renderFooter(t, locale, { brandName: FOOTER_BRAND_NAME, currentProduct: 'mcp' })}
@@ -953,14 +1229,10 @@ ${renderFooter(t, locale, { brandName: FOOTER_BRAND_NAME, currentProduct: 'mcp' 
 <script>
 const VERSIONS = ${versionsJson};
 const UI = ${uiStrings};
-const LANG_LABELS = {
-  'pt-br': 'Português', 'en': 'English', 'es': 'Español',
-  'he': 'עברית', 'gr': 'Ελληνικά', 'la': 'Latina',
-  'fr': 'Français', 'it': 'Italiano', 'pt-pt': 'Português (PT)'
-};
 
 const selectedLangs = new Set(UI.defaultLangs);
-const selectedVersions = new Set();
+// Ordem de marcação importa: a primeira versão do link vira a padrão da conexão.
+const selectedVersions = new Set(UI.defaultVersions.filter(s => VERSIONS.some(v => v.slug === s)));
 
 function nanoid() {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -972,14 +1244,15 @@ function nanoid() {
 }
 
 function renderLangFilters() {
-  const allLangs = [...new Set(VERSIONS.map(v => v.language))].sort();
   const root = document.getElementById('lang-filters');
   root.innerHTML = '';
-  for (const lang of allLangs) {
+  for (const lang of UI.languages) {
     const chip = document.createElement('button');
     chip.type = 'button';
-    chip.className = 'lang-chip' + (selectedLangs.has(lang) ? ' active' : '');
-    chip.textContent = LANG_LABELS[lang] || lang;
+    const active = selectedLangs.has(lang);
+    chip.className = 'lang-chip' + (active ? ' active' : '');
+    chip.setAttribute('aria-pressed', active ? 'true' : 'false');
+    chip.textContent = UI.labels[lang] || lang;
     chip.addEventListener('click', () => {
       if (selectedLangs.has(lang)) selectedLangs.delete(lang);
       else selectedLangs.add(lang);
@@ -990,29 +1263,37 @@ function renderLangFilters() {
   }
 }
 
+function visibleVersions() {
+  return VERSIONS.filter(v => selectedLangs.size === 0 || selectedLangs.has(v.language));
+}
+
 function renderVersions() {
   const root = document.getElementById('versions-grid');
   root.innerHTML = '';
-  const filtered = VERSIONS.filter(v => selectedLangs.size === 0 || selectedLangs.has(v.language));
-
-  for (const v of filtered) {
+  for (const v of visibleVersions()) {
     const item = document.createElement('label');
     item.className = 'version-item';
-    item.innerHTML =
-      '<input type="checkbox" data-slug="' + v.slug + '"' +
-      (selectedVersions.has(v.slug) ? ' checked' : '') + '>' +
-      '<div><strong>' + v.shortName + '</strong><div class="v-name">' + v.name + '</div></div>';
-    item.querySelector('input').addEventListener('change', (e) => {
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.checked = selectedVersions.has(v.slug);
+    input.addEventListener('change', (e) => {
       if (e.target.checked) selectedVersions.add(v.slug);
       else selectedVersions.delete(v.slug);
     });
+    const text = document.createElement('div');
+    const strong = document.createElement('strong');
+    strong.textContent = v.shortName;
+    const name = document.createElement('div');
+    name.className = 'v-name';
+    name.textContent = v.name;
+    text.append(strong, name);
+    item.append(input, text);
     root.appendChild(item);
   }
 }
 
 function selectAllVisible() {
-  const filtered = VERSIONS.filter(v => selectedLangs.size === 0 || selectedLangs.has(v.language));
-  for (const v of filtered) selectedVersions.add(v.slug);
+  for (const v of visibleVersions()) selectedVersions.add(v.slug);
   renderVersions();
 }
 function clearAll() {
@@ -1021,28 +1302,26 @@ function clearAll() {
 }
 
 function generate() {
+  const error = document.getElementById('config-error');
   if (selectedVersions.size === 0) {
-    alert(UI.needSelection);
+    error.textContent = UI.needSelection;
     return;
   }
-  const id = nanoid();
-  const v = [...selectedVersions].join(',');
-  const lang = [...selectedLangs].join(',');
-  const url = 'https://mcp.midvash.com/mcp/' + id + '?v=' + v + (lang ? '&lang=' + lang : '');
+  error.textContent = '';
+  const slugs = [...selectedVersions];
+  // Idiomas derivados das versões marcadas: um filtro de idioma que não cobre
+  // uma versão do link bloquearia essa versão no servidor.
+  const langs = [...new Set(slugs.map(s => (VERSIONS.find(v => v.slug === s) || {}).language).filter(Boolean))];
+  const url = 'https://mcp.midvash.com/mcp/' + nanoid() + '?v=' + slugs.join(',') + '&lang=' + langs.join(',');
 
-  const json = {
-    mcpServers: {
-      midvash: {
-        type: 'streamable-http',
-        url: url
-      }
-    }
-  };
+  const json = { mcpServers: { midvash: { url: url } } };
 
   document.getElementById('url-output').textContent = url;
   document.getElementById('json-output').textContent = JSON.stringify(json, null, 2);
-  document.getElementById('result').classList.add('visible');
-  document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  document.getElementById('gemini-output').textContent = 'gemini mcp add --transport http midvash "' + url + '"';
+  const result = document.getElementById('result');
+  result.classList.add('visible');
+  result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 document.getElementById('generate-btn').addEventListener('click', generate);
@@ -1062,7 +1341,7 @@ document.querySelectorAll('.copy-btn').forEach(btn => {
         btn.classList.remove('copied');
       }, 1500);
     } catch (err) {
-      alert(UI.copyError);
+      document.getElementById('config-error').textContent = UI.copyError;
     }
   });
 });
@@ -1108,5 +1387,12 @@ function claudeLogo(): string {
 function geminiLogo(): string {
   return `<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <path d="M16 2 L18.5 13.5 L30 16 L18.5 18.5 L16 30 L13.5 18.5 L2 16 L13.5 13.5 Z" fill="currentColor"/>
+  </svg>`;
+}
+
+function cursorLogo(): string {
+  return `<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M16 3 L28 10 V22 L16 29 L4 22 V10 Z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linejoin="round"/>
+    <path d="M4 10 L16 16 L28 10 M16 16 V29" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
   </svg>`;
 }
