@@ -62,6 +62,10 @@ export const VERSES_OUTPUT_SCHEMA: ToolOutputSchema = {
   properties: {
     ...VERSION_FIELDS,
     verses: { type: 'array', items: VERSE_ITEM },
+    reader_url: {
+      type: 'string',
+      description: 'Link to read the passage on midvash.com.',
+    },
   },
   required: ['version', 'verses'],
 };
@@ -159,6 +163,20 @@ export function dualResult(
     content: [{ type: 'text', text }],
     structuredContent: structured,
   };
+}
+
+/**
+ * Link do leitor do midvash.com para o trecho. O site aceita o slug em inglês
+ * do livro em qualquer versão; com versículo, abre a página do versículo.
+ */
+export function readerUrl(
+  version: VersionDefinition,
+  book: BookDefinition,
+  chapter: number,
+  verse?: number,
+): string {
+  const base = `https://midvash.com/${version.slug}/${book.slugs.en}/${chapter}`;
+  return verse === undefined ? base : `${base}/${verse}`;
 }
 
 /** Campos de versão presentes em quase toda resposta estruturada. */

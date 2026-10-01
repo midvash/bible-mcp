@@ -36,6 +36,11 @@ const SERVER_CAPABILITIES = {
   resources: { listChanged: false, subscribe: false },
   prompts: { listChanged: false },
   completions: {},
+  // Padrão MCP Apps: get_passage, get_verse e get_chapter apontam para uma
+  // tela (`ui://`) que hosts como o ChatGPT desenham ao lado da resposta.
+  extensions: {
+    'io.modelcontextprotocol/ui': { mimeTypes: ['text/html;profile=mcp-app'] },
+  },
 } as const;
 
 function success(id: string | number | null, result: unknown): JsonRpcResponse {

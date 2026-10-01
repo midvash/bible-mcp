@@ -15,6 +15,13 @@ describe('lookupBook', () => {
     expect(lookupBook('Êx.')?.names.en).toBe('Exodus');
   });
 
+  it('accepts the singular of Psalms and common Song of Songs names', () => {
+    expect(lookupBook('Psalm')?.id).toBe(19);
+    expect(lookupBook('Salmo')?.id).toBe(19);
+    expect(lookupBook('Psaume')?.id).toBe(19);
+    expect(lookupBook('Song of Songs')?.id).toBe(22);
+  });
+
   it('returns null for unknown books', () => {
     expect(lookupBook('Not a book')).toBeNull();
   });

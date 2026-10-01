@@ -43,8 +43,10 @@ describe('catálogos', () => {
     const resources = (await result('resources/list')).resources as Array<{
       uri: string;
     }>;
-    expect(resources.length).toBeGreaterThan(0);
-    expect(resources.every((r) => r.uri.startsWith('bible://'))).toBe(true);
+    const bible = resources.filter((r) => r.uri.startsWith('bible://'));
+    expect(bible.length).toBeGreaterThan(0);
+    // Além das versões, só a tela do trecho.
+    expect(resources.length - bible.length).toBe(1);
   });
 
   it('resources/list respeita o filtro de versões da conexão', async () => {
@@ -53,9 +55,9 @@ describe('catálogos', () => {
       { ...connectionCtx, allowedVersions: ['nvi'] },
       executionCtx,
     );
-    const resources = (narrow as { result: { resources: unknown[] } }).result
-      .resources;
-    expect(resources).toHaveLength(1);
+    const resources = (narrow as { result: { resources: Array<{ uri: string }> } })
+      .result.resources;
+    expect(resources.filter((r) => r.uri.startsWith('bible://'))).toHaveLength(1);
   });
 
   it('resources/templates/list descreve o padrão de URI', async () => {
@@ -171,5 +173,53 @@ describe('completion/complete', () => {
       argument: { name: 'qualquer', value: 'x' },
     });
     expect((res.completion as { values: string[] }).values).toEqual([]);
+  });
+});
+
+/**
+ * Tela do trecho (padrão MCP Apps, que o ChatGPT desenha). O contrato é: as
+ * tools de leitura apontam para o `ui://`, o servidor anuncia a extensão, e o
+ * `resources/read` devolve o HTML com o MIME do padrão.
+ */
+describe('tela do trecho (MCP Apps)', () => {
+  it('initialize anuncia a extensão de UI', async () => {
+    const init = await result('initialize');
+    const caps = init.capabilities as {
+      extensions?: Record<string, { mimeTypes: string[] }>;
+    };
+    expect(caps.extensions?.['io.modelcontextprotocol/ui']?.mimeTypes).toEqual([
+      'text/html;profile=mcp-app',
+    ]);
+  });
+
+  it('as tools de leitura apontam para a tela', async () => {
+    const tools = (await result('tools/list')).tools as Array<{
+      name: string;
+      _meta?: Record<string, unknown>;
+    }>;
+    const withUi = tools
+      .filter((t) => (t._meta?.ui as { resourceUri?: string } | undefined)?.resourceUri)
+      .map((t) => t.name)
+      .sort();
+    expect(withUi).toEqual(['get_chapter', 'get_passage', 'get_verse']);
+    for (const t of tools.filter((t) => withUi.includes(t.name))) {
+      expect(t._meta?.['openai/outputTemplate']).toBe(
+        (t._meta?.ui as { resourceUri: string }).resourceUri,
+      );
+    }
+  });
+
+  it('resources/read devolve o HTML da tela', async () => {
+    const read = await result('resources/read', {
+      uri: 'ui://midvash/passage-v1.html',
+    });
+    const [contents] = read.contents as Array<{
+      mimeType: string;
+      text: string;
+      _meta?: { ui?: { csp?: unknown } };
+    }>;
+    expect(contents.mimeType).toBe('text/html;profile=mcp-app');
+    expect(contents.text).toContain('ui/notifications/tool-result');
+    expect(contents._meta?.ui?.csp).toBeDefined();
   });
 });

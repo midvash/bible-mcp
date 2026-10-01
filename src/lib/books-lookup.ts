@@ -33,6 +33,16 @@ function numericPrefixVariants(name: string): string[] {
 }
 
 /**
+ * Formas comuns que não são nome, slug nem abreviação oficial — sobretudo o
+ * singular de Salmos ("Psalm 23", "Salmo 23"), que é como quase todo mundo
+ * cita um salmo só. Chave: id do livro.
+ */
+const EXTRA_ALIASES: Record<number, string[]> = {
+  19: ['Psalm', 'Salmo', 'Psaume', 'Ps'],
+  22: ['Song of Songs', 'Songs', 'Cantares de Salomão', 'Cântico dos Cânticos'],
+};
+
+/**
  * Map global de lookup. Construído uma única vez no carregamento do módulo.
  * Chave: forma normalizada (sem acento, lowercase, sem espaço/ponto).
  * Valor: BookDefinition correspondente.
@@ -63,6 +73,8 @@ const BOOK_LOOKUP: Map<string, BookDefinition> = (() => {
         variants.add(variant);
       }
     }
+
+    for (const alias of EXTRA_ALIASES[book.id] ?? []) variants.add(alias);
 
     for (const variant of variants) {
       const key = normalize(variant);

@@ -69,6 +69,8 @@ export interface ToolDefinition {
   description: string;
   inputSchema: ToolInputSchema;
   outputSchema?: ToolOutputSchema;
+  /** Metadados do host — p.ex. a tela (MCP Apps) que desenha o resultado. */
+  _meta?: Record<string, unknown>;
   annotations?: {
     title?: string;
     readOnlyHint?: boolean;
