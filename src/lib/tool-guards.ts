@@ -23,12 +23,16 @@ export type Guard<T> = { ok: true; value: T } | { ok: false; message: string };
 const fail = (message: string): Guard<never> => ({ ok: false, message });
 const pass = <T>(value: T): Guard<T> => ({ ok: true, value });
 
-/** Versão usada quando nem o argumento nem a conexão indicam uma. */
-const FALLBACK_VERSION = 'onbv';
+/**
+ * Versão usada quando nem o argumento nem a conexão indicam uma. Inglês, o
+ * idioma da maioria dos clientes (ChatGPT, Claude): pergunta em inglês sem
+ * versão precisa achar texto em inglês. BSB é livre e tem índice de busca.
+ */
+export const FALLBACK_VERSION = 'bsb';
 
 /**
  * Resolve a versão a usar: a pedida, senão a primeira liberada na conexão,
- * senão ONBV. Confere que existe e que a conexão permite ela e o idioma dela.
+ * senão BSB. Confere que existe e que a conexão permite ela e o idioma dela.
  */
 export function resolveVersion(
   ctx: ConnectionContext,

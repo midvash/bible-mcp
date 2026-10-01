@@ -51,7 +51,7 @@ export const getCrossReferencesTool: Tool = {
         version: {
           type: 'string',
           description:
-            'Optional Bible version slug for the text of the related passages. Defaults to the connection version, or "onbv".',
+            'Optional Bible version slug for the text of the related passages. Defaults to the connection version, or "bsb" (English).',
         },
         limit: {
           type: 'integer',

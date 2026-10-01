@@ -31,8 +31,8 @@ ficam em inglês (é o que o revisor lê).
 
 **Description**
 
-> Read, search and study Scripture without leaving the chat. Midvash brings 35+
-> Bible versions in 9 languages, side-by-side translation comparison, chapter
+> Read, search and study Scripture without leaving the chat. Midvash brings free Bible
+> versions in 9 languages, side-by-side translation comparison, chapter
 > commentaries, 340,000+ cross-references and Strong's Hebrew and Greek lexicon.
 > Passages open in a clean reading view with a button to continue on
 > midvash.com.
@@ -41,10 +41,10 @@ ficam em inglês (é o que o revisor lê).
 
 **Positivos (5)**
 
-1. *"Show me John 3:16-18 in the ESV."* → `get_passage` com `reference: "John 3:16-18"`, `version: "esv"`. A tela mostra os 3 versículos e o botão "Read on Midvash".
-2. *"Read Psalm 23 in Portuguese (NVI)."* → `get_passage` com `version: "nvi"`. A tela mostra o salmo inteiro.
-3. *"Compare Romans 8:28 in KJV, ESV and NVI."* → `compare_passage` com as três versões.
-4. *"Where does the KJV talk about forgiving seventy times seven?"* → `search_bible` com `version: "kjv"`; o primeiro resultado é Mateus 18:22.
+1. *"Show me John 3:16-18."* → `get_passage` com `reference: "John 3:16-18"` (sem versão cai na BSB, em inglês). A tela mostra os 3 versículos e o botão "Read on Midvash".
+2. *"Read Psalm 23 in Portuguese."* → `get_passage` com `version: "onbv"`. A tela mostra o salmo inteiro.
+3. *"Compare Romans 8:28 in the BSB, KJV and WEB."* → `compare_passage` com as três versões.
+4. *"Where does the Bible talk about forgiving seventy times seven?"* → `search_bible`; o primeiro resultado é Mateus 18:22.
 5. *"What does the Greek word agape mean?"* → `get_strongs` com `word: "agape"`; devolve G26.
 
 **Negativos (3)**
