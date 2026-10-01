@@ -5,7 +5,7 @@ import { fetchChapter } from '../lib/r2';
 import { parseReference } from '../lib/reference-parser';
 import type { Tool } from '../mcp/types';
 
-const DEFAULT_COMPARE_VERSIONS = ['nvi', 'ara', 'kjv', 'rvr1960'];
+const DEFAULT_COMPARE_VERSIONS = ['nvi', 'ara', 'kjv', 'rvr1909'];
 const MAX_COMPARE_VERSIONS = 8;
 
 function textResult(text: string, isError = false) {

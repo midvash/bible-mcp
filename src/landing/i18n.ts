@@ -118,7 +118,7 @@ const en: Translations = {
       {
         num: '01',
         title: 'Pick your Bibles',
-        body: 'Choose the languages and versions you want your AI to use. NIV, KJV, ESV, NVI, RVR1960 and 30+ more.',
+        body: 'Choose the languages and versions you want your AI to use. NIV, KJV, ESV, NVI, NTV and 30+ more.',
       },
       {
         num: '02',
@@ -227,7 +227,7 @@ const es: Translations = {
       {
         num: '01',
         title: 'Elige tus Biblias',
-        body: 'Elige los idiomas y versiones que quieres que use tu IA. NVI, RVR1960, NTV, KJV y más de 30 opciones.',
+        body: 'Elige los idiomas y versiones que quieres que use tu IA. NVI, NTV, RVR1909, KJV y más de 30 opciones.',
       },
       {
         num: '02',
@@ -440,7 +440,7 @@ const fr: Translations = {
   how: {
     title: 'Comment ça marche',
     cards: [
-      { num: '01', title: 'Choisissez vos Bibles', body: 'Sélectionnez les langues et les versions que votre IA utilisera. NIV, KJV, ESV, NVI, RVR1960 et plus de 30 autres.' },
+      { num: '01', title: 'Choisissez vos Bibles', body: 'Sélectionnez les langues et les versions que votre IA utilisera. NIV, KJV, ESV, NVI, NTV et plus de 30 autres.' },
       { num: '02', title: 'Récupérez votre lien', body: 'Nous générons un lien de connexion personnel — sans compte, sans email, sans installation.' },
       { num: '03', title: 'Collez-le dans votre IA', body: 'Ajoutez le lien à ChatGPT, Claude ou Gemini en deux clics. Votre IA cite la Bible parfaitement.' },
     ],
@@ -511,7 +511,7 @@ const de: Translations = {
   how: {
     title: 'So funktioniert es',
     cards: [
-      { num: '01', title: 'Wähle deine Bibeln', body: 'Wähle die Sprachen und Übersetzungen, die deine KI nutzen soll. NIV, KJV, ESV, NVI, RVR1960 und über 30 weitere.' },
+      { num: '01', title: 'Wähle deine Bibeln', body: 'Wähle die Sprachen und Übersetzungen, die deine KI nutzen soll. NIV, KJV, ESV, NVI, NTV und über 30 weitere.' },
       { num: '02', title: 'Erhalte deinen Link', body: 'Wir generieren einen persönlichen Verbindungslink — ohne Konto, ohne E-Mail, ohne Setup.' },
       { num: '03', title: 'Füge ihn in deiner KI ein', body: 'Trage den Link in ChatGPT, Claude oder Gemini in zwei Klicks ein. Deine KI zitiert die Bibel perfekt.' },
     ],
@@ -582,7 +582,7 @@ const it: Translations = {
   how: {
     title: 'Come funziona',
     cards: [
-      { num: '01', title: 'Scegli le tue Bibbie', body: 'Scegli le lingue e versioni che la tua IA userà. NIV, KJV, ESV, NVI, RVR1960 e oltre 30 altre.' },
+      { num: '01', title: 'Scegli le tue Bibbie', body: 'Scegli le lingue e versioni che la tua IA userà. NIV, KJV, ESV, NVI, NTV e oltre 30 altre.' },
       { num: '02', title: 'Ottieni il tuo link', body: 'Generiamo un link di connessione personale — senza account, senza email, senza installazione.' },
       { num: '03', title: "Incollalo nella tua IA", body: 'Aggiungi il link in ChatGPT, Claude o Gemini con due clic. La tua IA citerà la Bibbia perfettamente.' },
     ],
@@ -653,7 +653,7 @@ const zh: Translations = {
   how: {
     title: '使用流程',
     cards: [
-      { num: '01', title: '挑选圣经', body: '选择 AI 使用的语言与版本。NIV、KJV、ESV、NVI、RVR1960 等 30 多个版本。' },
+      { num: '01', title: '挑选圣经', body: '选择 AI 使用的语言与版本。NIV、KJV、ESV、NVI、NTV 等 30 多个版本。' },
       { num: '02', title: '获取链接', body: '我们为你生成专属连接链接 — 不需要账号、邮箱或安装。' },
       { num: '03', title: '粘贴到 AI', body: '两次点击即可把链接添加到 ChatGPT、Claude 或 Gemini，AI 即刻完美引用圣经。' },
     ],
@@ -724,7 +724,7 @@ const ru: Translations = {
   how: {
     title: 'Как это работает',
     cards: [
-      { num: '01', title: 'Выберите Библии', body: 'Выберите языки и переводы, которые будет использовать ИИ. NIV, KJV, ESV, NVI, RVR1960 и ещё 30+.' },
+      { num: '01', title: 'Выберите Библии', body: 'Выберите языки и переводы, которые будет использовать ИИ. NIV, KJV, ESV, NVI, NTV и ещё 30+.' },
       { num: '02', title: 'Получите ссылку', body: 'Мы создадим персональную ссылку для подключения — без аккаунта, email и установки.' },
       { num: '03', title: 'Вставьте в ИИ', body: 'Добавьте ссылку в ChatGPT, Claude или Gemini в два клика. ИИ начнёт идеально цитировать Библию.' },
     ],
@@ -795,7 +795,7 @@ const ko: Translations = {
   how: {
     title: '사용 방법',
     cards: [
-      { num: '01', title: '성경 선택', body: 'AI가 사용할 언어와 번역본을 고르세요. NIV, KJV, ESV, NVI, RVR1960 등 30여 종.' },
+      { num: '01', title: '성경 선택', body: 'AI가 사용할 언어와 번역본을 고르세요. NIV, KJV, ESV, NVI, NTV 등 30여 종.' },
       { num: '02', title: '링크 받기', body: '계정·이메일·설치 없이 개인 연결 링크를 생성합니다.' },
       { num: '03', title: 'AI에 붙여넣기', body: '두 번 클릭으로 ChatGPT, Claude 또는 Gemini에 추가하세요. AI가 성경을 완벽히 인용합니다.' },
     ],

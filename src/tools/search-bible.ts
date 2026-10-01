@@ -181,7 +181,7 @@ export const searchBibleTool: Tool = {
         version: {
           type: 'string',
           description:
-            'Optional Bible version slug such as "nvi", "kjv", "ara", or "rvr1960". If omitted, uses the first version enabled by the connection URL, or "nvi".',
+            'Optional Bible version slug such as "nvi", "kjv", "ara", or "rvr1909". If omitted, uses the first version enabled by the connection URL, or "nvi".',
         },
         book: {
           type: 'string',
