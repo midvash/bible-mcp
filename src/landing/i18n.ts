@@ -99,7 +99,7 @@ const en: Translations = {
   meta: {
     title: 'Midvash MCP — Connect any AI to the Bible',
     description:
-      "The free, public Bible MCP server. Get accurate Scripture in 16 free Bible versions and 8 languages, plus commentary on all 1,189 chapters — directly inside ChatGPT, Claude, and Gemini.",
+      "The free, public Bible MCP server. Get accurate Scripture in 62 free Bible versions and 31 languages, plus commentary on all 1,189 chapters — directly inside ChatGPT, Claude, and Gemini.",
   },
   nav: {
     skipToContent: 'Skip to content',
@@ -109,7 +109,7 @@ const en: Translations = {
     title: 'Connect any AI to the',
     titleAccent: 'Bible',
     subtitle:
-      'Give ChatGPT, Claude, or Gemini direct access to accurate Scripture in 16 free Bible versions and 8 languages, plus commentary on every chapter — straight from Midvash.',
+      'Give ChatGPT, Claude, or Gemini direct access to accurate Scripture in 62 free Bible versions and 31 languages, plus commentary on every chapter — straight from Midvash.',
     cta: 'Set up my connection',
   },
   how: {
@@ -208,7 +208,7 @@ const es: Translations = {
   meta: {
     title: 'Midvash MCP — Conecta cualquier IA a la Biblia',
     description:
-      'El servidor MCP público y gratuito de la Biblia. Obtén citas precisas en 16 versiones bíblicas libres y 8 idiomas, además de comentarios de los 1.189 capítulos — directamente en ChatGPT, Claude y Gemini.',
+      'El servidor MCP público y gratuito de la Biblia. Obtén citas precisas en 62 versiones bíblicas libres y 31 idiomas, además de comentarios de los 1.189 capítulos — directamente en ChatGPT, Claude y Gemini.',
   },
   nav: {
     skipToContent: 'Saltar al contenido',
@@ -218,7 +218,7 @@ const es: Translations = {
     title: 'Conecta cualquier IA a la',
     titleAccent: 'Biblia',
     subtitle:
-      'Dale a ChatGPT, Claude o Gemini acceso directo a citas bíblicas precisas en 16 versiones bíblicas libres y 8 idiomas, además de comentarios de cada capítulo — directamente desde Midvash.',
+      'Dale a ChatGPT, Claude o Gemini acceso directo a citas bíblicas precisas en 62 versiones bíblicas libres y 31 idiomas, además de comentarios de cada capítulo — directamente desde Midvash.',
     cta: 'Configurar mi conexión',
   },
   how: {
@@ -317,7 +317,7 @@ const ptBr: Translations = {
   meta: {
     title: 'Midvash MCP — Conecte qualquer IA à Bíblia',
     description:
-      'O servidor MCP público e gratuito da Bíblia. Receba citações bíblicas precisas em 16 versões bíblicas livres e 8 idiomas, além de comentários dos 1.189 capítulos — direto no ChatGPT, Claude e Gemini.',
+      'O servidor MCP público e gratuito da Bíblia. Receba citações bíblicas precisas em 62 versões bíblicas livres e 31 idiomas, além de comentários dos 1.189 capítulos — direto no ChatGPT, Claude e Gemini.',
   },
   nav: {
     skipToContent: 'Pular para o conteúdo',
@@ -327,7 +327,7 @@ const ptBr: Translations = {
     title: 'Conecte qualquer IA à',
     titleAccent: 'Bíblia',
     subtitle:
-      'Dê ao ChatGPT, Claude ou Gemini acesso direto a citações bíblicas precisas em 16 versões bíblicas livres e 8 idiomas, além de comentários de cada capítulo — direto do Midvash.',
+      'Dê ao ChatGPT, Claude ou Gemini acesso direto a citações bíblicas precisas em 62 versões bíblicas livres e 31 idiomas, além de comentários de cada capítulo — direto do Midvash.',
     cta: 'Configurar minha conexão',
   },
   how: {
@@ -426,7 +426,7 @@ const fr: Translations = {
   meta: {
     title: 'Midvash MCP — Connectez votre IA à la Bible',
     description:
-      "Le serveur MCP public et gratuit de la Bible. Obtenez des citations précises dans 16 versions libres de la Bible et 8 langues, ainsi qu'un commentaire pour les 1 189 chapitres — directement dans ChatGPT, Claude et Gemini.",
+      "Le serveur MCP public et gratuit de la Bible. Obtenez des citations précises dans 62 versions libres de la Bible et 31 langues, ainsi qu'un commentaire pour les 1 189 chapitres — directement dans ChatGPT, Claude et Gemini.",
   },
   nav: { skipToContent: 'Aller au contenu' },
   hero: {
@@ -434,7 +434,7 @@ const fr: Translations = {
     title: 'Connectez votre IA à la',
     titleAccent: 'Bible',
     subtitle:
-      "Donnez à ChatGPT, Claude ou Gemini un accès direct à des Écritures précises dans 16 versions libres de la Bible et 8 langues, avec un commentaire pour chaque chapitre — directement depuis Midvash.",
+      "Donnez à ChatGPT, Claude ou Gemini un accès direct à des Écritures précises dans 62 versions libres de la Bible et 31 langues, avec un commentaire pour chaque chapitre — directement depuis Midvash.",
     cta: 'Configurer ma connexion',
   },
   how: {
@@ -497,7 +497,7 @@ const de: Translations = {
   meta: {
     title: 'Midvash MCP — Verbinde jede KI mit der Bibel',
     description:
-      'Der kostenlose, öffentliche Bibel-MCP-Server. Hol dir präzise Bibelzitate in 16 frei verfügbaren Bibelversionen und 8 Sprachen, dazu Kommentare zu allen 1.189 Kapiteln — direkt in ChatGPT, Claude und Gemini.',
+      'Der kostenlose, öffentliche Bibel-MCP-Server. Hol dir präzise Bibelzitate in 62 frei verfügbaren Bibelversionen und 31 Sprachen, dazu Kommentare zu allen 1.189 Kapiteln — direkt in ChatGPT, Claude und Gemini.',
   },
   nav: { skipToContent: 'Zum Inhalt springen' },
   hero: {
@@ -505,7 +505,7 @@ const de: Translations = {
     title: 'Verbinde jede KI mit der',
     titleAccent: 'Bibel',
     subtitle:
-      'Gib ChatGPT, Claude oder Gemini direkten Zugriff auf präzise Schriftstellen in 16 frei verfügbaren Bibelversionen und 8 Sprachen, dazu Kommentare zu jedem Kapitel — direkt von Midvash.',
+      'Gib ChatGPT, Claude oder Gemini direkten Zugriff auf präzise Schriftstellen in 62 frei verfügbaren Bibelversionen und 31 Sprachen, dazu Kommentare zu jedem Kapitel — direkt von Midvash.',
     cta: 'Verbindung einrichten',
   },
   how: {
@@ -568,7 +568,7 @@ const it: Translations = {
   meta: {
     title: "Midvash MCP — Collega qualsiasi IA alla Bibbia",
     description:
-      'Il server MCP pubblico e gratuito della Bibbia. Ottieni citazioni bibliche precise in 16 versioni libere della Bibbia e 8 lingue, più i commenti a tutti i 1.189 capitoli — direttamente in ChatGPT, Claude e Gemini.',
+      'Il server MCP pubblico e gratuito della Bibbia. Ottieni citazioni bibliche precise in 62 versioni libere della Bibbia e 31 lingue, più i commenti a tutti i 1.189 capitoli — direttamente in ChatGPT, Claude e Gemini.',
   },
   nav: { skipToContent: 'Vai al contenuto' },
   hero: {
@@ -576,7 +576,7 @@ const it: Translations = {
     title: 'Collega qualsiasi IA alla',
     titleAccent: 'Bibbia',
     subtitle:
-      'Dai a ChatGPT, Claude o Gemini accesso diretto a citazioni bibliche precise in 16 versioni libere della Bibbia e 8 lingue, più i commenti a ogni capitolo — direttamente da Midvash.',
+      'Dai a ChatGPT, Claude o Gemini accesso diretto a citazioni bibliche precise in 62 versioni libere della Bibbia e 31 lingue, più i commenti a ogni capitolo — direttamente da Midvash.',
     cta: 'Configura la mia connessione',
   },
   how: {
@@ -639,7 +639,7 @@ const zh: Translations = {
   meta: {
     title: 'Midvash MCP — 把任意 AI 接入圣经',
     description:
-      '免费、公开的圣经 MCP 服务器。在 ChatGPT、Claude 与 Gemini 中直接获取 16 个可自由使用的圣经版本、8 种语言的精准经文，以及全部 1,189 章的注释。',
+      '免费、公开的圣经 MCP 服务器。在 ChatGPT、Claude 与 Gemini 中直接获取 62 个可自由使用的圣经版本、31 种语言的精准经文，以及全部 1,189 章的注释。',
   },
   nav: { skipToContent: '跳到主要内容' },
   hero: {
@@ -647,7 +647,7 @@ const zh: Translations = {
     title: '把任意 AI 接入',
     titleAccent: '圣经',
     subtitle:
-      '让 ChatGPT、Claude 或 Gemini 直接获取 16 个可自由使用的圣经版本、8 种语言的精准经文，以及每一章的注释 — 来自 Midvash。',
+      '让 ChatGPT、Claude 或 Gemini 直接获取 62 个可自由使用的圣经版本、31 种语言的精准经文，以及每一章的注释 — 来自 Midvash。',
     cta: '配置我的连接',
   },
   how: {
@@ -710,7 +710,7 @@ const ru: Translations = {
   meta: {
     title: 'Midvash MCP — Подключите любой ИИ к Библии',
     description:
-      'Бесплатный публичный MCP-сервер Библии. Получайте точные цитаты в 16 свободных версиях Библии на 8 языках, а также комментарии ко всем 1189 главам — прямо в ChatGPT, Claude и Gemini.',
+      'Бесплатный публичный MCP-сервер Библии. Получайте точные цитаты в 62 свободных версиях Библии на 31 языке, а также комментарии ко всем 1189 главам — прямо в ChatGPT, Claude и Gemini.',
   },
   nav: { skipToContent: 'Перейти к контенту' },
   hero: {
@@ -718,7 +718,7 @@ const ru: Translations = {
     title: 'Подключите любой ИИ к',
     titleAccent: 'Библии',
     subtitle:
-      'Дайте ChatGPT, Claude или Gemini прямой доступ к точным библейским текстам в 16 свободных версиях Библии на 8 языках, а также к комментариям к каждой главе — напрямую от Midvash.',
+      'Дайте ChatGPT, Claude или Gemini прямой доступ к точным библейским текстам в 62 свободных версиях Библии на 31 языке, а также к комментариям к каждой главе — напрямую от Midvash.',
     cta: 'Настроить подключение',
   },
   how: {
@@ -781,7 +781,7 @@ const ko: Translations = {
   meta: {
     title: 'Midvash MCP — 모든 AI를 성경에 연결하세요',
     description:
-      '무료 공개 성경 MCP 서버. ChatGPT, Claude, Gemini에서 자유롭게 쓸 수 있는 16개 성경 버전과 8개 언어로 정확한 말씀을, 그리고 1,189개 장 전체의 주석을 받아보세요.',
+      '무료 공개 성경 MCP 서버. ChatGPT, Claude, Gemini에서 자유롭게 쓸 수 있는 62개 성경 버전과 31개 언어로 정확한 말씀을, 그리고 1,189개 장 전체의 주석을 받아보세요.',
   },
   nav: { skipToContent: '본문으로 건너뛰기' },
   hero: {
@@ -789,7 +789,7 @@ const ko: Translations = {
     title: '모든 AI를 성경에',
     titleAccent: '연결',
     subtitle:
-      'ChatGPT, Claude, Gemini가 자유롭게 쓸 수 있는 16개 성경 버전과 8개 언어의 정확한 말씀과 각 장의 주석에 바로 접근할 수 있게 — Midvash에서 직접.',
+      'ChatGPT, Claude, Gemini가 자유롭게 쓸 수 있는 62개 성경 버전과 31개 언어의 정확한 말씀과 각 장의 주석에 바로 접근할 수 있게 — Midvash에서 직접.',
     cta: '연결 설정하기',
   },
   how: {
