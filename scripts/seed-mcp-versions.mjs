@@ -32,6 +32,26 @@ import { readFileSync } from 'node:fs';
 const TARGET_DB = 'midvash-mcp-search';
 
 /**
+ * Banco D1 de cada versão. O padrão é `bible-{slug}`; estas fogem dele (mesmo
+ * `database_name` dos bindings em apps/api/wrangler.jsonc do monorepo).
+ */
+const DB_NAME_BY_SLUG = {
+  'bg': 'bible-gdanska',
+  'bkr': 'bible-kralicka',
+  'bnb': 'bible-tagalog',
+  'kar': 'bible-karoli',
+  'kgy': 'bible-kougo',
+  'kp': 'bible-kulish',
+  'lsb': 'bible-esperanto',
+  'nb1930': 'bible-norsk',
+  'suv': 'bible-swahili-suv',
+  'vdc': 'bible-cornilescu',
+  'ycv': 'bible-turkish',
+};
+
+export const databaseFor = (slug) => DB_NAME_BY_SLUG[slug] ?? `bible-${slug}`;
+
+/**
  * Lê o catálogo direto do fonte, para não duplicar a lista. Linhas comentadas
  * são versões fora do ar e não entram — sem tirar os comentários, a regex
  * pegaria a kjf e a rvr1960 de volta.
@@ -275,7 +295,7 @@ async function main() {
         console.log(`${label} exportando…`);
         wrangler(
           [
-            'd1', 'export', `bible-${version.slug}`, '--remote',
+            'd1', 'export', databaseFor(version.slug), '--remote',
             '--table', 'verses', '--no-schema', '--output', dump,
           ],
           { quiet: true },

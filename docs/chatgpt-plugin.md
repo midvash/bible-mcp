@@ -31,8 +31,8 @@ ficam em inglês (é o que o revisor lê).
 
 **Description**
 
-> Read, search and study Scripture without leaving the chat. Midvash brings free Bible
-> versions in 9 languages, side-by-side translation comparison, chapter
+> Read, search and study Scripture without leaving the chat. Midvash brings 60+ free Bible
+> versions in 30+ languages, side-by-side translation comparison, chapter
 > commentaries, 340,000+ cross-references and Strong's Hebrew and Greek lexicon.
 > Passages open in a clean reading view with a button to continue on
 > midvash.com.
