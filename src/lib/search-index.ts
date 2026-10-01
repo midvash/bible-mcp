@@ -69,8 +69,26 @@ export function indexVersionForLocale(locale: IndexLocale): string {
  *  - **Sigma final.** Em grego, `ς` só aparece em fim de palavra e `σ` no
  *    resto — a mesma letra. Sem unificar, quem digita `ουτωσ` não acha `ουτως`.
  */
-export function normalizeText(input: string): string {
+/**
+ * Árabe sem sinais de vogal. A SVD grava o texto todo vocalizado (`ٱللهُ`),
+ * mas quem busca digita sem (`الله`), e o tokenizer do FTS5 não remove esses
+ * sinais. Então o índice guarda o árabe já dobrado (o seed aplica esta mesma
+ * regra, ver `foldArabic` em scripts/seed-mcp-versions.mjs) e a query passa
+ * por aqui antes do `MATCH`. Só mexe em caractere árabe.
+ *
+ *  - Remove harakat, tanwin, shadda, sukun, alef superscrito, marcas
+ *    corânicas e tatweel.
+ *  - Unifica as formas de alef (ٱ أ إ آ → ا) e alef maqsura (ى → ي).
+ */
+export function foldArabic(input: string): string {
   return input
+    .replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u0640]/g, '')
+    .replace(/[\u0671\u0622\u0623\u0625]/g, '\u0627')
+    .replace(/\u0649/g, '\u064A');
+}
+
+export function normalizeText(input: string): string {
+  return foldArabic(input)
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '') // U+0300–U+036F — marcas combinantes
     .replace(/־/g, ' ') // maqaf: separa palavras, não as junta
@@ -105,7 +123,9 @@ export function parseQuery(raw: string): ParsedQuery | null {
   const quoted = /^["“'](.+)["”']$/.exec(trimmed);
   const body = quoted ? quoted[1] : trimmed;
 
-  const tokens = Array.from(body.matchAll(TOKEN_RE), (m) => m[0]);
+  // Dobra o árabe antes de quebrar em tokens: os sinais de vogal são marcas
+  // (\p{M}), e o TOKEN_RE cortaria a palavra em cada um deles.
+  const tokens = Array.from(foldArabic(body).matchAll(TOKEN_RE), (m) => m[0]);
   if (tokens.length === 0) return null;
 
   const escape = (t: string) => t.replace(/"/g, '""');

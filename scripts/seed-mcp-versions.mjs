@@ -130,6 +130,19 @@ function splitValues(body) {
 
 const INSERT_RE = /^INSERT INTO "verses"\s*\(([^)]*)\)\s*VALUES\((.*)\);\s*$/;
 
+/**
+ * Mesma regra de `foldArabic` em src/lib/search-index.ts (o teste
+ * seed-mcp-versions.test.ts confere que as duas batem). O árabe entra no
+ * índice sem sinais de vogal pra casar com a query digitada sem eles; o texto
+ * que o usuário lê vem do R2, intacto.
+ */
+export function foldArabic(input) {
+  return input
+    .replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u0640]/g, '')
+    .replace(/[\u0671\u0622\u0623\u0625]/g, '\u0627')
+    .replace(/\u0649/g, '\u064A');
+}
+
 /** Converte o dump de uma versão para INSERTs na tabela do índice. */
 export async function transform(inputPath, outputPath, version, locale) {
   const output = createWriteStream(outputPath);
@@ -157,7 +170,8 @@ export async function transform(inputPath, outputPath, version, locale) {
     const bookId = pick('book_id');
     const chapter = pick('chapter');
     const verse = pick('number');
-    const text = pick('text');
+    const raw = pick('text');
+    const text = locale === 'ar' && raw !== undefined ? foldArabic(raw) : raw;
 
     if (!bookId || !chapter || !verse || text === undefined) {
       skipped++;
