@@ -32,7 +32,7 @@ import type { ToolResult } from '../mcp/types';
  * v7 → v8: sai a nri (duplicata da riveduta), list_versions muda.
  * v8 → v9: sai a dansk1931 (AT de 1931 com direitos), list_versions muda.
  */
-const CACHE_VERSION = 'v10';
+const CACHE_VERSION = 'v11';
 
 /** Um dia. O texto bíblico não muda; o teto existe só para limitar staleness. */
 const CACHE_TTL_SECONDS = 86400;

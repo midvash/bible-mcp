@@ -38,6 +38,7 @@ export interface VersionDefinition {
         | 'ko'
         | 'la'
         | 'lg'
+        | 'mg'
         | 'ln'
         | 'luo'
         | 'ml'
@@ -259,4 +260,10 @@ export const VERSIONS: VersionDefinition[] = [
     { slug: 'wmb', name: 'World Messianic Bible', shortName: 'WMB', language: 'en', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189, copyright: 'World Messianic Bible (WMB). Public Domain. "World Messianic Bible" is a trademark.' },
     { slug: 'elb1871', name: 'Elberfelder 1871', shortName: 'ELB1871', language: 'de', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189, copyright: 'Elberfelder Bibel 1871 (ELB1871). Gemeinfrei (Public Domain).' },
     { slug: 'textbibel', name: 'Textbibel (Kautzsch-Weizsäcker)', shortName: 'KW', language: 'de', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189, copyright: 'Textbibel des Alten und Neuen Testaments (Kautzsch-Weizsäcker). Gemeinfrei (Public Domain).' },
+    { slug: 'fbv', name: 'Free Bible Version', shortName: 'FBV', language: 'en', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189, copyright: 'Free Bible Version (FBV). Copyright © 2018 Dr. Jonathan Gallagher. Licensed under CC BY-SA 4.0. Source: eBible.org.' },
+    { slug: 'diodati1885', name: 'Diodati 1885', shortName: 'DIODATI1885', language: 'it', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189, copyright: 'La Sacra Bibbia, Diodati 1885. Pubblico dominio (Public Domain).' },
+    { slug: 'angbiblia', name: 'Ang Biblia (1905)', shortName: 'ABTAG1905', language: 'tl', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189, copyright: 'Ang Biblia (1905), Philippine Bible Society. Public Domain.' },
+    { slug: 'sk73', name: 'Karl XII:s Bibel 1873', shortName: 'SK73', language: 'sv', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189, copyright: 'Karl XII:s Bibel (1873 års utgåva). Allmän egendom (Public Domain).' },
+    { slug: 'fi1776', name: 'Biblia 1776', shortName: 'FI1776', language: 'fi', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189, copyright: 'Biblia 1776 (Vuoden 1776 kirkkoraamattu). Public Domain.' },
+    { slug: 'mg1865', name: 'Baiboly Malagasy (1865)', shortName: 'MG1865', language: 'mg', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189, copyright: 'Baiboly Malagasy (1865). Public Domain.' },
 ];
