@@ -266,4 +266,5 @@ export const VERSIONS: VersionDefinition[] = [
     { slug: 'sk73', name: 'Karl XII:s Bibel 1873', shortName: 'SK73', language: 'sv', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189, copyright: 'Karl XII:s Bibel (1873 års utgåva). Allmän egendom (Public Domain).' },
     { slug: 'fi1776', name: 'Biblia 1776', shortName: 'FI1776', language: 'fi', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189, copyright: 'Biblia 1776 (Vuoden 1776 kirkkoraamattu). Public Domain.' },
     { slug: 'mg1865', name: 'Baiboly Malagasy (1865)', shortName: 'MG1865', language: 'mg', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189, copyright: 'Baiboly Malagasy (1865). Public Domain.' },
+    { slug: 'ubg', name: 'Uwspółcześniona Biblia Gdańska', shortName: 'UBG', language: 'pl', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189, copyright: 'Święta Biblia, Uwspółcześniona Biblia Gdańska (UBG). Copyright © 2018 Fundacja Wrota Nadziei. CC BY-ND 4.0: the words and punctuation of the Scriptures may not be changed. Source: eBible.org.' },
 ];
