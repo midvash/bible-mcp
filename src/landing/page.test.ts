@@ -13,9 +13,9 @@ import { TOOLS } from '../tools';
 const languageCount = new Set(VERSIONS.map((v) => v.language)).size;
 
 describe('landing: contagens batem com o código', () => {
-  it('o catálogo tem 110 versões em 68 idiomas', () => {
-    expect(VERSIONS).toHaveLength(110);
-    expect(languageCount).toBe(68);
+  it('o catálogo tem 116 versões em 69 idiomas', () => {
+    expect(VERSIONS).toHaveLength(116);
+    expect(languageCount).toBe(69);
   });
 
   it('a lista de tools da landing é a mesma do servidor', () => {
@@ -62,8 +62,8 @@ describe.each(SUPPORTED_LOCALES)('landing %s', (locale) => {
 
   it('copy cita as contagens certas e não tem travessão', () => {
     expect(copy).not.toContain('—');
-    expect(copy).toMatch(/110/);
-    expect(copy).toMatch(/68/);
+    expect(copy).toMatch(/116/);
+    expect(copy).toMatch(/69/);
   });
 
   it('não cita versões que saíram do catálogo', () => {
