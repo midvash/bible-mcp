@@ -17,6 +17,7 @@ import { buildConnectionContext } from './lib/context';
 import { handleMcpMessage } from './mcp/server';
 import { JSON_RPC_ERRORS, type JsonRpcRequest, type JsonRpcResponse } from './mcp/types';
 import { renderLandingPage } from './landing/page';
+import { ROOT_NEGOTIATED_HEADERS, rootRedirectLocale } from './landing/locale-redirect';
 import { localeFromPath, SUPPORTED_LOCALES, TRANSLATIONS, pathForLocale } from './landing/i18n';
 import { handleOAuth } from './oauth';
 
@@ -300,14 +301,26 @@ export default {
       return handleMcpRequest(request, env, ctx, nanoId);
     }
 
-    // Landing page: / (inglês) e /{locale}. O idioma vem só do caminho,
-    // então cada idioma tem URL própria e não há Vary: Accept-Language.
+    // Landing page: / (inglês) e /{locale}. Cada idioma tem URL própria; só
+    // `/` olha o idioma do navegador (e o cookie da escolha) e manda pro dele
+    // com 302 (ver landing/locale-redirect.ts).
     const locale = localeFromPath(path);
     if (locale) {
       // /pt-br/ e afins viram a URL canônica, sem duplicata indexável.
       const canonicalPath = pathForLocale(locale);
       if (path !== canonicalPath) {
         return Response.redirect(`${url.origin}${canonicalPath}${url.search}`, 301);
+      }
+      const isRoot = locale === 'en';
+      const target = isRoot ? rootRedirectLocale(request, SUPPORTED_LOCALES) : null;
+      if (target) {
+        return new Response(null, {
+          status: 302,
+          headers: {
+            Location: `${url.origin}${pathForLocale(target)}${url.search}`,
+            ...ROOT_NEGOTIATED_HEADERS,
+          },
+        });
       }
       return new Response(renderLandingPage(locale), {
         status: 200,
@@ -316,6 +329,8 @@ export default {
           'Cache-Control': 'public, max-age=300',
           'Content-Language': TRANSLATIONS[locale].htmlLang,
           ...CORS_HEADERS,
+          // `/` depende do pedido: não pode ir pro cache compartilhado.
+          ...(isRoot ? ROOT_NEGOTIATED_HEADERS : {}),
         },
       });
     }

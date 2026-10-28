@@ -8,6 +8,7 @@ import {
   type Locale,
 } from './i18n';
 import { renderSiteFooter, SITE_FOOTER_CSS } from './site-footer';
+import { LANG_COOKIE_SCRIPT } from './locale-redirect';
 
 
 /**
@@ -126,6 +127,7 @@ const LANG_SWITCHER_SCRIPT = `(function(){
       if(e.key === 'Escape') close();
     });
   });
+  ${LANG_COOKIE_SCRIPT}
 })();`;
 
 /** Código BCP 47 de cada idioma do catálogo, pra Intl.DisplayNames. */
