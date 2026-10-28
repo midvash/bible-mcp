@@ -101,6 +101,8 @@ export interface Translations {
     title: string;
     subtitle: string;
     languagesLabel: string;
+    /** Primeira opção do seletor de idioma: mostra as versões de todos. */
+    allLanguages: string;
     versionsLabel: string;
     versionsHelper: string;
     generateBtn: string;
@@ -223,6 +225,7 @@ const en: Translations = {
     title: 'Create your link',
     subtitle: 'Pick the Bible versions your AI should use. The first one you check becomes the default.',
     languagesLabel: '1. Filter by language',
+    allLanguages: 'All languages',
     versionsLabel: '2. Choose your Bible versions',
     versionsHelper: 'Tip: 2 or 3 versions give the cleanest answers.',
     generateBtn: 'Create my link',
@@ -242,11 +245,11 @@ const en: Translations = {
     subtitle: 'Use the link you created above. It takes about a minute.',
     chatgpt: {
       name: 'ChatGPT',
-      tier: 'Plus, Pro, Business, Enterprise or Edu',
+      tier: 'Paid plans (availability varies by plan)',
       steps: [
-        'Go to Settings › Apps and turn on Developer mode (under Advanced settings)',
-        'Click Create app, name it Midvash, paste your link and choose no authentication',
-        'In a chat, click + and turn on Midvash',
+        'On chatgpt.com, open Plugins and click + › Add custom MCP server',
+        'Name it Midvash, paste your link, choose no authentication and click Create as a plugin',
+        'In a chat, type @ and pick Midvash',
       ],
     },
     claude: {
@@ -254,7 +257,7 @@ const en: Translations = {
       tier: 'Free (1 custom connector), Pro, Max, Team or Enterprise',
       steps: [
         'On claude.ai, go to Customize › Connectors',
-        'Click + › Add custom connector and paste your link',
+        'Click Add custom connector and paste your link',
         'In a chat, click + › Connectors and turn on Midvash',
       ],
     },
@@ -271,9 +274,9 @@ const en: Translations = {
       name: 'Cursor',
       tier: 'Desktop editor',
       steps: [
-        'Open Cursor Settings and go to the MCP section',
-        'Add a new MCP server (this opens mcp.json)',
+        'Open ~/.cursor/mcp.json (or .cursor/mcp.json in your project)',
         'Paste the JSON shown under your link and save',
+        'On the Customize page, check that Midvash is on',
       ],
     },
   },
@@ -307,7 +310,7 @@ const en: Translations = {
     items: [
       {
         q: 'Is it really free?',
-        a: 'Yes. No account, no API key and no ads. What may cost something is the AI itself: ChatGPT only accepts custom apps on paid plans, while Claude allows one custom connector on the free plan.',
+        a: 'Yes. No account, no API key and no ads. What may cost something is the AI itself: ChatGPT only accepts custom MCP servers on paid plans, while Claude allows one custom connector on the free plan.',
       },
       {
         q: 'Do I need to know how to code?',
@@ -423,6 +426,7 @@ const ptBr: Translations = {
     title: 'Crie seu link',
     subtitle: 'Escolha as versões da Bíblia que sua IA vai usar. A primeira que você marcar vira a padrão.',
     languagesLabel: '1. Filtre por idioma',
+    allLanguages: 'Todos os idiomas',
     versionsLabel: '2. Escolha as versões da Bíblia',
     versionsHelper: 'Dica: 2 ou 3 versões deixam as respostas mais claras.',
     generateBtn: 'Criar meu link',
@@ -442,11 +446,11 @@ const ptBr: Translations = {
     subtitle: 'Use o link que você criou acima. Leva cerca de um minuto.',
     chatgpt: {
       name: 'ChatGPT',
-      tier: 'Plus, Pro, Business, Enterprise ou Edu',
+      tier: 'Planos pagos (varia conforme o plano)',
       steps: [
-        'Vá em Configurações › Aplicativos e ative o Modo desenvolvedor (em Configurações avançadas)',
-        'Clique em Criar app, dê o nome Midvash, cole seu link e escolha sem autenticação',
-        'Numa conversa, clique em + e ative o Midvash',
+        'No chatgpt.com, abra Plugins e clique em + › adicionar servidor MCP personalizado',
+        'Dê o nome Midvash, cole seu link, escolha sem autenticação e crie como plugin',
+        'Numa conversa, digite @ e escolha Midvash',
       ],
     },
     claude: {
@@ -454,7 +458,7 @@ const ptBr: Translations = {
       tier: 'Gratuito (1 conector personalizado), Pro, Max, Team ou Enterprise',
       steps: [
         'No claude.ai, vá em Personalizar › Conectores',
-        'Clique em + › Adicionar conector personalizado e cole seu link',
+        'Clique em Adicionar conector personalizado e cole seu link',
         'Numa conversa, clique em + › Conectores e ative o Midvash',
       ],
     },
@@ -471,9 +475,9 @@ const ptBr: Translations = {
       name: 'Cursor',
       tier: 'Editor no computador',
       steps: [
-        'Abra as configurações do Cursor e vá na seção MCP',
-        'Adicione um novo servidor MCP (isso abre o mcp.json)',
+        'Abra o ~/.cursor/mcp.json (ou o .cursor/mcp.json do seu projeto)',
         'Cole o JSON que aparece abaixo do seu link e salve',
+        'Na página Customize, confira se o Midvash está ligado',
       ],
     },
   },
@@ -507,7 +511,7 @@ const ptBr: Translations = {
     items: [
       {
         q: 'É gratuito mesmo?',
-        a: 'Sim. Sem conta, sem chave de API e sem anúncios. O que pode ter custo é a própria IA: o ChatGPT só aceita apps personalizados nos planos pagos, e o Claude permite um conector personalizado no plano gratuito.',
+        a: 'Sim. Sem conta, sem chave de API e sem anúncios. O que pode ter custo é a própria IA: o ChatGPT só aceita servidores MCP personalizados nos planos pagos, e o Claude permite um conector personalizado no plano gratuito.',
       },
       {
         q: 'Preciso saber programar?',
@@ -623,6 +627,7 @@ const es: Translations = {
     title: 'Crea tu enlace',
     subtitle: 'Elige las versiones de la Biblia que usará tu IA. La primera que marques será la predeterminada.',
     languagesLabel: '1. Filtra por idioma',
+    allLanguages: 'Todos los idiomas',
     versionsLabel: '2. Elige las versiones de la Biblia',
     versionsHelper: 'Consejo: 2 o 3 versiones dan respuestas más claras.',
     generateBtn: 'Crear mi enlace',
@@ -642,11 +647,11 @@ const es: Translations = {
     subtitle: 'Usa el enlace que creaste arriba. Toma más o menos un minuto.',
     chatgpt: {
       name: 'ChatGPT',
-      tier: 'Plus, Pro, Business, Enterprise o Edu',
+      tier: 'Planes de pago (varía según el plan)',
       steps: [
-        'Ve a Configuración › Aplicaciones y activa el Modo desarrollador (en Configuración avanzada)',
-        'Haz clic en Crear app, llámala Midvash, pega tu enlace y elige sin autenticación',
-        'En un chat, haz clic en + y activa Midvash',
+        'En chatgpt.com, abre Plugins y haz clic en + › añadir servidor MCP personalizado',
+        'Llámalo Midvash, pega tu enlace, elige sin autenticación y créalo como plugin',
+        'En un chat, escribe @ y elige Midvash',
       ],
     },
     claude: {
@@ -654,7 +659,7 @@ const es: Translations = {
       tier: 'Gratis (1 conector personalizado), Pro, Max, Team o Enterprise',
       steps: [
         'En claude.ai, ve a Personalizar › Conectores',
-        'Haz clic en + › Añadir conector personalizado y pega tu enlace',
+        'Haz clic en Añadir conector personalizado y pega tu enlace',
         'En un chat, haz clic en + › Conectores y activa Midvash',
       ],
     },
@@ -671,9 +676,9 @@ const es: Translations = {
       name: 'Cursor',
       tier: 'Editor de escritorio',
       steps: [
-        'Abre la configuración de Cursor y ve a la sección MCP',
-        'Añade un nuevo servidor MCP (se abre mcp.json)',
+        'Abre ~/.cursor/mcp.json (o .cursor/mcp.json en tu proyecto)',
         'Pega el JSON que aparece debajo de tu enlace y guarda',
+        'En la página Customize, comprueba que Midvash esté activado',
       ],
     },
   },
@@ -707,7 +712,7 @@ const es: Translations = {
     items: [
       {
         q: '¿De verdad es gratis?',
-        a: 'Sí. Sin cuenta, sin clave de API y sin anuncios. Lo que puede costar es la IA misma: ChatGPT solo acepta apps personalizadas en planes de pago, y Claude permite un conector personalizado en el plan gratuito.',
+        a: 'Sí. Sin cuenta, sin clave de API y sin anuncios. Lo que puede costar es la IA misma: ChatGPT solo acepta servidores MCP personalizados en planes de pago, y Claude permite un conector personalizado en el plan gratuito.',
       },
       {
         q: '¿Necesito saber programar?',
@@ -809,6 +814,7 @@ const fr: Translations = {
     title: 'Créez votre lien',
     subtitle: 'Choisissez les versions de la Bible que votre IA utilisera. La première cochée devient la version par défaut.',
     languagesLabel: '1. Filtrez par langue',
+    allLanguages: 'Toutes les langues',
     versionsLabel: '2. Choisissez vos versions de la Bible',
     versionsHelper: 'Astuce : 2 ou 3 versions donnent les réponses les plus claires.',
     generateBtn: 'Créer mon lien',
@@ -826,10 +832,10 @@ const fr: Translations = {
   clients: {
     title: 'Ajoutez-le à votre IA',
     subtitle: 'Utilisez le lien créé plus haut. Cela prend environ une minute.',
-    chatgpt: { name: 'ChatGPT', tier: 'Plus, Pro, Business, Enterprise ou Edu', steps: ['Allez dans Paramètres › Applications et activez le Mode développeur (dans les paramètres avancés)', 'Cliquez sur Créer une app, nommez-la Midvash, collez votre lien et choisissez sans authentification', 'Dans une conversation, cliquez sur + et activez Midvash'] },
-    claude: { name: 'Claude', tier: 'Gratuit (1 connecteur personnalisé), Pro, Max, Team ou Enterprise', steps: ['Sur claude.ai, allez dans Personnaliser › Connecteurs', 'Cliquez sur + › Ajouter un connecteur personnalisé et collez votre lien', 'Dans une conversation, cliquez sur + › Connecteurs et activez Midvash'] },
+    chatgpt: { name: 'ChatGPT', tier: 'Offres payantes (selon l’offre)', steps: ['Sur chatgpt.com, ouvrez Plugins et cliquez sur + › ajouter un serveur MCP personnalisé', 'Nommez-le Midvash, collez votre lien, choisissez sans authentification et créez-le comme plugin', 'Dans une conversation, tapez @ et choisissez Midvash'] },
+    claude: { name: 'Claude', tier: 'Gratuit (1 connecteur personnalisé), Pro, Max, Team ou Enterprise', steps: ['Sur claude.ai, allez dans Personnaliser › Connecteurs', 'Cliquez sur Ajouter un connecteur personnalisé et collez votre lien', 'Dans une conversation, cliquez sur + › Connecteurs et activez Midvash'] },
     gemini: { name: 'Gemini', tier: 'Gemini CLI, dans le terminal', steps: ['Installez Gemini CLI sur votre ordinateur', 'Lancez la commande affichée sous votre lien', 'Ouvrez gemini et posez une question sur un passage'] },
-    cursor: { name: 'Cursor', tier: 'Éditeur sur ordinateur', steps: ['Ouvrez les paramètres de Cursor, section MCP', 'Ajoutez un nouveau serveur MCP (cela ouvre mcp.json)', 'Collez le JSON affiché sous votre lien et enregistrez'] },
+    cursor: { name: 'Cursor', tier: 'Éditeur sur ordinateur', steps: ['Ouvrez ~/.cursor/mcp.json (ou .cursor/mcp.json dans votre projet)', 'Collez le JSON affiché sous votre lien et enregistrez', 'Dans la page Customize, vérifiez que Midvash est activé'] },
   },
   tools: {
     title: 'Ce que votre IA peut faire',
@@ -859,7 +865,7 @@ const fr: Translations = {
   faq: {
     title: 'Questions fréquentes',
     items: [
-      { q: 'Est-ce vraiment gratuit ?', a: "Oui. Sans compte, sans clé API et sans publicité. Ce qui peut coûter, c'est l'IA elle-même : ChatGPT n'accepte les apps personnalisées que sur les offres payantes, et Claude permet un connecteur personnalisé avec l'offre gratuite." },
+      { q: 'Est-ce vraiment gratuit ?', a: "Oui. Sans compte, sans clé API et sans publicité. Ce qui peut coûter, c'est l'IA elle-même : ChatGPT n'accepte les serveurs MCP personnalisés que sur les offres payantes, et Claude permet un connecteur personnalisé avec l'offre gratuite." },
       { q: 'Faut-il savoir programmer ?', a: "Non. Vous copiez un lien et le collez dans les paramètres de votre IA. Le JSON et la commande de terminal servent seulement pour Cursor et Gemini CLI." },
       { q: "Quelle version de la Bible l'IA utilise-t-elle ?", a: "La première version de votre lien. Vous pouvez demander par son nom toute autre version du lien. Un lien sans version utilise la Berean Standard Bible (BSB), en anglais." },
       { q: "Pourquoi ma traduction préférée n'y est-elle pas ?", a: 'Beaucoup de traductions connues ont des droits réservés et ne peuvent pas être redistribuées. Ici, seules les versions du domaine public ou sous licence libre sont incluses. Vous pouvez en lire bien d’autres sur midvash.com.' },
@@ -936,6 +942,7 @@ const de: Translations = {
     title: 'Erstelle deinen Link',
     subtitle: 'Wähle die Bibelübersetzungen, die deine KI nutzen soll. Die erste, die du ankreuzt, wird zum Standard.',
     languagesLabel: '1. Nach Sprache filtern',
+    allLanguages: 'Alle Sprachen',
     versionsLabel: '2. Bibelübersetzungen wählen',
     versionsHelper: 'Tipp: 2 oder 3 Übersetzungen ergeben die klarsten Antworten.',
     generateBtn: 'Meinen Link erstellen',
@@ -953,10 +960,10 @@ const de: Translations = {
   clients: {
     title: 'Füge es deiner KI hinzu',
     subtitle: 'Nutze den Link, den du oben erstellt hast. Das dauert etwa eine Minute.',
-    chatgpt: { name: 'ChatGPT', tier: 'Plus, Pro, Business, Enterprise oder Edu', steps: ['Öffne Einstellungen › Apps und schalte den Entwicklermodus ein (unter Erweiterte Einstellungen)', 'Klicke auf App erstellen, nenne sie Midvash, füge deinen Link ein und wähle keine Authentifizierung', 'Klicke in einem Chat auf + und aktiviere Midvash'] },
-    claude: { name: 'Claude', tier: 'Free (1 eigener Connector), Pro, Max, Team oder Enterprise', steps: ['Öffne auf claude.ai Anpassen › Connectors', 'Klicke auf + › Benutzerdefinierten Connector hinzufügen und füge deinen Link ein', 'Klicke in einem Chat auf + › Connectors und aktiviere Midvash'] },
+    chatgpt: { name: 'ChatGPT', tier: 'Bezahlte Pläne (je nach Plan)', steps: ['Öffne auf chatgpt.com Plugins und klicke auf + › eigenen MCP-Server hinzufügen', 'Nenne ihn Midvash, füge deinen Link ein, wähle keine Authentifizierung und erstelle ihn als Plugin', 'Tippe in einem Chat @ und wähle Midvash'] },
+    claude: { name: 'Claude', tier: 'Free (1 eigener Connector), Pro, Max, Team oder Enterprise', steps: ['Öffne auf claude.ai Anpassen › Connectors', 'Klicke auf Benutzerdefinierten Connector hinzufügen und füge deinen Link ein', 'Klicke in einem Chat auf + › Connectors und aktiviere Midvash'] },
     gemini: { name: 'Gemini', tier: 'Gemini CLI, im Terminal', steps: ['Installiere Gemini CLI auf deinem Computer', 'Führe den Befehl unter deinem Link aus', 'Starte gemini und frag nach einer beliebigen Stelle'] },
-    cursor: { name: 'Cursor', tier: 'Desktop-Editor', steps: ['Öffne die Cursor-Einstellungen und gehe zum Bereich MCP', 'Füge einen neuen MCP-Server hinzu (das öffnet mcp.json)', 'Füge das JSON unter deinem Link ein und speichere'] },
+    cursor: { name: 'Cursor', tier: 'Desktop-Editor', steps: ['Öffne ~/.cursor/mcp.json (oder .cursor/mcp.json in deinem Projekt)', 'Füge das JSON unter deinem Link ein und speichere', 'Prüfe auf der Seite Customize, dass Midvash aktiv ist'] },
   },
   tools: {
     title: 'Was deine KI damit kann',
@@ -986,7 +993,7 @@ const de: Translations = {
   faq: {
     title: 'Häufige Fragen',
     items: [
-      { q: 'Ist es wirklich kostenlos?', a: 'Ja. Ohne Konto, ohne API-Key und ohne Werbung. Kosten kann höchstens die KI selbst: ChatGPT erlaubt eigene Apps nur in bezahlten Plänen, Claude erlaubt einen eigenen Connector im kostenlosen Plan.' },
+      { q: 'Ist es wirklich kostenlos?', a: 'Ja. Ohne Konto, ohne API-Key und ohne Werbung. Kosten kann höchstens die KI selbst: ChatGPT erlaubt eigene MCP-Server nur in bezahlten Plänen, Claude erlaubt einen eigenen Connector im kostenlosen Plan.' },
       { q: 'Muss ich programmieren können?', a: 'Nein. Du kopierst einen Link und fügst ihn in den Einstellungen deiner KI ein. JSON und Terminalbefehl brauchst du nur für Cursor und Gemini CLI.' },
       { q: 'Welche Bibelübersetzung nutzt die KI?', a: 'Die erste Übersetzung in deinem Link. Jede andere Übersetzung aus dem Link kannst du beim Namen nennen. Ein Link ohne Übersetzung nutzt die Berean Standard Bible (BSB) auf Englisch.' },
       { q: 'Warum fehlt meine Lieblingsübersetzung?', a: 'Viele bekannte Übersetzungen sind urheberrechtlich geschützt und dürfen nicht weitergegeben werden. Hier gibt es nur gemeinfreie oder offen lizenzierte Übersetzungen. Auf midvash.com kannst du viele weitere lesen.' },
@@ -1063,6 +1070,7 @@ const it: Translations = {
     title: 'Crea il tuo link',
     subtitle: 'Scegli le versioni della Bibbia che userà la tua IA. La prima che selezioni diventa quella predefinita.',
     languagesLabel: '1. Filtra per lingua',
+    allLanguages: 'Tutte le lingue',
     versionsLabel: '2. Scegli le versioni della Bibbia',
     versionsHelper: 'Suggerimento: 2 o 3 versioni danno le risposte più chiare.',
     generateBtn: 'Crea il mio link',
@@ -1080,10 +1088,10 @@ const it: Translations = {
   clients: {
     title: 'Aggiungilo alla tua IA',
     subtitle: 'Usa il link che hai creato sopra. Ci vuole circa un minuto.',
-    chatgpt: { name: 'ChatGPT', tier: 'Plus, Pro, Business, Enterprise o Edu', steps: ['Vai in Impostazioni › App e attiva la Modalità sviluppatore (nelle impostazioni avanzate)', 'Clicca su Crea app, chiamala Midvash, incolla il link e scegli nessuna autenticazione', 'In una chat, clicca su + e attiva Midvash'] },
-    claude: { name: 'Claude', tier: 'Gratuito (1 connettore personalizzato), Pro, Max, Team o Enterprise', steps: ['Su claude.ai, vai in Personalizza › Connettori', 'Clicca su + › Aggiungi connettore personalizzato e incolla il link', 'In una chat, clicca su + › Connettori e attiva Midvash'] },
+    chatgpt: { name: 'ChatGPT', tier: 'Piani a pagamento (varia in base al piano)', steps: ['Su chatgpt.com, apri Plugins e clicca su + › aggiungi server MCP personalizzato', 'Chiamalo Midvash, incolla il link, scegli nessuna autenticazione e crealo come plugin', 'In una chat, scrivi @ e scegli Midvash'] },
+    claude: { name: 'Claude', tier: 'Gratuito (1 connettore personalizzato), Pro, Max, Team o Enterprise', steps: ['Su claude.ai, vai in Personalizza › Connettori', 'Clicca su Aggiungi connettore personalizzato e incolla il link', 'In una chat, clicca su + › Connettori e attiva Midvash'] },
     gemini: { name: 'Gemini', tier: 'Gemini CLI, nel terminale', steps: ['Installa Gemini CLI sul tuo computer', 'Esegui il comando che compare sotto il tuo link', 'Avvia gemini e chiedi di qualsiasi passo'] },
-    cursor: { name: 'Cursor', tier: 'Editor desktop', steps: ['Apri le impostazioni di Cursor e vai alla sezione MCP', 'Aggiungi un nuovo server MCP (si apre mcp.json)', 'Incolla il JSON che compare sotto il tuo link e salva'] },
+    cursor: { name: 'Cursor', tier: 'Editor desktop', steps: ['Apri ~/.cursor/mcp.json (o .cursor/mcp.json nel tuo progetto)', 'Incolla il JSON che compare sotto il tuo link e salva', 'Nella pagina Customize, controlla che Midvash sia attivo'] },
   },
   tools: {
     title: 'Cosa può fare la tua IA',
@@ -1113,7 +1121,7 @@ const it: Translations = {
   faq: {
     title: 'Domande frequenti',
     items: [
-      { q: 'È davvero gratuito?', a: 'Sì. Senza account, senza chiave API e senza pubblicità. A costare può essere solo la IA stessa: ChatGPT accetta app personalizzate solo nei piani a pagamento, mentre Claude consente un connettore personalizzato nel piano gratuito.' },
+      { q: 'È davvero gratuito?', a: 'Sì. Senza account, senza chiave API e senza pubblicità. A costare può essere solo la IA stessa: ChatGPT accetta server MCP personalizzati solo nei piani a pagamento, mentre Claude consente un connettore personalizzato nel piano gratuito.' },
       { q: 'Devo saper programmare?', a: 'No. Copi un link e lo incolli nelle impostazioni della tua IA. Il JSON e il comando da terminale servono solo per Cursor e Gemini CLI.' },
       { q: 'Quale versione della Bibbia usa la IA?', a: 'La prima versione del tuo link. Puoi chiedere per nome qualsiasi altra versione del link. Un link senza versioni usa la Berean Standard Bible (BSB), in inglese.' },
       { q: 'Perché manca la mia traduzione preferita?', a: 'Molte traduzioni note hanno diritti riservati e non possono essere ridistribuite. Qui entrano solo versioni di pubblico dominio o con licenza libera. Su midvash.com puoi leggerne molte altre.' },
@@ -1190,6 +1198,7 @@ const zh: Translations = {
     title: '创建你的链接',
     subtitle: '选择 AI 要使用的圣经版本。你勾选的第一个版本会成为默认版本。',
     languagesLabel: '1. 按语言筛选',
+    allLanguages: '所有语言',
     versionsLabel: '2. 选择圣经版本',
     versionsHelper: '建议：选 2 到 3 个版本，回答最清楚。',
     generateBtn: '创建我的链接',
@@ -1207,10 +1216,10 @@ const zh: Translations = {
   clients: {
     title: '添加到你的 AI',
     subtitle: '使用你在上面创建的链接，大约一分钟即可完成。',
-    chatgpt: { name: 'ChatGPT', tier: 'Plus、Pro、Business、Enterprise 或 Edu', steps: ['进入「设置 › 应用」，在高级设置中开启「开发者模式」', '点击「创建应用」，命名为 Midvash，粘贴链接，认证选择「无」', '在对话中点击 +，启用 Midvash'] },
-    claude: { name: 'Claude', tier: '免费版（1 个自定义连接器）、Pro、Max、Team 或 Enterprise', steps: ['在 claude.ai 进入「自定义 › 连接器」', '点击 + ›「添加自定义连接器」，粘贴链接', '在对话中点击 + ›「连接器」，启用 Midvash'] },
+    chatgpt: { name: 'ChatGPT', tier: '付费方案（因方案而异）', steps: ['在 chatgpt.com 打开「Plugins」，点击 + › 添加自定义 MCP 服务器', '命名为 Midvash，粘贴链接，认证选择「无」，然后创建为插件', '在对话中输入 @，选择 Midvash'] },
+    claude: { name: 'Claude', tier: '免费版（1 个自定义连接器）、Pro、Max、Team 或 Enterprise', steps: ['在 claude.ai 进入「自定义 › 连接器」', '点击「添加自定义连接器」，粘贴链接', '在对话中点击 + ›「连接器」，启用 Midvash'] },
     gemini: { name: 'Gemini', tier: 'Gemini CLI（终端）', steps: ['在电脑上安装 Gemini CLI', '运行链接下方显示的命令', '启动 gemini，询问任意经文'] },
-    cursor: { name: 'Cursor', tier: '桌面编辑器', steps: ['打开 Cursor 设置，进入 MCP 部分', '添加新的 MCP 服务器（会打开 mcp.json）', '粘贴链接下方显示的 JSON 并保存'] },
+    cursor: { name: 'Cursor', tier: '桌面编辑器', steps: ['打开 ~/.cursor/mcp.json（或项目中的 .cursor/mcp.json）', '粘贴链接下方显示的 JSON 并保存', '在 Customize 页面确认 Midvash 已开启'] },
   },
   tools: {
     title: '你的 AI 能做什么',
@@ -1240,7 +1249,7 @@ const zh: Translations = {
   faq: {
     title: '常见问题',
     items: [
-      { q: '真的免费吗？', a: '是的。无需账号，无需 API 密钥，也没有广告。可能收费的只有 AI 本身：ChatGPT 只在付费方案中支持自定义应用，Claude 的免费版可以添加 1 个自定义连接器。' },
+      { q: '真的免费吗？', a: '是的。无需账号，无需 API 密钥，也没有广告。可能收费的只有 AI 本身：ChatGPT 只在付费方案中支持自定义 MCP 服务器，Claude 的免费版可以添加 1 个自定义连接器。' },
       { q: '需要会写程序吗？', a: '不需要。复制链接，粘贴到 AI 的设置里即可。JSON 和终端命令只用于 Cursor 和 Gemini CLI。' },
       { q: 'AI 用哪个圣经版本？', a: '链接中的第一个版本。你也可以直接说出链接里其他版本的名称。没有指定版本的链接会使用英文的 Berean Standard Bible (BSB)。' },
       { q: '为什么没有我常用的译本？', a: '许多常见译本保留版权，不能转发分享。这里只收录公有领域或开放许可的版本。在 midvash.com 可以阅读更多译本。' },
@@ -1290,7 +1299,7 @@ const ru: Translations = {
     title: 'Подключите свой ИИ к',
     titleAccent: 'Библии',
     subtitle:
-      'Ваш ИИ перестанет цитировать Писание по памяти. С Midvash он читает настоящий текст в 119 свободных переводах Библии на 69 языке, ищет по нему, сравнивает переводы и объясняет каждую главу. Работает в ChatGPT, Claude, Gemini и Cursor.',
+      'Ваш ИИ перестанет цитировать Писание по памяти. С Midvash он читает настоящий текст в 119 свободных переводах Библии на 69 языках, ищет по нему, сравнивает переводы и объясняет каждую главу. Работает в ChatGPT, Claude, Gemini и Cursor.',
     cta: 'Создать ссылку',
     ctaSecondary: 'Что можно спросить',
     facts: ['119 переводов на 69 языках', '11 инструментов для изучения', 'Комментарий ко всем 1189 главам'],
@@ -1317,6 +1326,7 @@ const ru: Translations = {
     title: 'Создайте ссылку',
     subtitle: 'Выберите переводы Библии для вашего ИИ. Первый отмеченный станет переводом по умолчанию.',
     languagesLabel: '1. Фильтр по языку',
+    allLanguages: 'Все языки',
     versionsLabel: '2. Выберите переводы Библии',
     versionsHelper: 'Совет: 2 или 3 перевода дают самые ясные ответы.',
     generateBtn: 'Создать ссылку',
@@ -1334,10 +1344,10 @@ const ru: Translations = {
   clients: {
     title: 'Добавьте в свой ИИ',
     subtitle: 'Используйте ссылку, которую вы создали выше. Это займёт около минуты.',
-    chatgpt: { name: 'ChatGPT', tier: 'Plus, Pro, Business, Enterprise или Edu', steps: ['Откройте Настройки › Приложения и включите режим разработчика (в расширенных настройках)', 'Нажмите «Создать приложение», назовите его Midvash, вставьте ссылку и выберите вход без аутентификации', 'В чате нажмите + и включите Midvash'] },
-    claude: { name: 'Claude', tier: 'Free (1 свой коннектор), Pro, Max, Team или Enterprise', steps: ['На claude.ai откройте Настроить › Коннекторы', 'Нажмите + › «Добавить свой коннектор» и вставьте ссылку', 'В чате нажмите + › Коннекторы и включите Midvash'] },
+    chatgpt: { name: 'ChatGPT', tier: 'Платные тарифы (зависит от тарифа)', steps: ['На chatgpt.com откройте Plugins и нажмите + › добавить свой MCP-сервер', 'Назовите его Midvash, вставьте ссылку, выберите вход без аутентификации и создайте как плагин', 'В чате введите @ и выберите Midvash'] },
+    claude: { name: 'Claude', tier: 'Free (1 свой коннектор), Pro, Max, Team или Enterprise', steps: ['На claude.ai откройте Настроить › Коннекторы', 'Нажмите «Добавить свой коннектор» и вставьте ссылку', 'В чате нажмите + › Коннекторы и включите Midvash'] },
     gemini: { name: 'Gemini', tier: 'Gemini CLI, в терминале', steps: ['Установите Gemini CLI на компьютер', 'Выполните команду, показанную под ссылкой', 'Запустите gemini и спросите о любом месте Писания'] },
-    cursor: { name: 'Cursor', tier: 'Редактор для компьютера', steps: ['Откройте настройки Cursor, раздел MCP', 'Добавьте новый MCP-сервер (откроется mcp.json)', 'Вставьте JSON, показанный под ссылкой, и сохраните'] },
+    cursor: { name: 'Cursor', tier: 'Редактор для компьютера', steps: ['Откройте ~/.cursor/mcp.json (или .cursor/mcp.json в проекте)', 'Вставьте JSON, показанный под ссылкой, и сохраните', 'На странице Customize проверьте, что Midvash включён'] },
   },
   tools: {
     title: 'Что умеет ваш ИИ',
@@ -1367,7 +1377,7 @@ const ru: Translations = {
   faq: {
     title: 'Частые вопросы',
     items: [
-      { q: 'Это правда бесплатно?', a: 'Да. Без аккаунта, без API-ключа и без рекламы. Платным может быть только сам ИИ: ChatGPT принимает свои приложения только на платных тарифах, а Claude разрешает один свой коннектор на бесплатном тарифе.' },
+      { q: 'Это правда бесплатно?', a: 'Да. Без аккаунта, без API-ключа и без рекламы. Платным может быть только сам ИИ: ChatGPT принимает свои MCP-серверы только на платных тарифах, а Claude разрешает один свой коннектор на бесплатном тарифе.' },
       { q: 'Нужно ли уметь программировать?', a: 'Нет. Вы копируете ссылку и вставляете её в настройки ИИ. JSON и команда для терминала нужны только для Cursor и Gemini CLI.' },
       { q: 'Какой перевод использует ИИ?', a: 'Первый перевод в вашей ссылке. Любой другой перевод из ссылки можно попросить по названию. Ссылка без переводов использует Berean Standard Bible (BSB) на английском.' },
       { q: 'Почему нет моего любимого перевода?', a: 'У многих известных переводов права охраняются, и распространять их нельзя. Здесь только переводы в общественном достоянии или под открытой лицензией. Гораздо больше переводов можно читать на midvash.com.' },
@@ -1444,6 +1454,7 @@ const ko: Translations = {
     title: '내 링크 만들기',
     subtitle: 'AI가 사용할 성경 번역본을 고르세요. 처음 선택한 번역본이 기본값이 됩니다.',
     languagesLabel: '1. 언어로 거르기',
+    allLanguages: '모든 언어',
     versionsLabel: '2. 성경 번역본 선택',
     versionsHelper: '팁: 2~3개 번역본을 고르면 답변이 가장 깔끔합니다.',
     generateBtn: '내 링크 만들기',
@@ -1461,10 +1472,10 @@ const ko: Translations = {
   clients: {
     title: 'AI에 추가하기',
     subtitle: '위에서 만든 링크를 사용하세요. 1분 정도 걸립니다.',
-    chatgpt: { name: 'ChatGPT', tier: 'Plus, Pro, Business, Enterprise 또는 Edu', steps: ['설정 › 앱에서 개발자 모드를 켜세요 (고급 설정 안에 있음)', '앱 만들기를 누르고 이름을 Midvash로 정한 뒤 링크를 붙여넣고 인증 없음을 선택하세요', '대화창에서 +를 누르고 Midvash를 켜세요'] },
-    claude: { name: 'Claude', tier: '무료 (사용자 지정 커넥터 1개), Pro, Max, Team 또는 Enterprise', steps: ['claude.ai에서 사용자 지정 › 커넥터로 이동하세요', '+ › 사용자 지정 커넥터 추가를 누르고 링크를 붙여넣으세요', '대화창에서 + › 커넥터를 누르고 Midvash를 켜세요'] },
+    chatgpt: { name: 'ChatGPT', tier: '유료 요금제 (요금제에 따라 다름)', steps: ['chatgpt.com에서 Plugins를 열고 + › 사용자 지정 MCP 서버 추가를 누르세요', '이름을 Midvash로 정하고 링크를 붙여넣은 뒤 인증 없음을 선택하고 플러그인으로 만드세요', '대화창에서 @를 입력하고 Midvash를 고르세요'] },
+    claude: { name: 'Claude', tier: '무료 (사용자 지정 커넥터 1개), Pro, Max, Team 또는 Enterprise', steps: ['claude.ai에서 사용자 지정 › 커넥터로 이동하세요', '사용자 지정 커넥터 추가를 누르고 링크를 붙여넣으세요', '대화창에서 + › 커넥터를 누르고 Midvash를 켜세요'] },
     gemini: { name: 'Gemini', tier: 'Gemini CLI (터미널)', steps: ['컴퓨터에 Gemini CLI를 설치하세요', '링크 아래에 표시된 명령을 실행하세요', 'gemini를 실행하고 원하는 본문을 물어보세요'] },
-    cursor: { name: 'Cursor', tier: '데스크톱 편집기', steps: ['Cursor 설정을 열고 MCP 항목으로 이동하세요', '새 MCP 서버를 추가하세요 (mcp.json이 열립니다)', '링크 아래에 표시된 JSON을 붙여넣고 저장하세요'] },
+    cursor: { name: 'Cursor', tier: '데스크톱 편집기', steps: ['~/.cursor/mcp.json(또는 프로젝트의 .cursor/mcp.json)을 여세요', '링크 아래에 표시된 JSON을 붙여넣고 저장하세요', 'Customize 페이지에서 Midvash가 켜져 있는지 확인하세요'] },
   },
   tools: {
     title: 'AI가 할 수 있는 일',
@@ -1494,7 +1505,7 @@ const ko: Translations = {
   faq: {
     title: '자주 묻는 질문',
     items: [
-      { q: '정말 무료인가요?', a: '네. 계정도, API 키도, 광고도 없습니다. 비용이 들 수 있는 것은 AI 자체입니다. ChatGPT는 유료 요금제에서만 사용자 지정 앱을 지원하고, Claude는 무료 요금제에서도 사용자 지정 커넥터 1개를 허용합니다.' },
+      { q: '정말 무료인가요?', a: '네. 계정도, API 키도, 광고도 없습니다. 비용이 들 수 있는 것은 AI 자체입니다. ChatGPT는 유료 요금제에서만 사용자 지정 MCP 서버를 지원하고, Claude는 무료 요금제에서도 사용자 지정 커넥터 1개를 허용합니다.' },
       { q: '프로그래밍을 알아야 하나요?', a: '아니요. 링크를 복사해서 AI 설정에 붙여넣으면 됩니다. JSON과 터미널 명령은 Cursor와 Gemini CLI에만 필요합니다.' },
       { q: 'AI는 어떤 번역본을 사용하나요?', a: '링크의 첫 번째 번역본입니다. 링크에 있는 다른 번역본도 이름으로 요청할 수 있습니다. 번역본이 없는 링크는 영어 Berean Standard Bible (BSB)을 사용합니다.' },
       { q: '즐겨 읽는 번역본이 왜 없나요?', a: '널리 쓰이는 번역본 중 많은 수가 저작권 보호를 받아 재배포할 수 없습니다. 여기에는 퍼블릭 도메인이거나 오픈 라이선스인 번역본만 들어 있습니다. midvash.com에서는 더 많은 번역본을 읽을 수 있습니다.' },

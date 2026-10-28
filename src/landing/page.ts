@@ -213,6 +213,7 @@ export function renderLandingPage(locale: Locale): string {
     copiedBtn: t.configure.copiedBtn,
     copyError: t.configure.copyError,
     defaultLangs: [locale],
+    allLanguages: t.configure.allLanguages,
     defaultVersions: [DEFAULT_VERSION_BY_LOCALE[locale]],
     languages,
     labels,
@@ -263,9 +264,13 @@ export function renderLandingPage(locale: Locale): string {
     .map(
       (c) => `
       <article class="client-card client-card--${c.key}">
-        <div class="client-logo">${c.logo}</div>
-        <h3>${escapeHtml(c.name)}</h3>
-        <p class="client-tier">${escapeHtml(c.tier)}</p>
+        <header class="client-head">
+          <div class="client-logo">${c.logo}</div>
+          <div>
+            <h3>${escapeHtml(c.name)}</h3>
+            <p class="client-tier">${escapeHtml(c.tier)}</p>
+          </div>
+        </header>
         <ol class="client-steps">
           ${c.steps.map((s) => `<li>${escapeHtml(s)}</li>`).join('')}
         </ol>
@@ -627,15 +632,17 @@ section[id] { scroll-margin-top: 72px; }
 .config-step { margin-bottom: 32px; }
 .config-step:last-of-type { margin-bottom: 0; }
 .config-label { font-family: var(--font-serif); font-size: 1.125rem; font-weight: 600; color: var(--text); margin-bottom: 14px; }
-.lang-filters { display: flex; flex-wrap: wrap; gap: 8px; }
-.lang-chip {
-  background: var(--bg); border: 1px solid var(--border); color: var(--text-soft);
-  padding: 8px 16px; border-radius: 999px; cursor: pointer;
-  font-family: var(--font-sans); font-size: 0.875rem; font-weight: 500;
-  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+.lang-select {
+  appearance: none; -webkit-appearance: none;
+  width: 100%; max-width: 360px; height: 42px; padding: 0 36px 0 12px;
+  background-color: var(--bg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='%23857a6b'%3E%3Cpath d='M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center; background-size: 14px;
+  border: 1px solid var(--border); border-radius: 6px;
+  color: var(--text); font: inherit; font-size: 0.95rem; cursor: pointer;
 }
-.lang-chip:hover { border-color: var(--border-strong); color: var(--text); }
-.lang-chip.active { background: var(--control); color: var(--on-control); border-color: var(--control); font-weight: 600; }
+.lang-select:hover { border-color: var(--border-strong); }
+.lang-select:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 .versions-toolbar { display: flex; gap: 12px; margin-bottom: 12px; font-size: 0.8125rem; }
 .toolbar-btn {
   background: transparent; border: none; color: var(--primary); font-weight: 600;
@@ -693,24 +700,27 @@ section[id] { scroll-margin-top: 72px; }
 .copy-btn.copied { color: var(--success); border-color: var(--success); }
 
 /* CLIENT CARDS */
-.clients-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-.client-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; }
+/* 4 clientes: 2x2 no desktop, 1 coluna no celular (nunca um sozinho na linha) */
+.clients-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+@media (min-width: 760px) { .clients-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.client-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 22px; }
+.client-head { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
 .client-logo {
-  width: 48px; height: 48px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center; margin-bottom: 18px;
+  width: 44px; height: 44px; border-radius: 8px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
   background: var(--bg-soft); border: 1px solid var(--border); color: var(--text);
 }
-.client-logo svg { width: 26px; height: 26px; display: block; }
-.client-card h3 { font-family: var(--font-serif); font-size: 1.4rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-.client-tier { font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 18px; font-weight: 500; }
+.client-logo svg { width: 24px; height: 24px; display: block; }
+.client-card h3 { font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600; color: var(--text); line-height: 1.2; }
+.client-tier { font-size: 0.8125rem; color: var(--text-muted); font-weight: 500; line-height: 1.4; margin-top: 2px; }
 .client-steps { list-style: none; counter-reset: step; }
 .client-steps li {
-  counter-increment: step; position: relative; padding: 10px 0 10px 34px;
-  font-size: 0.925rem; color: var(--text-soft); line-height: 1.5; border-bottom: 1px solid var(--border);
+  counter-increment: step; position: relative; padding: 8px 0 8px 34px;
+  font-size: 0.9rem; color: var(--text-soft); line-height: 1.5; border-bottom: 1px solid var(--border);
 }
 .client-steps li:last-child { border-bottom: none; }
 .client-steps li::before {
-  content: counter(step); position: absolute; left: 0; top: 10px;
+  content: counter(step); position: absolute; left: 0; top: 8px;
   width: 22px; height: 22px; border-radius: 999px;
   background: var(--bg-soft); border: 1px solid var(--border); color: var(--text);
   font-weight: 700; font-size: 0.72rem; display: flex; align-items: center; justify-content: center;
@@ -740,8 +750,9 @@ section[id] { scroll-margin-top: 72px; }
 /* VERSIONS */
 .versions-intro { max-width: 720px; margin: 0 0 32px; color: var(--text-soft); }
 .versions-intro p + p { margin-top: 12px; font-size: 0.925rem; color: var(--text-muted); }
-.catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
-.cat-lang { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; }
+/* Colunas (não grade): cada idioma tem altura diferente, e a grade deixava buracos. */
+.catalog { columns: 3 260px; column-gap: 16px; }
+.cat-lang { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; break-inside: avoid; margin-bottom: 16px; }
 .cat-lang h3 { font-family: var(--font-serif); font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
 .cat-lang ul { list-style: none; font-size: 0.875rem; line-height: 1.45; color: var(--text-soft); }
 .cat-lang li + li { margin-top: 6px; }
@@ -848,7 +859,7 @@ ${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}
     <div class="config-block">
       <div class="config-step">
         <h3 class="config-label" id="lang-filters-label">${escapeHtml(t.configure.languagesLabel)}</h3>
-        <div class="lang-filters" id="lang-filters" role="group" aria-labelledby="lang-filters-label"></div>
+        <select class="lang-select" id="lang-filters" aria-labelledby="lang-filters-label"></select>
       </div>
 
       <div class="config-step">
@@ -976,24 +987,27 @@ function nanoid() {
   return id;
 }
 
+// Um seletor no lugar de um botão por idioma: com quase 70 idiomas, os botões
+// viravam um paredão. Opção vazia = todos os idiomas.
 function renderLangFilters() {
   const root = document.getElementById('lang-filters');
-  root.innerHTML = '';
+  const count = (lang) => VERSIONS.filter(v => v.language === lang).length;
+  const all = document.createElement('option');
+  all.value = '';
+  all.textContent = UI.allLanguages + ' (' + VERSIONS.length + ')';
+  root.appendChild(all);
   for (const lang of UI.languages) {
-    const chip = document.createElement('button');
-    chip.type = 'button';
-    const active = selectedLangs.has(lang);
-    chip.className = 'lang-chip' + (active ? ' active' : '');
-    chip.setAttribute('aria-pressed', active ? 'true' : 'false');
-    chip.textContent = UI.labels[lang] || lang;
-    chip.addEventListener('click', () => {
-      if (selectedLangs.has(lang)) selectedLangs.delete(lang);
-      else selectedLangs.add(lang);
-      renderLangFilters();
-      renderVersions();
-    });
-    root.appendChild(chip);
+    const opt = document.createElement('option');
+    opt.value = lang;
+    opt.textContent = (UI.labels[lang] || lang) + ' (' + count(lang) + ')';
+    opt.selected = selectedLangs.has(lang);
+    root.appendChild(opt);
   }
+  root.addEventListener('change', () => {
+    selectedLangs.clear();
+    if (root.value) selectedLangs.add(root.value);
+    renderVersions();
+  });
 }
 
 function visibleVersions() {
@@ -1051,7 +1065,7 @@ function generate() {
 
   document.getElementById('url-output').textContent = url;
   document.getElementById('json-output').textContent = JSON.stringify(json, null, 2);
-  document.getElementById('gemini-output').textContent = 'gemini mcp add --transport http midvash "' + url + '"';
+  document.getElementById('gemini-output').textContent = 'gemini mcp add --scope user --transport http midvash "' + url + '"';
   const result = document.getElementById('result');
   result.classList.add('visible');
   result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
