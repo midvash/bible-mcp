@@ -7,9 +7,8 @@ import {
   pathForLocale,
   type Locale,
 } from './i18n';
-import { FOOTER_CSS, renderFooter } from './footer';
+import { renderSiteFooter, SITE_FOOTER_CSS } from './site-footer';
 
-const FOOTER_BRAND_NAME = 'Bible MCP';
 
 /**
  * Escapa caracteres HTML perigosos. Necessário porque interpolamos
@@ -775,7 +774,7 @@ section[id] { scroll-margin-top: 72px; }
 .more-card h3 { font-family: var(--font-serif); font-size: 1.2rem; font-weight: 600; color: var(--text); margin-bottom: 8px; }
 .more-card p { color: var(--text-soft); font-size: 0.95rem; }
 .more-url { display: inline-block; margin-top: 14px; color: var(--primary); font-weight: 600; font-size: 0.875rem; }
-${FOOTER_CSS}
+${SITE_FOOTER_CSS}
 
 @media (max-width: 640px) {
   .hero { padding: 56px 0 40px; }
@@ -958,7 +957,7 @@ ${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}
 
 </main>
 
-${renderFooter(t, locale, { brandName: FOOTER_BRAND_NAME, currentProduct: 'mcp' })}
+${renderSiteFooter(locale)}
 
 <script>
 const VERSIONS = ${versionsJson};
