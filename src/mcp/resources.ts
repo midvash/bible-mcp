@@ -1,5 +1,9 @@
 import { BOOKS, type BookDefinition } from '../data/books';
-import { VERSIONS, type VersionDefinition } from '../data/versions';
+import {
+  VERSIONS,
+  resolveVersionSlug,
+  type VersionDefinition,
+} from '../data/versions';
 import { lookupBook } from '../lib/books-lookup';
 import { isLanguageAllowed, isVersionAllowed, type ConnectionContext } from '../lib/context';
 import { formatChapter, localeForVersion } from '../lib/markdown';
@@ -92,7 +96,8 @@ function requireVersion(
   ctx: ConnectionContext,
   slug: string,
 ): VersionDefinition {
-  const version = VERSIONS.find((v) => v.slug === slug.toLowerCase());
+  const effective = resolveVersionSlug(slug);
+  const version = VERSIONS.find((v) => v.slug === effective);
   if (!version) throw new ResourceError(`Unknown version "${slug}".`);
   if (!isVersionAllowed(ctx, version.slug) || !isLanguageAllowed(ctx, version.language)) {
     throw new ResourceError(

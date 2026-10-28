@@ -1,3 +1,4 @@
+import { resolveVersionSlug } from '../data/versions';
 import type { Env } from '../env';
 
 /**
@@ -27,11 +28,17 @@ export function buildConnectionContext(
   const langParam = url.searchParams.get('lang');
 
   return {
+    // `?v=nvi` (versão que saiu) libera a livre que responde no lugar dela.
     allowedVersions: vParam
-      ? vParam
-          .split(',')
-          .map((v) => v.trim().toLowerCase())
-          .filter(Boolean)
+      ? [
+          ...new Set(
+            vParam
+              .split(',')
+              .map((v) => v.trim())
+              .filter(Boolean)
+              .map(resolveVersionSlug),
+          ),
+        ]
       : null,
     allowedLanguages: langParam
       ? langParam

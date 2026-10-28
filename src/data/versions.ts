@@ -173,6 +173,8 @@ export const VERSIONS: VersionDefinition[] = [
     { slug: 'ylt', name: 'Young\'s Literal Translation', shortName: 'YLT', language: 'en', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
     { slug: 'dra', name: 'Douay-Rheims American Edition', shortName: 'DRA', language: 'en', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
     { slug: 'bbe', name: 'Bible in Basic English', shortName: 'BBE', language: 'en', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'darby', name: 'Darby Translation', shortName: 'DARBY', language: 'en', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
+    { slug: 'rv1885', name: 'Revised Version', shortName: 'RV', language: 'en', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
     { slug: 'svd', name: 'الكتاب المقدس فان دايك (Smith-Van Dyck)', shortName: 'SVD', language: 'ar', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
     { slug: 'kgy', name: '口語訳聖書 (Kōgoyaku)', shortName: 'KGY', language: 'ja', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1171 },
     { slug: 'bg', name: 'Biblia Gdańska', shortName: 'BG', language: 'pl', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189 },
@@ -268,3 +270,46 @@ export const VERSIONS: VersionDefinition[] = [
     { slug: 'mg1865', name: 'Baiboly Malagasy (1865)', shortName: 'MG1865', language: 'mg', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189, copyright: 'Baiboly Malagasy (1865). Public Domain.' },
     { slug: 'ubg', name: 'Uwspółcześniona Biblia Gdańska', shortName: 'UBG', language: 'pl', hasOldTestament: true, hasNewTestament: true, totalBooks: 66, totalChapters: 1189, copyright: 'Święta Biblia, Uwspółcześniona Biblia Gdańska (UBG). Copyright © 2018 Fundacja Wrota Nadziei. CC BY-ND 4.0: the words and punctuation of the Scriptures may not be changed. Source: eBible.org.' },
 ];
+
+// Versão que saiu (direitos reservados) → versão livre do mesmo idioma que
+// responde no lugar. Mesma tabela que a API pública lê do R2
+// (`catalog/version-aliases.json`, publicada pelo monorepo): quem tem `nvi` ou
+// `esv` salvo no prompt ou na URL da conexão recebe texto, não erro.
+// MANTENHA EM SINCRONIA com o `PUBLIC_API_ALIASES` do monorepo.
+export const VERSION_ALIASES: Readonly<Record<string, string>> = {
+    aa: 'almeida-livre',
+    acf: 'almeida-livre',
+    ara: 'almeida-livre',
+    arc: 'alm1911',
+    as21: 'almeida-livre',
+    bhs: 'wlc',
+    bpt: 'almeida-livre',
+    dansk1931: 'da1871',
+    esv: 'bsb',
+    jfaa: 'almeida-livre',
+    kja: 'onbv',
+    kjf: 'onbv',
+    mh: 'wlc',
+    msg: 'bsb',
+    msgpt: 'onbv',
+    naa: 'almeida-livre',
+    nbv: 'onbv',
+    niv: 'bsb',
+    nkjv: 'kjv',
+    nlt: 'bsb',
+    nri: 'riveduta',
+    ntlh: 'onbv',
+    ntv: 'onbv-es',
+    nvi: 'onbv',
+    nvies: 'pdt',
+    nvl: 'vulg',
+    nvt: 'onbv',
+    ol: 'onbv',
+    rvr1960: 'rvr1909',
+};
+
+/** Slug pedido (qualquer caixa) → slug que existe, seguindo o alias. */
+export function resolveVersionSlug(slug: string): string {
+    const s = slug.toLowerCase().trim();
+    return VERSION_ALIASES[s] ?? s;
+}

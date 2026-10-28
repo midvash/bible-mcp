@@ -131,18 +131,18 @@ export function formatChapter(
  * Formata uma lista de versões em Markdown.
  *
  * Exemplo:
- *   ## Versões disponíveis nesta conexão
+ *   ## Versions available on this connection
  *
  *   - **ONBV** — Open Nova Bíblia Viva (pt-br)
  *   - **KJV** — King James Version (en)
  */
 export function formatVersionList(versions: VersionDefinition[]): string {
   if (versions.length === 0) {
-    return '## Versões disponíveis\n\nNenhuma versão habilitada nesta conexão.';
+    return '## Available versions\n\nNo versions are enabled on this connection.';
   }
 
   const lines: string[] = [
-    '## Versões disponíveis nesta conexão',
+    '## Versions available on this connection',
     '',
   ];
 
@@ -158,10 +158,10 @@ export function formatVersionList(versions: VersionDefinition[]): string {
     lines.push(`### ${lang}`);
     for (const v of byLang.get(lang)!) {
       const scope = v.hasOldTestament && v.hasNewTestament
-        ? 'AT + NT'
+        ? 'OT + NT'
         : v.hasOldTestament
-        ? 'somente AT'
-        : 'somente NT';
+        ? 'OT only'
+        : 'NT only';
       lines.push(`- **${v.shortName}** (\`${v.slug}\`) — ${v.name} · ${scope}`);
     }
     lines.push('');

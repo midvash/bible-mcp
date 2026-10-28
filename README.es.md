@@ -2,12 +2,13 @@
 
 [![bible-mcp MCP server](https://glama.ai/mcp/servers/midvash/bible-mcp/badges/card.svg)](https://glama.ai/mcp/servers/midvash/bible-mcp)
 [![bible-mcp MCP score](https://glama.ai/mcp/servers/midvash/bible-mcp/badges/score.svg)](https://glama.ai/mcp/servers/midvash/bible-mcp)
+[![CI](https://github.com/midvash/bible-mcp/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/midvash/bible-mcp/actions/workflows/ci.yml)
 
 > 🌐 [English](./README.md) · [Português (BR)](./README.pt-BR.md) · **Español**
 
 Servidor [Model Context Protocol](https://modelcontextprotocol.io) gratuito y sin
 clave de [Midvash](https://midvash.com). Lee, busca y estudia las Escrituras en
-**117 versiones bíblicas libres en 69 idiomas** (dominio público o licencia
+**119 versiones bíblicas libres en 69 idiomas** (dominio público o licencia
 abierta, el mismo catálogo de [api.midvash.com](https://api.midvash.com)) en
 ChatGPT, Claude, Gemini, Cursor y cualquier otro cliente MCP. Servido desde el
 edge de Cloudflare. Impulsa [mcp.midvash.com](https://mcp.midvash.com).
@@ -97,7 +98,7 @@ responde en una fracción del tiempo.
 ## Catálogo actual
 
 El MCP expone hoy el catálogo compilado en
-[`src/data/versions.ts`](./src/data/versions.ts): 117 versiones, todas de dominio
+[`src/data/versions.ts`](./src/data/versions.ts): 119 versiones, todas de dominio
 público o con licencia libre, en 69 códigos de idioma: `ar`, `as`, `bn`, `ceb`, `ckb`, `cs`, `da`, `de`, `ee`, `en`, `eo`, `es`, `fa`, `fi`, `fr`, `gr` (griego), `gu`, `ha`, `haw`, `he`, `hi`, `hil`, `hne`, `ht`, `hu`, `id`, `ig`, `ilo`, `it`, `ja`, `ki`, `kn`, `ko`, `la`, `lg`, `mg`, `ln`, `luo`, `ml`, `mr`, `my`, `nb`, `nd`, `ne`, `nl`, `ny`, `om`, `or`, `pa`, `pl`, `pt-br`, `ro`, `ru`, `sn`, `sr`, `sv`, `sw`, `ta`, `te`, `tl`, `to`, `tr`, `tw`, `ug`, `uk`, `ur`, `vi`, `yo`, `zh`. Las versiones cuya licencia pide atribución (CC BY-SA y similares)
 llevan una línea `copyright`, impresa al final de todo texto que devuelven las tools.
 
@@ -123,30 +124,6 @@ completa — no alcance nada más que contenido bíblico público.
 La búsqueda está ordenada por versión en todas las versiones del catálogo. El
 hebreo y el árabe se indexan sin signos vocálicos, así que una palabra escrita
 sin ellos también se encuentra.
-
-## Benchmark
-
-El ecosistema de MCPs bíblicos muestra tres patrones útiles:
-
-| Servidor | Fortalezas | Qué debería aprender Midvash |
-|---|---|---|
-| [`tuxr/bible-mcp`](https://glama.ai/mcp/servers/tuxr/bible-mcp) | Lookup remoto, búsqueda, navegación, múltiples traducciones y Apocrypha. | Agregar búsqueda bíblica nativa y mejores helpers de navegación. |
-| [`molpass/mcp-bible`](https://glama.ai/mcp/servers/molpass/mcp-bible) | Lookup multi-versión, búsqueda keyword/semántica, referencias cruzadas, estudios de palabras y léxicos de lenguas originales. | Agregar búsqueda semántica/keyword, referencias cruzadas y capas opcionales de estudio. |
-| [`djayatillake/studybible-mcp`](https://glama.ai/mcp/servers/djayatillake/studybible-mcp) | Léxicos, morfología, referencias cruzadas, notas contextuales y flujo de estudio profundo. | Mantener Midvash simple por defecto, pero exponer herramientas avanzadas cuando haya datos confiables. |
-| [`ytssamuel/FHL-MCP-Server`](https://glama.ai/mcp/servers/ytssamuel/FHL-MCP-Server) | Recursos fuertes para estudio bíblico en chino, comentarios, análisis de lenguas originales, Apocrypha y estudios por tema. | Tratar comunidades lingüísticas como audiencias de primera clase, no solo como filtros de traducción. |
-
-La ventaja de Midvash es la simplicidad: remoto, sin clave, sin cuenta, rápido en
-Cloudflare y conectado a un ecosistema abierto de lector, API, apps, plugins y
-datos. Las próximas mejoras deberían preservar esa experiencia sin fricción y
-agregar las herramientas de descubrimiento y estudio que los usuarios esperan de
-MCPs bíblicos.
-
-## Roadmap
-
-- Expandir el catálogo del MCP para acompañar la cobertura más amplia de los datos/API Midvash.
-- Mejorar `compare_passage` con formato más rico para pasajes largos.
-- Agregar herramientas de estudio para lenguas originales, léxicos y morfología
-  cuando haya datos abiertos confiables.
 
 ## Desarrollo
 
@@ -183,7 +160,7 @@ Parte de [**Midvash: Biblia y Devocional**](https://midvash.com), una plataforma
 | 🔌 **API** | [api.midvash.com](https://api.midvash.com) · [`bible-api`](https://github.com/midvash/bible-api) |
 | 🤖 **Servidor MCP** | [mcp.midvash.com](https://mcp.midvash.com) · [`bible-mcp`](https://github.com/midvash/bible-mcp) |
 | 🧩 **Plugin de WordPress** | [midvash.com/wordpress-plugin](https://midvash.com/wordpress-plugin) · [`bible-wordpress-plugin`](https://github.com/midvash/bible-wordpress-plugin) |
-| 🧩 **Plugin de EmDash** | [midvash.com/emdash-plugin](https://midvash.com/emdash-plugin) · [`emdash-plugin-bible`](https://github.com/midvash/emdash-plugin-bible) |
+| 🧩 **Plugin de EmDash** | [midvash.com/emdash-plugin](https://midvash.com/emdash-plugin) · [`bible-emdash-plugin`](https://github.com/midvash/bible-emdash-plugin) |
 | 🌐 **Extensión de Chrome** | [midvash.com/chrome-extension](https://midvash.com/chrome-extension) · [`bible-chrome-extension`](https://github.com/midvash/bible-chrome-extension) |
 | 📦 **Datos abiertos** | [`bible-data`](https://github.com/midvash/bible-data) · [`bible-data-js`](https://github.com/midvash/bible-data-js) · [`bible-cross-references`](https://github.com/midvash/bible-cross-references) |
 

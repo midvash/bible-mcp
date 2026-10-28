@@ -1,5 +1,9 @@
 import type { BookDefinition } from '../data/books';
-import { VERSIONS, type VersionDefinition } from '../data/versions';
+import {
+  VERSIONS,
+  resolveVersionSlug,
+  type VersionDefinition,
+} from '../data/versions';
 import { lookupBook } from './books-lookup';
 import {
   isLanguageAllowed,
@@ -45,7 +49,11 @@ export function resolveVersion(
     return fail('Missing required parameter: version.');
   }
 
-  const slug = requested || ctx.allowedVersions?.[0] || FALLBACK_VERSION;
+  // Versão com direitos (`esv`, `nvi`…) vira a livre do mesmo idioma, como na
+  // API pública: o cabeçalho da resposta já mostra a versão que respondeu.
+  const slug = resolveVersionSlug(
+    requested || ctx.allowedVersions?.[0] || FALLBACK_VERSION,
+  );
   const version = VERSIONS.find((v) => v.slug === slug);
   if (!version) {
     return fail(
