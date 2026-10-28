@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import type { ConnectionContext } from './context';
-import { isLanguageAllowed, isVersionAllowed } from './context';
+import {
+  buildConnectionContext,
+  isLanguageAllowed,
+  isVersionAllowed,
+} from './context';
 
 function ctx(overrides: Partial<ConnectionContext> = {}): ConnectionContext {
   return {
@@ -31,5 +35,14 @@ describe('connection context filters', () => {
     expect(isLanguageAllowed(connection, 'pt-br')).toBe(true);
     expect(isLanguageAllowed(connection, 'pt-pt')).toBe(true);
     expect(isLanguageAllowed(connection, 'en')).toBe(false);
+  });
+
+  it('maps a version that left (?v=nvi) to the free one that answers for it', () => {
+    const c = buildConnectionContext(
+      new URL('https://mcp.midvash.com/mcp/x?v=NVI,onbv,esv'),
+      'x',
+      {} as ConnectionContext['env'],
+    );
+    expect(c.allowedVersions).toEqual(['onbv', 'bsb']);
   });
 });

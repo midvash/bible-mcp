@@ -110,7 +110,7 @@ const OSS_REPOS: OssRepo[] = [
   { name: 'bible-data-js', href: 'https://github.com/midvash/bible-data-js' },
   { name: 'bible-cross-references', href: 'https://github.com/midvash/bible-cross-references' },
   { name: 'bible-by-midvash', href: 'https://github.com/midvash/bible-by-midvash' },
-  { name: 'emdash-plugin-bible', href: 'https://github.com/midvash/emdash-plugin-bible' },
+  { name: 'bible-emdash-plugin', href: 'https://github.com/midvash/bible-emdash-plugin' },
 ];
 
 function escapeHtml(str: string): string {

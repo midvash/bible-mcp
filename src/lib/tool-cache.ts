@@ -31,8 +31,10 @@ import type { ToolResult } from '../mcp/types';
  *          (resultado vazio cacheado antes do conserto sumiria só em 24h).
  * v7 → v8: sai a nri (duplicata da riveduta), list_versions muda.
  * v8 → v9: sai a dansk1931 (AT de 1931 com direitos), list_versions muda.
+ * v12 → v13: entram darby e rv1885, list_versions sai em inglês e versão com
+ *          direitos troca pela livre (o "not found" cacheado sumiria só em 24h).
  */
-const CACHE_VERSION = 'v12';
+const CACHE_VERSION = 'v13';
 
 /** Um dia. O texto bíblico não muda; o teto existe só para limitar staleness. */
 const CACHE_TTL_SECONDS = 86400;

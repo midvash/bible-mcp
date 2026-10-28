@@ -41,6 +41,18 @@ describe('resolveVersion', () => {
     expect(r.ok && r.value.slug).toBe('kjv');
   });
 
+  it('swaps a version that left for the free one of the same language', () => {
+    const esv = resolveVersion(ctx(), 'ESV');
+    expect(esv.ok && esv.value.slug).toBe('bsb');
+    const nvi = resolveVersion(ctx(), 'nvi');
+    expect(nvi.ok && nvi.value.slug).toBe('onbv');
+  });
+
+  it('swaps a version that left in the connection filter too', () => {
+    const r = resolveVersion(ctx({ allowedVersions: ['onbv'] }), 'nvi');
+    expect(r.ok && r.value.slug).toBe('onbv');
+  });
+
   it('rejects an unknown slug and points at list_versions', () => {
     expect(message(resolveVersion(ctx(), 'nope'))).toContain('list_versions');
   });

@@ -13,8 +13,8 @@ import { TOOLS } from '../tools';
 const languageCount = new Set(VERSIONS.map((v) => v.language)).size;
 
 describe('landing: contagens batem com o código', () => {
-  it('o catálogo tem 117 versões em 69 idiomas', () => {
-    expect(VERSIONS).toHaveLength(117);
+  it('o catálogo tem 119 versões em 69 idiomas', () => {
+    expect(VERSIONS).toHaveLength(119);
     expect(languageCount).toBe(69);
   });
 
@@ -62,7 +62,7 @@ describe.each(SUPPORTED_LOCALES)('landing %s', (locale) => {
 
   it('copy cita as contagens certas e não tem travessão', () => {
     expect(copy).not.toContain('—');
-    expect(copy).toMatch(/117/);
+    expect(copy).toMatch(/119/);
     expect(copy).toMatch(/69/);
   });
 

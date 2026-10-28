@@ -25,7 +25,7 @@ const PROTOCOL_VERSION = '2025-06-18';
 const SERVER_INFO = {
   name: 'midvash',
   title: 'Midvash',
-  version: '1.0.0',
+  version: '1.1.0',
 } as const;
 
 const SERVER_CAPABILITIES = {
@@ -83,7 +83,7 @@ export async function handleMcpMessage(
           capabilities: SERVER_CAPABILITIES,
           serverInfo: SERVER_INFO,
           instructions:
-            'Midvash MCP gives AI clients fast, no-key access to Scripture in 117 free Bible versions across 69 languages. Use get_passage for natural references, search_bible to find verses, and compare_passage to compare translations.',
+            'Midvash MCP gives AI clients fast, no-key access to Scripture in 119 free Bible versions across 69 languages. Use get_passage for natural references, search_bible to find verses, and compare_passage to compare translations.',
         });
       }
 
