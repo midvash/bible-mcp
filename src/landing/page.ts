@@ -7,9 +7,9 @@ import {
   pathForLocale,
   type Locale,
 } from './i18n';
-import { FOOTER_CSS, renderFooter } from './footer';
+import { renderSiteFooter, SITE_FOOTER_CSS } from './site-footer';
+import { LANG_COOKIE_SCRIPT } from './locale-redirect';
 
-const FOOTER_BRAND_NAME = 'Bible MCP';
 
 /**
  * Escapa caracteres HTML perigosos. Necessário porque interpolamos
@@ -93,9 +93,6 @@ const SELECT_LANGUAGE_LABEL: Record<Locale, string> = {
 const GLOBE_ICON =
   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" focusable="false"><path d="M128,24A104,104,0,1,0,232,128,104.12,104.12,0,0,0,128,24Zm88,104a87.61,87.61,0,0,1-3.33,24H174.16a157.44,157.44,0,0,0,0-48h38.51A87.61,87.61,0,0,1,216,128ZM102,168H154a112.1,112.1,0,0,1-26,45A112,112,0,0,1,102,168Zm-3.9-16a140.84,140.84,0,0,1,0-48h59.88a140.84,140.84,0,0,1,0,48ZM40,128a87.61,87.61,0,0,1,3.33-24H81.84a157.44,157.44,0,0,0,0,48H43.33A87.61,87.61,0,0,1,40,128ZM154,88H102a112.1,112.1,0,0,1,26-45A112,112,0,0,1,154,88Zm52.33,0H170.71a135.28,135.28,0,0,0-22.3-45.6A88.29,88.29,0,0,1,206.37,88ZM107.59,42.4A135.28,135.28,0,0,0,85.29,88H49.63A88.29,88.29,0,0,1,107.59,42.4ZM49.63,168H85.29a135.28,135.28,0,0,0,22.3,45.6A88.29,88.29,0,0,1,49.63,168Zm98.78,45.6a135.28,135.28,0,0,0,22.3-45.6h35.66A88.29,88.29,0,0,1,148.41,213.6Z"/></svg>';
 
-const CARET_ICON =
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" focusable="false"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg>';
-
 function langSwitcherMarkup(currentLocale: Locale, ariaLabel: string): string {
   const items = SUPPORTED_LOCALES.map((l) => {
     const isActive = l === currentLocale;
@@ -105,8 +102,6 @@ function langSwitcherMarkup(currentLocale: Locale, ariaLabel: string): string {
   return `<div class="lang-switcher" data-lang-switcher>
     <button type="button" class="lang-trigger" aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu" aria-label="${escapeHtml(ariaLabel)}">
       <span class="lang-trigger-icon">${GLOBE_ICON}</span>
-      <span class="lang-trigger-label">${escapeHtml(LOCALE_NATIVE_NAMES[currentLocale])}</span>
-      <span class="lang-trigger-caret">${CARET_ICON}</span>
     </button>
     <ul id="lang-menu" class="lang-menu" role="menu" hidden>
       ${items}
@@ -132,6 +127,7 @@ const LANG_SWITCHER_SCRIPT = `(function(){
       if(e.key === 'Escape') close();
     });
   });
+  ${LANG_COOKIE_SCRIPT}
 })();`;
 
 /** Código BCP 47 de cada idioma do catálogo, pra Intl.DisplayNames. */
@@ -219,6 +215,7 @@ export function renderLandingPage(locale: Locale): string {
     copiedBtn: t.configure.copiedBtn,
     copyError: t.configure.copyError,
     defaultLangs: [locale],
+    allLanguages: t.configure.allLanguages,
     defaultVersions: [DEFAULT_VERSION_BY_LOCALE[locale]],
     languages,
     labels,
@@ -269,9 +266,13 @@ export function renderLandingPage(locale: Locale): string {
     .map(
       (c) => `
       <article class="client-card client-card--${c.key}">
-        <div class="client-logo">${c.logo}</div>
-        <h3>${escapeHtml(c.name)}</h3>
-        <p class="client-tier">${escapeHtml(c.tier)}</p>
+        <header class="client-head">
+          <div class="client-logo">${c.logo}</div>
+          <div>
+            <h3>${escapeHtml(c.name)}</h3>
+            <p class="client-tier">${escapeHtml(c.tier)}</p>
+          </div>
+        </header>
         <ol class="client-steps">
           ${c.steps.map((s) => `<li>${escapeHtml(s)}</li>`).join('')}
         </ol>
@@ -520,24 +521,15 @@ body {
 @media (max-width: 480px) { .brand-logo { height: 32px; } }
 .lang-switcher { position: relative; }
 .lang-trigger {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 6px 10px; height: 36px;
-  background: transparent; border: 1px solid transparent;
-  border-radius: 6px; color: var(--text);
-  font: inherit; font-size: 14px; font-weight: 500;
-  cursor: pointer; transition: background-color 0.15s ease, border-color 0.15s ease;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; padding: 0;
+  background: transparent; border: none; border-radius: 8px;
+  color: var(--text-soft); cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
-.lang-trigger:hover, .lang-trigger[aria-expanded="true"] { background: var(--bg-soft); border-color: var(--border); }
+.lang-trigger:hover, .lang-trigger[aria-expanded="true"] { background: var(--bg-soft); color: var(--text); }
 .lang-trigger-icon { display: inline-flex; }
-.lang-trigger-icon svg { width: 20px; height: 20px; color: var(--text); }
-.lang-trigger-caret { display: inline-flex; transition: transform 0.15s ease; }
-.lang-trigger-caret svg { width: 14px; height: 14px; color: var(--text-muted); }
-.lang-trigger[aria-expanded="true"] .lang-trigger-caret { transform: rotate(180deg); }
-.lang-trigger-label { line-height: 1; }
-@media (max-width: 480px) {
-  .lang-trigger-label { display: none; }
-  .lang-trigger { padding: 6px; }
-}
+.lang-trigger-icon svg { width: 22px; height: 22px; }
 .lang-menu {
   position: absolute; top: calc(100% + 6px); right: 0;
   min-width: 200px; max-height: 70vh; overflow-y: auto;
@@ -642,15 +634,17 @@ section[id] { scroll-margin-top: 72px; }
 .config-step { margin-bottom: 32px; }
 .config-step:last-of-type { margin-bottom: 0; }
 .config-label { font-family: var(--font-serif); font-size: 1.125rem; font-weight: 600; color: var(--text); margin-bottom: 14px; }
-.lang-filters { display: flex; flex-wrap: wrap; gap: 8px; }
-.lang-chip {
-  background: var(--bg); border: 1px solid var(--border); color: var(--text-soft);
-  padding: 8px 16px; border-radius: 999px; cursor: pointer;
-  font-family: var(--font-sans); font-size: 0.875rem; font-weight: 500;
-  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+.lang-select {
+  appearance: none; -webkit-appearance: none;
+  width: 100%; max-width: 360px; height: 42px; padding: 0 36px 0 12px;
+  background-color: var(--bg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='%23857a6b'%3E%3Cpath d='M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center; background-size: 14px;
+  border: 1px solid var(--border); border-radius: 6px;
+  color: var(--text); font: inherit; font-size: 0.95rem; cursor: pointer;
 }
-.lang-chip:hover { border-color: var(--border-strong); color: var(--text); }
-.lang-chip.active { background: var(--control); color: var(--on-control); border-color: var(--control); font-weight: 600; }
+.lang-select:hover { border-color: var(--border-strong); }
+.lang-select:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 .versions-toolbar { display: flex; gap: 12px; margin-bottom: 12px; font-size: 0.8125rem; }
 .toolbar-btn {
   background: transparent; border: none; color: var(--primary); font-weight: 600;
@@ -708,24 +702,27 @@ section[id] { scroll-margin-top: 72px; }
 .copy-btn.copied { color: var(--success); border-color: var(--success); }
 
 /* CLIENT CARDS */
-.clients-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-.client-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; }
+/* 4 clientes: 2x2 no desktop, 1 coluna no celular (nunca um sozinho na linha) */
+.clients-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+@media (min-width: 760px) { .clients-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.client-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 22px; }
+.client-head { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
 .client-logo {
-  width: 48px; height: 48px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center; margin-bottom: 18px;
+  width: 44px; height: 44px; border-radius: 8px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
   background: var(--bg-soft); border: 1px solid var(--border); color: var(--text);
 }
-.client-logo svg { width: 28px; height: 28px; }
-.client-card h3 { font-family: var(--font-serif); font-size: 1.4rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-.client-tier { font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 18px; font-weight: 500; }
+.client-logo svg { width: 24px; height: 24px; display: block; }
+.client-card h3 { font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600; color: var(--text); line-height: 1.2; }
+.client-tier { font-size: 0.8125rem; color: var(--text-muted); font-weight: 500; line-height: 1.4; margin-top: 2px; }
 .client-steps { list-style: none; counter-reset: step; }
 .client-steps li {
-  counter-increment: step; position: relative; padding: 10px 0 10px 34px;
-  font-size: 0.925rem; color: var(--text-soft); line-height: 1.5; border-bottom: 1px solid var(--border);
+  counter-increment: step; position: relative; padding: 8px 0 8px 34px;
+  font-size: 0.9rem; color: var(--text-soft); line-height: 1.5; border-bottom: 1px solid var(--border);
 }
 .client-steps li:last-child { border-bottom: none; }
 .client-steps li::before {
-  content: counter(step); position: absolute; left: 0; top: 10px;
+  content: counter(step); position: absolute; left: 0; top: 8px;
   width: 22px; height: 22px; border-radius: 999px;
   background: var(--bg-soft); border: 1px solid var(--border); color: var(--text);
   font-weight: 700; font-size: 0.72rem; display: flex; align-items: center; justify-content: center;
@@ -755,8 +752,9 @@ section[id] { scroll-margin-top: 72px; }
 /* VERSIONS */
 .versions-intro { max-width: 720px; margin: 0 0 32px; color: var(--text-soft); }
 .versions-intro p + p { margin-top: 12px; font-size: 0.925rem; color: var(--text-muted); }
-.catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
-.cat-lang { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; }
+/* Colunas (não grade): cada idioma tem altura diferente, e a grade deixava buracos. */
+.catalog { columns: 3 260px; column-gap: 16px; }
+.cat-lang { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; break-inside: avoid; margin-bottom: 16px; }
 .cat-lang h3 { font-family: var(--font-serif); font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
 .cat-lang ul { list-style: none; font-size: 0.875rem; line-height: 1.45; color: var(--text-soft); }
 .cat-lang li + li { margin-top: 6px; }
@@ -789,7 +787,7 @@ section[id] { scroll-margin-top: 72px; }
 .more-card h3 { font-family: var(--font-serif); font-size: 1.2rem; font-weight: 600; color: var(--text); margin-bottom: 8px; }
 .more-card p { color: var(--text-soft); font-size: 0.95rem; }
 .more-url { display: inline-block; margin-top: 14px; color: var(--primary); font-weight: 600; font-size: 0.875rem; }
-${FOOTER_CSS}
+${SITE_FOOTER_CSS}
 
 @media (max-width: 640px) {
   .hero { padding: 56px 0 40px; }
@@ -863,7 +861,7 @@ ${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}
     <div class="config-block">
       <div class="config-step">
         <h3 class="config-label" id="lang-filters-label">${escapeHtml(t.configure.languagesLabel)}</h3>
-        <div class="lang-filters" id="lang-filters" role="group" aria-labelledby="lang-filters-label"></div>
+        <select class="lang-select" id="lang-filters" aria-labelledby="lang-filters-label"></select>
       </div>
 
       <div class="config-step">
@@ -972,7 +970,7 @@ ${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}
 
 </main>
 
-${renderFooter(t, locale, { brandName: FOOTER_BRAND_NAME, currentProduct: 'mcp' })}
+${renderSiteFooter(locale)}
 
 <script>
 const VERSIONS = ${versionsJson};
@@ -991,24 +989,27 @@ function nanoid() {
   return id;
 }
 
+// Um seletor no lugar de um botão por idioma: com quase 70 idiomas, os botões
+// viravam um paredão. Opção vazia = todos os idiomas.
 function renderLangFilters() {
   const root = document.getElementById('lang-filters');
-  root.innerHTML = '';
+  const count = (lang) => VERSIONS.filter(v => v.language === lang).length;
+  const all = document.createElement('option');
+  all.value = '';
+  all.textContent = UI.allLanguages + ' (' + VERSIONS.length + ')';
+  root.appendChild(all);
   for (const lang of UI.languages) {
-    const chip = document.createElement('button');
-    chip.type = 'button';
-    const active = selectedLangs.has(lang);
-    chip.className = 'lang-chip' + (active ? ' active' : '');
-    chip.setAttribute('aria-pressed', active ? 'true' : 'false');
-    chip.textContent = UI.labels[lang] || lang;
-    chip.addEventListener('click', () => {
-      if (selectedLangs.has(lang)) selectedLangs.delete(lang);
-      else selectedLangs.add(lang);
-      renderLangFilters();
-      renderVersions();
-    });
-    root.appendChild(chip);
+    const opt = document.createElement('option');
+    opt.value = lang;
+    opt.textContent = (UI.labels[lang] || lang) + ' (' + count(lang) + ')';
+    opt.selected = selectedLangs.has(lang);
+    root.appendChild(opt);
   }
+  root.addEventListener('change', () => {
+    selectedLangs.clear();
+    if (root.value) selectedLangs.add(root.value);
+    renderVersions();
+  });
 }
 
 function visibleVersions() {
@@ -1066,7 +1067,7 @@ function generate() {
 
   document.getElementById('url-output').textContent = url;
   document.getElementById('json-output').textContent = JSON.stringify(json, null, 2);
-  document.getElementById('gemini-output').textContent = 'gemini mcp add --transport http midvash "' + url + '"';
+  document.getElementById('gemini-output').textContent = 'gemini mcp add --scope user --transport http midvash "' + url + '"';
   const result = document.getElementById('result');
   result.classList.add('visible');
   result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1102,34 +1103,23 @@ renderVersions();
 </html>`;
 }
 
-// ─── Inline SVG marks for the AI clients ─────────────────────────────────
-// Marcas geométricas simples (não são logos reais das marcas). Pintam em
-// `currentColor` (var(--text) via .client-logo) para manter neutralidade
-// e funcionar em light/dark mode.
+// ─── Logos dos clientes de IA ────────────────────────────────────────────
+// Paths do Simple Icons (CC0, simpleicons.org), só pra dizer "funciona no X".
+// ChatGPT e Cursor são marcas monocromáticas: pintam em `currentColor` e
+// acompanham o tema. Claude e Gemini levam a cor da marca.
 
 function chatgptLogo(): string {
-  return `<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path d="M28.7 13.1a7.6 7.6 0 0 0-.7-6.3 7.8 7.8 0 0 0-8.4-3.7 7.8 7.8 0 0 0-13.2 2.8 7.8 7.8 0 0 0-5.2 3.8 7.8 7.8 0 0 0 1 9.2 7.6 7.6 0 0 0 .6 6.3 7.8 7.8 0 0 0 8.4 3.7 7.7 7.7 0 0 0 5.8 2.6 7.8 7.8 0 0 0 7.4-5.4 7.8 7.8 0 0 0 5.2-3.8 7.8 7.8 0 0 0-1-9.2zM17.2 27.9a5.8 5.8 0 0 1-3.7-1.3l.2-.1 6.1-3.5a1 1 0 0 0 .5-.9V13.6l2.6 1.5v7.1a5.8 5.8 0 0 1-5.7 5.7zM4.9 22.7a5.8 5.8 0 0 1-.7-3.9l.2.1 6.1 3.5a1 1 0 0 0 1 0l7.4-4.3v3l-7.5 4.3a5.8 5.8 0 0 1-6.5-2.7zM3.3 9.7a5.8 5.8 0 0 1 3-2.5v7.2a1 1 0 0 0 .5.9l7.4 4.3-2.6 1.5L5.5 17.6a5.8 5.8 0 0 1-2.2-7.9zm21 4.9-7.5-4.3 2.6-1.5 6.1 3.5a5.8 5.8 0 0 1-.9 10.5v-7.3a1 1 0 0 0-.3-.9zm2.6-3.9-.2-.1-6.1-3.6a1 1 0 0 0-1 0l-7.4 4.3v-3l7.4-4.3a5.8 5.8 0 0 1 8.7 6.7zM11.7 16.1l-2.6-1.5V7.5a5.8 5.8 0 0 1 9.5-4.5l-.2.1L12.3 6.7a1 1 0 0 0-.5.9zm1.4-3 3.3-1.9 3.3 1.9V17l-3.3 1.9-3.3-1.9z" fill="currentColor"/>
-  </svg>`;
+  return `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/></svg>`;
 }
 
 function claudeLogo(): string {
-  return `<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path d="M9 20.5l4-10.5h2.2l4 10.5h-2.4l-.9-2.5h-3.6l-.9 2.5H9zm4-4.4h2.4l-1.2-3.4-1.2 3.4z" fill="currentColor"/>
-    <path d="M21 9.8h2.2v10.7H21zM4 9.8h2.2v10.7H4z" fill="currentColor"/>
-    <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="1.5" fill="none"/>
-  </svg>`;
+  return `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#D97757" d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg>`;
 }
 
 function geminiLogo(): string {
-  return `<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path d="M16 2 L18.5 13.5 L30 16 L18.5 18.5 L16 30 L13.5 18.5 L2 16 L13.5 13.5 Z" fill="currentColor"/>
-  </svg>`;
+  return `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="gemini-grad" x1="0" y1="24" x2="24" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4285F4"/><stop offset="0.5" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs><path fill="url(#gemini-grad)" d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81"/></svg>`;
 }
 
 function cursorLogo(): string {
-  return `<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path d="M16 3 L28 10 V22 L16 29 L4 22 V10 Z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linejoin="round"/>
-    <path d="M4 10 L16 16 L28 10 M16 16 V29" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-  </svg>`;
+  return `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M11.503.131 1.891 5.678a.84.84 0 0 0-.42.726v11.188c0 .3.162.575.42.724l9.609 5.55a1 1 0 0 0 .998 0l9.61-5.55a.84.84 0 0 0 .42-.724V6.404a.84.84 0 0 0-.42-.726L12.497.131a1.01 1.01 0 0 0-.996 0M2.657 6.338h18.55c.263 0 .43.287.297.515L12.23 22.918c-.062.107-.229.064-.229-.06V12.335a.59.59 0 0 0-.295-.51l-9.11-5.257c-.109-.063-.064-.23.061-.23"/></svg>`;
 }
