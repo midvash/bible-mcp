@@ -147,7 +147,6 @@ export interface Translations {
     wordpress: { title: string; body: string };
   };
   footer: {
-    brandBy: string;
     productsTitle: string;
     productLabels: {
       reader: string;
@@ -348,7 +347,6 @@ const en: Translations = {
     },
   },
   footer: {
-    brandBy: 'by Midvash',
     productsTitle: 'Products',
     productLabels: {
       reader: 'Bible reader',
@@ -549,7 +547,6 @@ const ptBr: Translations = {
     },
   },
   footer: {
-    brandBy: 'por Midvash',
     productsTitle: 'Produtos',
     productLabels: {
       reader: 'Leitor da Bíblia',
@@ -750,7 +747,6 @@ const es: Translations = {
     },
   },
   footer: {
-    brandBy: 'por Midvash',
     productsTitle: 'Productos',
     productLabels: {
       reader: 'Lector de la Biblia',
@@ -878,7 +874,6 @@ const fr: Translations = {
     wordpress: { title: 'Plugin WordPress', body: "Transforme les références bibliques du site de votre église ou ministère en versets que le lecteur ouvre sur place." },
   },
   footer: {
-    brandBy: 'par Midvash',
     productsTitle: 'Produits',
     productLabels: {
       reader: 'Lecteur de Bible',
@@ -1006,7 +1001,6 @@ const de: Translations = {
     wordpress: { title: 'WordPress-Plugin', body: 'Macht Bibelstellen auf der Website deiner Gemeinde zu Versen, die Leser direkt dort öffnen.' },
   },
   footer: {
-    brandBy: 'von Midvash',
     productsTitle: 'Produkte',
     productLabels: {
       reader: 'Bibel-Reader',
@@ -1134,7 +1128,6 @@ const it: Translations = {
     wordpress: { title: 'Plugin WordPress', body: 'Trasforma i riferimenti biblici del sito della tua chiesa o del tuo ministero in versetti che il lettore apre sul posto.' },
   },
   footer: {
-    brandBy: 'di Midvash',
     productsTitle: 'Prodotti',
     productLabels: {
       reader: 'Lettore della Bibbia',
@@ -1262,7 +1255,6 @@ const zh: Translations = {
     wordpress: { title: 'WordPress 插件', body: '把教会或事工网站上的经文出处变成读者可以就地打开的经文。' },
   },
   footer: {
-    brandBy: 'Midvash 出品',
     productsTitle: '产品',
     productLabels: {
       reader: '圣经阅读器',
@@ -1390,7 +1382,6 @@ const ru: Translations = {
     wordpress: { title: 'Плагин для WordPress', body: 'Превращает ссылки на Писание на сайте вашей церкви в стихи, которые читатель открывает прямо на странице.' },
   },
   footer: {
-    brandBy: 'от Midvash',
     productsTitle: 'Продукты',
     productLabels: {
       reader: 'Читалка Библии',
@@ -1518,7 +1509,6 @@ const ko: Translations = {
     wordpress: { title: 'WordPress 플러그인', body: '교회나 사역 웹사이트의 성경 출처를 독자가 그 자리에서 열어 볼 수 있는 말씀으로 바꿔 줍니다.' },
   },
   footer: {
-    brandBy: 'Midvash 제작',
     productsTitle: '제품',
     productLabels: {
       reader: '성경 리더',
