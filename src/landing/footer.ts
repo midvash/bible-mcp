@@ -92,12 +92,6 @@ const INSTAGRAM_ICON =
 const GITHUB_ICON =
   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208.31,75.68A59.78,59.78,0,0,0,202.93,28,8,8,0,0,0,196,24a59.75,59.75,0,0,0-48,24H124A59.75,59.75,0,0,0,76,24a8,8,0,0,0-6.93,4,59.78,59.78,0,0,0-5.38,47.68A58.14,58.14,0,0,0,56,104v8a56.06,56.06,0,0,0,48.44,55.47A39.8,39.8,0,0,0,96,192v8H72a24,24,0,0,1-24-24A40,40,0,0,0,8,136a8,8,0,0,0,0,16,24,24,0,0,1,24,24,40,40,0,0,0,40,40H96v16a8,8,0,0,0,16,0V192a24,24,0,0,1,48,0v40a8,8,0,0,0,16,0V192a39.8,39.8,0,0,0-8.44-24.53A56.06,56.06,0,0,0,216,112v-8A58.14,58.14,0,0,0,208.31,75.68Z"/></svg>';
 
-const MIDVASH_LOGO_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" aria-hidden="true">
-  <path d="M100,16 L138.105,38 L138.105,82 L100,104 L61.895,82 L61.895,38 Z" fill="#F0CE8A"/>
-  <path d="M61.895,59.56 L100,81.56 L100,125.56 L61.895,147.56 L23.79,125.56 L23.79,81.56 Z" fill="#E8B45A"/>
-  <path d="M138.105,59.56 L176.21,81.56 L176.21,125.56 L138.105,147.56 L100,125.56 L100,81.56 Z" fill="#B17027"/>
-</svg>`;
-
 interface OssRepo {
   name: string;
   href: string;
@@ -125,22 +119,22 @@ function escapeHtml(str: string): string {
 export const FOOTER_CSS = `
 /* ─── MIDVASH FOOTER ─── tokens próprios, sem conflito com o tema da página */
 .mv-footer {
-  --mv-primary: #B17027;
-  --mv-primary-soft: #FBF5E8;
-  --mv-text: #30281D;
-  --mv-text-soft: #5C5343;
-  --mv-text-muted: #827B6E;
-  --mv-bg-soft: #F5EFE2;
-  --mv-bg-card: #FFFDF7;
-  --mv-border: #E6DFD0;
-  --mv-radius: 12px;
+  --mv-primary: oklch(0.55 0.15 62);
+  --mv-primary-soft: oklch(0.955 0.025 82);
+  --mv-text: oklch(0.22 0.020 65);
+  --mv-text-soft: oklch(0.38 0.018 65);
+  --mv-text-muted: oklch(0.52 0.015 65);
+  --mv-bg-soft: oklch(0.965 0.006 80);
+  --mv-bg-card: oklch(0.995 0.003 82);
+  --mv-border: oklch(0.91 0.008 80);
+  --mv-radius: 6px;
   --mv-font-sans: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --mv-font-serif: 'Literata', Georgia, serif;
   --mv-font-mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
 
   padding: 56px 0 40px;
   border-top: 1px solid var(--mv-border);
-  background: var(--mv-bg-soft);
+  background: var(--mv-bg-card);
   color: var(--mv-text-soft);
   font-family: var(--mv-font-sans);
   font-size: 16px;
@@ -148,20 +142,20 @@ export const FOOTER_CSS = `
 }
 @media (prefers-color-scheme: dark) {
   .mv-footer {
-    --mv-primary: #ECC779;
-    --mv-primary-soft: #302A21;
-    --mv-text: #EDE4D3;
-    --mv-text-soft: #C7BCA5;
-    --mv-text-muted: #B4A994;
-    --mv-bg-soft: #302A21;
-    --mv-bg-card: #302A21;
-    --mv-border: #4A4235;
+    --mv-primary: oklch(0.84 0.13 82);
+    --mv-primary-soft: oklch(0.22 0.025 74);
+    --mv-text: oklch(0.92 0.018 85);
+    --mv-text-soft: oklch(0.80 0.018 82);
+    --mv-text-muted: oklch(0.66 0.018 80);
+    --mv-bg-soft: oklch(0.16 0.009 74);
+    --mv-bg-card: oklch(0.18 0.010 74);
+    --mv-border: oklch(0.27 0.010 74);
   }
 }
 .mv-footer *,
 .mv-footer *::before,
 .mv-footer *::after { box-sizing: border-box; }
-.mv-footer-container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.mv-footer-container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
 
 .mv-footer-top { display: grid; grid-template-columns: 1fr; gap: 40px; }
 @media (min-width: 768px) {
@@ -173,25 +167,15 @@ export const FOOTER_CSS = `
 }
 
 .mv-footer-brand { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
-.mv-footer-brand-mark { width: 38px; height: 38px; flex-shrink: 0; display: inline-flex; }
-.mv-footer-brand-mark svg { width: 100%; height: 100%; display: block; }
-.mv-footer-brand-id { display: flex; flex-direction: column; gap: 2px; }
-.mv-footer-brand-name {
-  font-family: var(--mv-font-serif);
-  font-weight: 700;
-  font-size: 18px;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  color: var(--mv-text);
-  line-height: 1;
+.mv-footer-logo { display: block; height: 36px; width: auto; }
+.mv-footer-logo-dark { display: none; }
+@media (prefers-color-scheme: dark) {
+  .mv-footer-logo-light { display: none; }
+  .mv-footer-logo-dark { display: block; }
 }
-.mv-footer-brand-by {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--mv-text-muted);
-  line-height: 1;
+.mv-footer-product {
+  font-size: 13px; font-weight: 600; color: var(--mv-text-muted);
+  padding-left: 12px; border-left: 1px solid var(--mv-border); line-height: 20px;
 }
 .mv-footer-social { display: flex; gap: 16px; width: 100%; margin-top: 4px; }
 .mv-footer-social-icon {
@@ -212,10 +196,10 @@ export const FOOTER_CSS = `
 }
 .mv-footer-col-title {
   font-family: var(--mv-font-sans);
-  font-size: 0.7rem;
-  font-weight: 700;
+  font-size: 0.72rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
   color: var(--mv-text-muted);
   margin: 0 0 12px;
 }
@@ -240,9 +224,9 @@ export const FOOTER_CSS = `
   text-decoration: none;
   transition: color 0.14s ease;
 }
-a.mv-footer-link:hover { color: var(--mv-primary); }
-a.mv-footer-link:hover .mv-footer-link-icon { color: var(--mv-primary); }
-.mv-footer-link.is-current { color: var(--mv-primary); font-weight: 600; }
+a.mv-footer-link:hover { color: var(--mv-text); }
+a.mv-footer-link:hover .mv-footer-link-icon { color: var(--mv-text); }
+.mv-footer-link.is-current { color: var(--mv-text); font-weight: 600; }
 .mv-footer-link.is-current .mv-footer-link-icon { color: var(--mv-primary); }
 .mv-footer-link.is-soon { color: var(--mv-text-muted); cursor: default; }
 .mv-footer-link-icon {
@@ -256,7 +240,7 @@ a.mv-footer-link:hover .mv-footer-link-icon { color: var(--mv-primary); }
 .mv-footer-link-icon svg { width: 100%; height: 100%; }
 .mv-footer-link-text { line-height: 1.3; }
 .mv-footer-repo-name { font-family: var(--mv-font-mono); font-size: 0.82rem; }
-.mv-footer-all-repos { color: var(--mv-primary); font-weight: 600; font-size: 0.82rem; }
+.mv-footer-all-repos { color: var(--mv-text); font-weight: 600; font-size: 0.82rem; }
 .mv-soon-badge {
   margin-left: auto;
   font-size: 0.6rem;
@@ -275,14 +259,13 @@ a.mv-footer-link:hover .mv-footer-link-icon { color: var(--mv-primary); }
   margin-top: 44px;
   padding-top: 24px;
   border-top: 1px solid var(--mv-border);
-  text-align: center;
 }
 .mv-footer-bottom p { margin: 0; }
 .mv-footer-tagline { font-size: 0.8125rem; color: var(--mv-text-soft); }
 .mv-footer-copyright { margin-top: 6px; font-size: 0.75rem; opacity: 0.85; }
 .mv-footer-credit { margin-top: 2px; font-size: 0.75rem; opacity: 0.85; color: var(--mv-text-muted); }
 .mv-footer-credit a {
-  color: var(--mv-primary);
+  color: var(--mv-text);
   font-weight: 600;
   text-decoration: none;
 }
@@ -329,11 +312,9 @@ export function renderFooter(t: Translations, locale: Locale, opts: RenderFooter
   <div class="mv-footer-container">
     <div class="mv-footer-top">
       <div class="mv-footer-brand">
-        <span class="mv-footer-brand-mark" aria-hidden="true">${MIDVASH_LOGO_SVG}</span>
-        <span class="mv-footer-brand-id">
-          <span class="mv-footer-brand-name">${escapeHtml(brandName)}</span>
-          <span class="mv-footer-brand-by">${escapeHtml(t.footer.brandBy)}</span>
-        </span>
+        <img class="mv-footer-logo mv-footer-logo-light" src="https://midvash.com/brand/logo-midvash.svg" alt="Midvash" width="120" height="36" loading="lazy">
+        <img class="mv-footer-logo mv-footer-logo-dark" src="https://midvash.com/brand/logo-midvash-dark.svg" alt="" width="120" height="36" loading="lazy">
+        <span class="mv-footer-product">${escapeHtml(brandName)}</span>
         <div class="mv-footer-social" aria-label="${escapeHtml(t.footer.socialLabel)}">
           <a href="https://instagram.com/midvash" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(
             t.footer.instagramLabel,
