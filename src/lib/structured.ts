@@ -1,4 +1,3 @@
-import { localeForVersion } from './markdown';
 import type { BookDefinition } from '../data/books';
 import type { VersionDefinition } from '../data/versions';
 import type { ToolOutputSchema, ToolResult } from '../mcp/types';
@@ -171,28 +170,8 @@ export function dualResult(
   };
 }
 
-/**
- * Link do leitor do midvash.com no endereço canônico do trecho. O site publica
- * cada versão no idioma dela (`/pt-br/onbv/joao/3`); o endereço sem idioma
- * responde, mas com a interface em inglês. Versão em inglês, ou de idioma fora
- * dos 9 do site, fica sem prefixo e com o slug em inglês. Versículo vai na
- * âncora `#v=16` ou `#v=16-18`, como o site redireciona.
- */
-export function readerUrl(
-  version: VersionDefinition,
-  book: BookDefinition,
-  chapter: number,
-  verseStart?: number,
-  verseEnd?: number,
-): string {
-  const locale = localeForVersion(version);
-  const prefix = locale === 'en' ? '' : `/${locale}`;
-  const slug = encodeURIComponent(book.slugs[locale] || book.slugs.en);
-  const base = `https://midvash.com${prefix}/${version.slug}/${slug}/${chapter}`;
-  if (verseStart === undefined) return base;
-  const end = verseEnd !== undefined && verseEnd > verseStart ? `-${verseEnd}` : '';
-  return `${base}#v=${verseStart}${end}`;
-}
+// Mora em markdown.ts (os títulos dos trechos também levam o link).
+export { readerUrl } from './markdown';
 
 /** Campos de versão presentes em quase toda resposta estruturada. */
 export function versionFields(version: VersionDefinition) {

@@ -62,7 +62,7 @@ function formatCrossChapter(
   const lastVerse = verseEnd ?? lastChapterVerses?.length ?? 1;
 
   const lines = [
-    `## ${name} ${chapter}:${firstVerse} — ${last}:${lastVerse} (${version.shortName})`,
+    `## [${name} ${chapter}:${firstVerse} — ${last}:${lastVerse}](${readerUrl(version, book, chapter, firstVerse)}) (${version.shortName})`,
     '',
   ];
 
