@@ -68,6 +68,18 @@ standard) that shows the numbered verses and a button to read the passage on
 midvash.com. Hosts without UI support keep getting the Markdown. Submission
 data lives in [docs/chatgpt-plugin.md](docs/chatgpt-plugin.md).
 
+## Bible study skill
+
+For a guided study rather than single lookups, install the
+[`bible-study`](https://github.com/midvash/skills) skill. It walks an agent
+through observation, interpretation and application of a passage or topic, as a
+personal study, a small-group lesson or a sermon outline, using this server's
+tools and linking every verse to the reader.
+
+```bash
+npx skills add midvash/skills
+```
+
 ## Tools
 
 | Tool | Description |
@@ -173,6 +185,7 @@ Part of [**Midvash: Bible & Devotional**](https://midvash.com), a free Bible rea
 | 📱 **iOS and Android apps** | [App Store](https://apps.apple.com/app/id6775930176) · [Google Play](https://play.google.com/store/apps/details?id=com.midvash.mobile) |
 | 🔌 **API** | [api.midvash.com](https://api.midvash.com) · [`bible-api`](https://github.com/midvash/bible-api) |
 | 🤖 **MCP server** | [mcp.midvash.com](https://mcp.midvash.com) · [`bible-mcp`](https://github.com/midvash/bible-mcp) |
+| 🧠 **Bible study skill** | [`skills`](https://github.com/midvash/skills) · `npx skills add midvash/skills` |
 | 🧩 **WordPress plugin** | [midvash.com/wordpress-plugin](https://midvash.com/wordpress-plugin) · [`bible-wordpress-plugin`](https://github.com/midvash/bible-wordpress-plugin) |
 | 🧩 **EmDash plugin** | [midvash.com/emdash-plugin](https://midvash.com/emdash-plugin) · [`bible-emdash-plugin`](https://github.com/midvash/bible-emdash-plugin) |
 | 🌐 **Chrome extension** | [midvash.com/chrome-extension](https://midvash.com/chrome-extension) · [`bible-chrome-extension`](https://github.com/midvash/bible-chrome-extension) |

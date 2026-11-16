@@ -147,6 +147,7 @@ export interface Translations {
     reader: { title: string; body: string };
     api: { title: string; body: string };
     wordpress: { title: string; body: string };
+    skills: { title: string; body: string };
   };
   footer: {
     productsTitle: string;
@@ -348,6 +349,7 @@ const en: Translations = {
       title: 'WordPress plugin',
       body: 'Turns Bible references on your church or ministry site into verses readers can open in place.',
     },
+    skills: { title: 'Bible study skill', body: 'A ready-made Bible study method for Claude, Cursor and other agents: observe, interpret and apply, with every verse fetched and linked.' },
   },
   footer: {
     productsTitle: 'Products',
@@ -549,6 +551,7 @@ const ptBr: Translations = {
       title: 'Plugin para WordPress',
       body: 'Transforma referências bíblicas do site da sua igreja ou ministério em versículos que o leitor abre ali mesmo.',
     },
+    skills: { title: 'Skill de estudo bíblico', body: 'Um método de estudo bíblico pronto pro Claude, o Cursor e outros agentes: observar, interpretar e aplicar, com cada versículo buscado e linkado.' },
   },
   footer: {
     productsTitle: 'Produtos',
@@ -750,6 +753,7 @@ const es: Translations = {
       title: 'Plugin para WordPress',
       body: 'Convierte las referencias bíblicas del sitio de tu iglesia o ministerio en versículos que el lector abre ahí mismo.',
     },
+    skills: { title: 'Skill de estudio bíblico', body: 'Un método de estudio bíblico listo para Claude, Cursor y otros agentes: observar, interpretar y aplicar, con cada versículo consultado y enlazado.' },
   },
   footer: {
     productsTitle: 'Productos',
@@ -878,6 +882,7 @@ const fr: Translations = {
     reader: { title: 'Midvash : Bible et méditation', body: 'Lisez la Bible, suivez une méditation quotidienne et étudiez avec des commentaires sur le web, l’iPhone et Android.' },
     api: { title: 'API de la Bible', body: 'Le même catalogue en JSON, gratuit et sans clé, pour les développeurs qui veulent le texte biblique dans leur app.' },
     wordpress: { title: 'Plugin WordPress', body: "Transforme les références bibliques du site de votre église ou ministère en versets que le lecteur ouvre sur place." },
+    skills: { title: 'Skill d’étude biblique', body: 'Une méthode d’étude biblique prête pour Claude, Cursor et d’autres agents : observer, interpréter, appliquer, chaque verset récupéré et lié.' },
   },
   footer: {
     productsTitle: 'Produits',
@@ -1006,6 +1011,7 @@ const de: Translations = {
     reader: { title: 'Midvash: Bibel & Andacht', body: 'Lies die Bibel, folge einer täglichen Andacht und studiere mit Kommentaren im Web, auf dem iPhone und auf Android.' },
     api: { title: 'Bibel-API', body: 'Derselbe Katalog als JSON, kostenlos und ohne Key, für Entwickler, die Bibeltext in ihrer eigenen App brauchen.' },
     wordpress: { title: 'WordPress-Plugin', body: 'Macht Bibelstellen auf der Website deiner Gemeinde zu Versen, die Leser direkt dort öffnen.' },
+    skills: { title: 'Bibelstudium-Skill', body: 'Eine fertige Methode zum Bibelstudium für Claude, Cursor und andere Agenten: beobachten, deuten, anwenden, jeder Vers abgerufen und verlinkt.' },
   },
   footer: {
     productsTitle: 'Produkte',
@@ -1134,6 +1140,7 @@ const it: Translations = {
     reader: { title: 'Midvash: Bibbia e Devozionale', body: 'Leggi la Bibbia, segui un devozionale quotidiano e studia con i commenti sul web, su iPhone e su Android.' },
     api: { title: 'API della Bibbia', body: 'Lo stesso catalogo in JSON, gratuito e senza chiave, per chi sviluppa e vuole il testo biblico nella propria app.' },
     wordpress: { title: 'Plugin WordPress', body: 'Trasforma i riferimenti biblici del sito della tua chiesa o del tuo ministero in versetti che il lettore apre sul posto.' },
+    skills: { title: 'Skill di studio biblico', body: 'Un metodo di studio biblico pronto per Claude, Cursor e altri agenti: osservare, interpretare e applicare, con ogni versetto recuperato e collegato.' },
   },
   footer: {
     productsTitle: 'Prodotti',
@@ -1262,6 +1269,7 @@ const zh: Translations = {
     reader: { title: 'Midvash：圣经与灵修', body: '在网页、iPhone 和 Android 上读经、跟随每日灵修，并借助注释查经。' },
     api: { title: '圣经 API', body: '同一目录的 JSON 数据，免费且无需密钥，适合想在自己应用中显示经文的开发者。' },
     wordpress: { title: 'WordPress 插件', body: '把教会或事工网站上的经文出处变成读者可以就地打开的经文。' },
+    skills: { title: '圣经研读技能', body: '为 Claude、Cursor 等智能体准备的圣经研读方法：观察、解释、应用，每节经文都实时获取并附上链接。' },
   },
   footer: {
     productsTitle: '产品',
@@ -1390,6 +1398,7 @@ const ru: Translations = {
     reader: { title: 'Midvash: Библия и ежедневное чтение', body: 'Читайте Библию, следуйте ежедневному плану размышлений и изучайте Писание с комментариями в браузере, на iPhone и Android.' },
     api: { title: 'API Библии', body: 'Тот же каталог в JSON, бесплатно и без ключа, для разработчиков, которым нужен текст Библии в своём приложении.' },
     wordpress: { title: 'Плагин для WordPress', body: 'Превращает ссылки на Писание на сайте вашей церкви в стихи, которые читатель открывает прямо на странице.' },
+    skills: { title: 'Навык для изучения Библии', body: 'Готовый метод изучения Библии для Claude, Cursor и других агентов: наблюдение, толкование, применение, каждый стих загружен и снабжён ссылкой.' },
   },
   footer: {
     productsTitle: 'Продукты',
@@ -1518,6 +1527,7 @@ const ko: Translations = {
     reader: { title: 'Midvash: 성경 & 묵상', body: '웹, iPhone, Android에서 성경을 읽고, 매일 묵상을 따라가고, 주석과 함께 공부하세요.' },
     api: { title: '성경 API', body: '같은 카탈로그를 JSON으로 무료, 키 없이 제공합니다. 자신의 앱에 성경 본문을 넣고 싶은 개발자를 위한 것입니다.' },
     wordpress: { title: 'WordPress 플러그인', body: '교회나 사역 웹사이트의 성경 출처를 독자가 그 자리에서 열어 볼 수 있는 말씀으로 바꿔 줍니다.' },
+    skills: { title: '성경 공부 스킬', body: 'Claude, Cursor 등 에이전트를 위한 성경 공부 방법: 관찰, 해석, 적용. 모든 구절을 직접 불러오고 링크를 답니다.' },
   },
   footer: {
     productsTitle: '제품',

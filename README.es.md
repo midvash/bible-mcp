@@ -53,6 +53,18 @@ Ejemplo (Cursor y otros editores, `mcp.json`):
 }
 ```
 
+## Skill de estudio bíblico
+
+Para un estudio guiado, y no solo consultas sueltas, instala la skill
+[`bible-study`](https://github.com/midvash/skills). Guía al agente por la
+observación, la interpretación y la aplicación de un pasaje o tema, como estudio
+personal, lección para grupo pequeño o bosquejo de sermón, usando las
+herramientas de este servidor y con un enlace al lector en cada versículo.
+
+```bash
+npx skills add midvash/skills
+```
+
 ## Herramientas
 
 | Herramienta | Descripción |
@@ -159,6 +171,7 @@ Parte de [**Midvash: Biblia y Devocional**](https://midvash.com), una plataforma
 | 📱 **Apps iOS y Android** | [App Store](https://apps.apple.com/app/id6775930176) · [Google Play](https://play.google.com/store/apps/details?id=com.midvash.mobile) |
 | 🔌 **API** | [api.midvash.com](https://api.midvash.com) · [`bible-api`](https://github.com/midvash/bible-api) |
 | 🤖 **Servidor MCP** | [mcp.midvash.com](https://mcp.midvash.com) · [`bible-mcp`](https://github.com/midvash/bible-mcp) |
+| 🧠 **Skill de estudio bíblico** | [`skills`](https://github.com/midvash/skills) · `npx skills add midvash/skills` |
 | 🧩 **Plugin de WordPress** | [midvash.com/wordpress-plugin](https://midvash.com/wordpress-plugin) · [`bible-wordpress-plugin`](https://github.com/midvash/bible-wordpress-plugin) |
 | 🧩 **Plugin de EmDash** | [midvash.com/emdash-plugin](https://midvash.com/emdash-plugin) · [`bible-emdash-plugin`](https://github.com/midvash/bible-emdash-plugin) |
 | 🌐 **Extensión de Chrome** | [midvash.com/chrome-extension](https://midvash.com/chrome-extension) · [`bible-chrome-extension`](https://github.com/midvash/bible-chrome-extension) |

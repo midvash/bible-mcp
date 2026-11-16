@@ -320,6 +320,7 @@ export function renderLandingPage(locale: Locale): string {
     { ...t.more.reader, href: midvashHome },
     { ...t.more.api, href: `https://api.midvash.com${pathForLocale(locale) === '/' ? '' : pathForLocale(locale)}` },
     { ...t.more.wordpress, href: `${midvashHome}/wordpress-plugin` },
+    { ...t.more.skills, href: 'https://github.com/midvash/skills' },
   ]
     .map(
       (m) => `
@@ -778,7 +779,7 @@ section[id] { scroll-margin-top: 72px; }
 .faq-item p { margin-top: 10px; color: var(--text-soft); }
 
 /* MORE */
-.more-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+.more-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px; }
 .more-card {
   display: block; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
   padding: 24px; text-decoration: none; color: inherit; transition: border-color 0.15s ease;
