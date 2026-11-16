@@ -26,6 +26,29 @@ export function localeForVersion(version: VersionDefinition): Locale {
   return 'en';
 }
 
+/**
+ * Link do leitor do midvash.com no endereço canônico do trecho. O site publica
+ * cada versão no idioma dela (`/pt-br/onbv/joao/3`); o endereço sem idioma
+ * responde, mas com a interface em inglês. Versão em inglês, ou de idioma fora
+ * dos 9 do site, fica sem prefixo e com o slug em inglês. Versículo vai na
+ * âncora `#v=16` ou `#v=16-18`, como o site redireciona.
+ */
+export function readerUrl(
+  version: VersionDefinition,
+  book: BookDefinition,
+  chapter: number,
+  verseStart?: number,
+  verseEnd?: number,
+): string {
+  const locale = localeForVersion(version);
+  const prefix = locale === 'en' ? '' : `/${locale}`;
+  const slug = encodeURIComponent(book.slugs[locale] || book.slugs.en);
+  const base = `https://midvash.com${prefix}/${version.slug}/${slug}/${chapter}`;
+  if (verseStart === undefined) return base;
+  const end = verseEnd !== undefined && verseEnd > verseStart ? `-${verseEnd}` : '';
+  return `${base}#v=${verseStart}${end}`;
+}
+
 function bookNameFor(book: BookDefinition, version: VersionDefinition): string {
   return book.names[localeForVersion(version)];
 }
@@ -83,7 +106,8 @@ export function formatVerse(
       ? `${bookName} ${chapter}:${verseStart}`
       : `${bookName} ${chapter}:${verseStart}-${verseEnd}`;
 
-  const lines = [`**${ref}** (${version.shortName})`];
+  const url = readerUrl(version, book, chapter, verseStart, verseEnd);
+  const lines = [`**[${ref}](${url})** (${version.shortName})`];
 
   if (verses.length === 1) {
     lines.push(`*"${verses[0]}"*`);
@@ -115,7 +139,8 @@ export function formatChapter(
   { attribution = true }: { attribution?: boolean } = {},
 ): string {
   const bookName = bookNameFor(book, version);
-  const lines: string[] = [`## ${bookName} ${chapter} (${version.shortName})`, ''];
+  const url = readerUrl(version, book, chapter);
+  const lines: string[] = [`## [${bookName} ${chapter}](${url}) (${version.shortName})`, ''];
 
   for (let i = 0; i < verses.length; i++) {
     const text = verses[i];

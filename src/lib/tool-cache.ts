@@ -37,8 +37,9 @@ import type { ToolResult } from '../mcp/types';
  * v14 → v15: compare_passage escreve o livro no idioma de cada versão.
  * v15 → v16: reader_url com a âncora #v= e o intervalo inteiro.
  * v16 → v17: reader_url no endereço canônico do idioma da versão.
+ * v17 → v18: título de cada trecho leva o link do leitor.
  */
-const CACHE_VERSION = 'v17';
+const CACHE_VERSION = 'v18';
 
 /** Um dia. O texto bíblico não muda; o teto existe só para limitar staleness. */
 const CACHE_TTL_SECONDS = 86400;

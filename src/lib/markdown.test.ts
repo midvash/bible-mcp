@@ -75,3 +75,20 @@ describe('formatBookList', () => {
     expect(formatBookList(BOOKS, 'es')).toContain('## Libros de la Biblia');
   });
 });
+
+describe('link no título do trecho', () => {
+  const NVA = VERSIONS.find((v) => v.slug === 'nva')!;
+  const PSALMS = BOOKS.find((b) => b.id === 19)!;
+
+  it('formatVerse leva o link canônico do leitor no título', () => {
+    expect(formatVerse(PSALMS, NVA, 23, 1, 2, ['a', 'b'])).toContain(
+      '**[Salmos 23:1-2](https://midvash.com/pt-br/nva/salmos/23#v=1-2)** (NVA)',
+    );
+  });
+
+  it('formatChapter também', () => {
+    expect(formatChapter(PSALMS, NVA, 23, ['a'])).toContain(
+      '## [Salmos 23](https://midvash.com/pt-br/nva/salmos/23) (NVA)',
+    );
+  });
+});
