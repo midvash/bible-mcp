@@ -36,8 +36,9 @@ import type { ToolResult } from '../mcp/types';
  * v13 → v14: list_books rotula no idioma pedido (antes saía em português).
  * v14 → v15: compare_passage escreve o livro no idioma de cada versão.
  * v15 → v16: reader_url com a âncora #v= e o intervalo inteiro.
+ * v16 → v17: reader_url no endereço canônico do idioma da versão.
  */
-const CACHE_VERSION = 'v16';
+const CACHE_VERSION = 'v17';
 
 /** Um dia. O texto bíblico não muda; o teto existe só para limitar staleness. */
 const CACHE_TTL_SECONDS = 86400;

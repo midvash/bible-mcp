@@ -81,16 +81,23 @@ describe('outputSchema contract', () => {
 });
 
 describe('readerUrl', () => {
-  it('uses the English book slug for any version', () => {
-    expect(readerUrl(ONBV, JOHN, 3)).toBe('https://midvash.com/onbv/john/3');
+  const BSB = VERSIONS.find((v) => v.slug === 'bsb')!;
+  const SYNODAL = VERSIONS.find((v) => v.slug === 'synodal')!;
+  const PSALMS = BOOKS.find((b) => b.id === 19)!;
+
+  it('opens the reader in the version language, as the site publishes it', () => {
+    expect(readerUrl(ONBV, JOHN, 3)).toBe('https://midvash.com/pt-br/onbv/joao/3');
+    expect(readerUrl(ONBV, JOHN, 3, 16, 18)).toBe('https://midvash.com/pt-br/onbv/joao/3#v=16-18');
   });
 
-  it('marks the verse with the #v= anchor the site redirects to', () => {
-    expect(readerUrl(ONBV, JOHN, 3, 16)).toBe('https://midvash.com/onbv/john/3#v=16');
-    expect(readerUrl(ONBV, JOHN, 3, 16, 16)).toBe('https://midvash.com/onbv/john/3#v=16');
+  it('keeps English versions unprefixed', () => {
+    expect(readerUrl(BSB, JOHN, 3, 16)).toBe('https://midvash.com/bsb/john/3#v=16');
+    expect(readerUrl(BSB, JOHN, 3, 16, 16)).toBe('https://midvash.com/bsb/john/3#v=16');
   });
 
-  it('keeps the whole range, not just the first verse', () => {
-    expect(readerUrl(ONBV, JOHN, 3, 16, 18)).toBe('https://midvash.com/onbv/john/3#v=16-18');
+  it('encodes non-Latin book slugs', () => {
+    expect(readerUrl(SYNODAL, PSALMS, 23)).toBe(
+      'https://midvash.com/ru/synodal/%D0%BF%D1%81%D0%B0%D0%BB%D1%82%D0%B8%D1%80%D1%8C/23',
+    );
   });
 });
