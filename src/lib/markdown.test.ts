@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { BOOKS } from '../data/books';
 import { VERSIONS } from '../data/versions';
-import { formatChapter, formatVerse, withAttribution } from './markdown';
+import { formatBookList, formatChapter, formatVerse, withAttribution } from './markdown';
 
 const JOHN = BOOKS.find((b) => b.id === 43)!;
 const KJV = VERSIONS.find((v) => v.slug === 'kjv')!;
@@ -49,5 +49,29 @@ describe('attribution', () => {
   it('prints each credit once, even when a version repeats', () => {
     const text = withAttribution('body', [ONBV, KJV, ONBV, NVA]);
     expect(text).toBe(`body\n\n_${ONBV.copyright}_\n\n_${NVA.copyright}_`);
+  });
+});
+
+describe('formatBookList', () => {
+  it('rotula em inglês quando não vem idioma', () => {
+    const text = formatBookList(BOOKS);
+    expect(text).toContain('## Books of the Bible');
+    expect(text).toContain('### Old Testament (39 books)');
+    expect(text).toContain('### New Testament (27 books)');
+    expect(text).toContain('**Genesis** (`genesis`, Gen) — 50 chapters');
+    expect(text).not.toMatch(/Livros|Testamento|capítulos/);
+  });
+
+  it('usa o singular em livro de um capítulo', () => {
+    const text = formatBookList(BOOKS);
+    expect(text).toMatch(/\*\*Jude\*\*.* — 1 chapter$/m);
+  });
+
+  it('rotula no idioma pedido', () => {
+    const text = formatBookList(BOOKS, 'pt-br');
+    expect(text).toContain('## Livros da Bíblia');
+    expect(text).toContain('### Antigo Testamento (39 livros)');
+    expect(text).toMatch(/ — 1 capítulo$/m);
+    expect(formatBookList(BOOKS, 'es')).toContain('## Libros de la Biblia');
   });
 });
