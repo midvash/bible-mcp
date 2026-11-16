@@ -173,33 +173,66 @@ export function formatVersionList(versions: VersionDefinition[]): string {
 /**
  * Formata a lista de livros em Markdown, agrupados por testamento.
  */
+interface BookListLabels {
+  title: string;
+  old: string;
+  new: string;
+  /** "39 livros" */
+  books: (n: number) => string;
+  /** "50 capítulos" / "1 capítulo" */
+  chapters: (n: number) => string;
+}
+
+const plural = (one: string, other: string) => (n: number) => `${n} ${n === 1 ? one : other}`;
+
+/** Rótulos do `list_books` nos 9 locales; o padrão é inglês. */
+const BOOK_LIST_LABELS: Record<Locale, BookListLabels> = {
+  en: { title: 'Books of the Bible', old: 'Old Testament', new: 'New Testament', books: plural('book', 'books'), chapters: plural('chapter', 'chapters') },
+  'pt-br': { title: 'Livros da Bíblia', old: 'Antigo Testamento', new: 'Novo Testamento', books: plural('livro', 'livros'), chapters: plural('capítulo', 'capítulos') },
+  es: { title: 'Libros de la Biblia', old: 'Antiguo Testamento', new: 'Nuevo Testamento', books: plural('libro', 'libros'), chapters: plural('capítulo', 'capítulos') },
+  fr: { title: 'Livres de la Bible', old: 'Ancien Testament', new: 'Nouveau Testament', books: plural('livre', 'livres'), chapters: plural('chapitre', 'chapitres') },
+  de: { title: 'Bücher der Bibel', old: 'Altes Testament', new: 'Neues Testament', books: plural('Buch', 'Bücher'), chapters: plural('Kapitel', 'Kapitel') },
+  it: { title: 'Libri della Bibbia', old: 'Antico Testamento', new: 'Nuovo Testamento', books: plural('libro', 'libri'), chapters: plural('capitolo', 'capitoli') },
+  zh: { title: '圣经书卷', old: '旧约', new: '新约', books: (n) => `${n} 卷`, chapters: (n) => `${n} 章` },
+  ru: {
+    title: 'Книги Библии',
+    old: 'Ветхий Завет',
+    new: 'Новый Завет',
+    books: (n) => `${n} ${ruPlural(n, 'книга', 'книги', 'книг')}`,
+    chapters: (n) => `${n} ${ruPlural(n, 'глава', 'главы', 'глав')}`,
+  },
+  ko: { title: '성경 목록', old: '구약', new: '신약', books: (n) => `${n}권`, chapters: (n) => `${n}장` },
+};
+
+function ruPlural(n: number, one: string, few: string, many: string): string {
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+  if (mod10 === 1 && mod100 !== 11) return one;
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return few;
+  return many;
+}
+
 export function formatBookList(
   books: BookDefinition[],
   locale: Locale = 'en',
 ): string {
+  const labels = BOOK_LIST_LABELS[locale] ?? BOOK_LIST_LABELS.en;
   const ot = books.filter((b) => b.testament === 'old');
   const nt = books.filter((b) => b.testament === 'new');
 
-  const lines: string[] = ['## Livros da Bíblia', ''];
-
-  if (ot.length > 0) {
-    lines.push(`### Antigo Testamento (${ot.length} livros)`);
-    for (const b of ot) {
+  const lines: string[] = [`## ${labels.title}`, ''];
+  const pushGroup = (heading: string, group: BookDefinition[]) => {
+    lines.push(`### ${heading} (${labels.books(group.length)})`);
+    for (const b of group) {
       lines.push(
-        `- **${b.names[locale]}** (\`${b.slugs[locale]}\`, ${b.abbrev[locale]}) — ${b.chapters} capítulos`,
+        `- **${b.names[locale]}** (\`${b.slugs[locale]}\`, ${b.abbrev[locale]}) — ${labels.chapters(b.chapters)}`,
       );
     }
     lines.push('');
-  }
+  };
 
-  if (nt.length > 0) {
-    lines.push(`### Novo Testamento (${nt.length} livros)`);
-    for (const b of nt) {
-      lines.push(
-        `- **${b.names[locale]}** (\`${b.slugs[locale]}\`, ${b.abbrev[locale]}) — ${b.chapters} capítulos`,
-      );
-    }
-  }
+  if (ot.length > 0) pushGroup(labels.old, ot);
+  if (nt.length > 0) pushGroup(labels.new, nt);
 
   return lines.join('\n').trimEnd();
 }
