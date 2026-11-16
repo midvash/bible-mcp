@@ -272,6 +272,7 @@ export const getPassageTool: Tool = {
         first.book,
         first.chapter,
         singleVerseStart,
+        singleVerseStart === undefined ? undefined : first.verseEnd,
       ),
       verses: structured,
     });

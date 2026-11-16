@@ -85,7 +85,12 @@ describe('readerUrl', () => {
     expect(readerUrl(ONBV, JOHN, 3)).toBe('https://midvash.com/onbv/john/3');
   });
 
-  it('points at the verse page when a verse is given', () => {
-    expect(readerUrl(ONBV, JOHN, 3, 16)).toBe('https://midvash.com/onbv/john/3/16');
+  it('marks the verse with the #v= anchor the site redirects to', () => {
+    expect(readerUrl(ONBV, JOHN, 3, 16)).toBe('https://midvash.com/onbv/john/3#v=16');
+    expect(readerUrl(ONBV, JOHN, 3, 16, 16)).toBe('https://midvash.com/onbv/john/3#v=16');
+  });
+
+  it('keeps the whole range, not just the first verse', () => {
+    expect(readerUrl(ONBV, JOHN, 3, 16, 18)).toBe('https://midvash.com/onbv/john/3#v=16-18');
   });
 });

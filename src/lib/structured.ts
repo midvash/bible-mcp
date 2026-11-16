@@ -172,16 +172,21 @@ export function dualResult(
 
 /**
  * Link do leitor do midvash.com para o trecho. O site aceita o slug em inglês
- * do livro em qualquer versão; com versículo, abre a página do versículo.
+ * do livro em qualquer versão. Versículo vai na âncora `#v=16` ou `#v=16-18`:
+ * é pra lá que o site redireciona `/john/3/16` (301), então o link já nasce
+ * no endereço final.
  */
 export function readerUrl(
   version: VersionDefinition,
   book: BookDefinition,
   chapter: number,
-  verse?: number,
+  verseStart?: number,
+  verseEnd?: number,
 ): string {
   const base = `https://midvash.com/${version.slug}/${book.slugs.en}/${chapter}`;
-  return verse === undefined ? base : `${base}/${verse}`;
+  if (verseStart === undefined) return base;
+  const end = verseEnd !== undefined && verseEnd > verseStart ? `-${verseEnd}` : '';
+  return `${base}#v=${verseStart}${end}`;
 }
 
 /** Campos de versão presentes em quase toda resposta estruturada. */

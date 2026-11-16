@@ -123,6 +123,7 @@ export const getVerseTool: Tool = {
           book.value,
           chapter.value,
           range.value.start,
+          range.value.end,
         ),
         verses: selected.map((text, i) =>
           structuredVerse(
