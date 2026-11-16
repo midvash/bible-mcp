@@ -34,8 +34,9 @@ import type { ToolResult } from '../mcp/types';
  * v12 → v13: entram darby e rv1885, list_versions sai em inglês e versão com
  *          direitos troca pela livre (o "not found" cacheado sumiria só em 24h).
  * v13 → v14: list_books rotula no idioma pedido (antes saía em português).
+ * v14 → v15: compare_passage escreve o livro no idioma de cada versão.
  */
-const CACHE_VERSION = 'v14';
+const CACHE_VERSION = 'v15';
 
 /** Um dia. O texto bíblico não muda; o teto existe só para limitar staleness. */
 const CACHE_TTL_SECONDS = 86400;

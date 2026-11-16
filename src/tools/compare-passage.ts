@@ -1,7 +1,7 @@
 import { VERSIONS } from '../data/versions';
 import { isLanguageAllowed, type ConnectionContext } from '../lib/context';
 import { resolveVersion } from '../lib/tool-guards';
-import { attributionLine } from '../lib/markdown';
+import { attributionLine, bookNameForVersion } from '../lib/markdown';
 import type { VersionDefinition } from '../data/versions';
 import { fetchChapter } from '../lib/r2';
 import { parseReference } from '../lib/reference-parser';
@@ -143,12 +143,15 @@ export const comparePassageTool: Tool = {
       }
 
       const selected = verses.slice(start - 1, end);
+      // Cada versão com o nome do livro no próprio idioma: "Salmos" na NVA,
+      // "Psalms" na BSB.
+      const name = bookNameForVersion(book, version);
       const ref =
         verseStart === undefined
-          ? `${book.names.en} ${chapter}`
+          ? `${name} ${chapter}`
           : end === start
-          ? `${book.names.en} ${chapter}:${start}`
-          : `${book.names.en} ${chapter}:${start}-${end}`;
+          ? `${name} ${chapter}:${start}`
+          : `${name} ${chapter}:${start}-${end}`;
 
       sections.push(
         [
@@ -169,7 +172,7 @@ export const comparePassageTool: Tool = {
     }
 
     const output = [
-      `## Comparison: ${book.names.en} ${chapter}${verseStart ? `:${start}${(endFromReference ?? start) !== start ? `-${endFromReference}` : ''}` : ''}`,
+      `## Comparison: ${bookNameForVersion(book, shown[0])} ${chapter}${verseStart ? `:${start}${(endFromReference ?? start) !== start ? `-${endFromReference}` : ''}` : ''}`,
       '',
       ...sections,
     ];
