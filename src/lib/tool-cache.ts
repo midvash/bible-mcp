@@ -39,7 +39,7 @@ import type { ToolResult } from '../mcp/types';
  * v16 → v17: reader_url no endereço canônico do idioma da versão.
  * v17 → v18: título de cada trecho leva o link do leitor.
  */
-const CACHE_VERSION = 'v18';
+const CACHE_VERSION = 'v19';
 
 /** Um dia. O texto bíblico não muda; o teto existe só para limitar staleness. */
 const CACHE_TTL_SECONDS = 86400;
